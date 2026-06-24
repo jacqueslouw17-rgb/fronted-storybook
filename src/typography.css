@@ -1,0 +1,37 @@
+/* ============================================================
+   TYPOGRAPHY ROLES — Fronted DS
+   Headings: Clash Display · Body / UI: Inter.
+   Modular scale (base 16). Line-heights are multiples of 4px so
+   text sits on the same baseline grid as spacing. Tracking tightens
+   as size grows. Weights are consistent (headings 600).
+   ============================================================ */
+
+.ds-display, .ds-h1, .ds-h2, .ds-h3, .ds-h4, .ds-h5, .ds-h6 {
+  font-family: var(--ds-font-heading);
+  color: var(--ds-color-heading);
+  font-weight: var(--p-weight-semibold);
+  margin: 0;
+}
+.ds-body-lg, .ds-body, .ds-body-sm, .ds-caption, .ds-overline, .ds-label {
+  font-family: var(--ds-font-body);
+  color: var(--ds-color-text);
+  margin: 0;
+}
+
+/* —— Headings (Clash Display · 600) —— */
+.ds-display { font-size: var(--p-text-6xl); line-height: var(--p-lh-64); letter-spacing: var(--p-tracking-tight); }   /* 60 / 64 */
+.ds-h1      { font-size: var(--p-text-5xl); line-height: var(--p-lh-56); letter-spacing: var(--p-tracking-tight); }   /* 48 / 56 */
+.ds-h2      { font-size: var(--p-text-4xl); line-height: var(--p-lh-44); letter-spacing: var(--p-tracking-snug); }    /* 36 / 44 */
+.ds-h3      { font-size: var(--p-text-3xl); line-height: var(--p-lh-36); letter-spacing: var(--p-tracking-snug); }    /* 28 / 36 */
+.ds-h4      { font-size: var(--p-text-2xl); line-height: var(--p-lh-32); letter-spacing: var(--p-tracking-normal); }  /* 24 / 32 */
+.ds-h5      { font-size: var(--p-text-xl);  line-height: var(--p-lh-28); letter-spacing: var(--p-tracking-normal); }  /* 20 / 28 */
+.ds-h6      { font-size: var(--p-text-base);line-height: var(--p-lh-24); letter-spacing: var(--p-tracking-normal); }  /* 16 / 24 */
+
+/* —— Body / UI (Inter) —— */
+.ds-body-lg { font-size: var(--p-text-lg);  line-height: var(--p-lh-28); font-weight: var(--p-weight-regular); }      /* 18 / 28 */
+.ds-body    { font-size: var(--p-text-base);line-height: var(--p-lh-24); font-weight: var(--p-weight-regular); }      /* 16 / 24 */
+.ds-body-sm { font-size: var(--p-text-sm);  line-height: var(--p-lh-20); font-weight: var(--p-weight-regular); }      /* 14 / 20 */
+.ds-caption { font-size: var(--p-text-xs);  line-height: var(--p-lh-16); font-weight: var(--p-weight-regular); color: var(--ds-color-text-muted); } /* 12 / 16 */
+.ds-label   { font-size: var(--p-text-sm);  line-height: var(--p-lh-20); font-weight: var(--p-weight-medium); }       /* 14 / 20 */
+.ds-overline{ font-size: var(--p-text-xs);  line-height: var(--p-lh-16); font-weight: var(--p-weight-semibold);
+              letter-spacing: var(--p-tracking-wide); text-transform: uppercase; color: var(--ds-color-text-muted); } /* 12 / 16 */

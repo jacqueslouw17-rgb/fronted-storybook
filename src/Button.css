@@ -1,0 +1,45 @@
+.ds-btn {
+  border: 0;
+  font-family: var(--ds-font-body);
+  font-weight: var(--p-weight-medium);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--p-space-2);
+  cursor: pointer;
+  white-space: nowrap;
+  transition: transform var(--p-dur-fast) var(--ds-ease), box-shadow var(--p-dur-fast) var(--ds-ease), background-color var(--p-dur-fast) var(--ds-ease), color var(--p-dur-fast) var(--ds-ease);
+}
+.ds-btn svg { width: 1.05em; height: 1.05em; }
+
+/* PRIMARY = brand yellow pill */
+.ds-btn--primary {
+  background: var(--ds-action-primary-bg);
+  color: var(--ds-action-primary-fg);
+}
+.ds-btn--primary:hover  { background: var(--ds-action-primary-bg-hover); transform: translateY(-.5px); box-shadow: var(--ds-shadow-lg); }
+.ds-btn--primary:active { background: var(--ds-action-primary-bg-active); transform: translateY(0); box-shadow: none; }
+
+/* SECONDARY = ghost (transparent → dark fill on hover) */
+.ds-btn--secondary {
+  background: var(--ds-action-secondary-bg);
+  border: 1px solid var(--ds-action-secondary-border);
+  color: var(--ds-action-secondary-fg);
+}
+.ds-btn--secondary:hover  { background: var(--ds-action-secondary-bg-hover);  color: var(--ds-action-secondary-fg-hover); border-color: var(--ds-action-secondary-bg-hover); }
+.ds-btn--secondary:active { background: var(--ds-action-secondary-bg-active); color: var(--ds-action-secondary-fg-hover); border-color: var(--ds-action-secondary-bg-active); }
+
+/* shared focus ring */
+.ds-btn:focus-visible { outline: 2px solid var(--ds-color-focus-ring); outline-offset: 2px; }
+
+/* shape — pill (default) or rounded (lg, 12px) */
+.ds-btn--pill    { border-radius: var(--ds-radius-button); }   /* pill */
+.ds-btn--rounded { border-radius: var(--p-radius-lg); }        /* 12px */
+
+/* sizes — S / M / L. Heights are control dims; padding = spacing scale,
+   text = type scale (sm 13px is the one intentional compact off-scale step). */
+.ds-btn--sm { height: 32px; font-size: 13px;                 padding: 0 var(--p-space-4); }
+.ds-btn--md { height: 40px; font-size: var(--p-text-sm);     padding: 0 var(--p-space-5); }
+.ds-btn--lg { height: 52px; font-size: var(--p-text-base);   padding: 0 var(--p-space-7); }
+
+.ds-btn:disabled { opacity: .5; pointer-events: none; }

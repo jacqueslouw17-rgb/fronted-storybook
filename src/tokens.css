@@ -1,0 +1,227 @@
+/* ============================================================
+   FRONTED DESIGN SYSTEM — COLOUR & CORE TOKENS
+   Tier 1  PRIMITIVES (--p-*)  : raw ramps, one family per hue (50→900)
+   Tier 2  SEMANTIC   (--ds-*) : role aliases — components use THESE
+   Source: fronted.com (Webflow). Brand anchors kept at their exact
+   website hex; ramps extended around them for product depth.
+   ============================================================ */
+
+:root {
+  /* ===================== 1 · PRIMITIVES ===================== */
+
+  --p-white: #FFFFFF;
+  --p-black: #000000;
+
+  /* —— Neutral (cool grey) — UI depth, text, surfaces, borders —— */
+  --p-neutral-50:  #FAFAFB;
+  --p-neutral-100: #F7F7F7;   /* muted surface (anchor) */
+  --p-neutral-200: #ECECEE;
+  --p-neutral-300: #E2E2E2;   /* border (anchor) */
+  --p-neutral-400: #CACBCF;
+  --p-neutral-500: #9A9CA3;
+  --p-neutral-600: #6B7280;   /* muted text (anchor) */
+  --p-neutral-700: #4B4D54;
+  --p-neutral-800: #333333;   /* body text (anchor) */
+  --p-neutral-900: #1E1E1E;   /* strong text (anchor) */
+  --p-neutral-950: #0F1011;
+
+  /* —— Yellow (PRIMARY / gold) —— */
+  --p-yellow-50:  #FFFCF2;
+  --p-yellow-100: #FFF7E0;
+  --p-yellow-200: #FFF2D7;   /* tint (anchor) */
+  --p-yellow-300: #FEECA6;   /* PRIMARY CTA (anchor) */
+  --p-yellow-400: #FBDE7E;   /* primary hover */
+  --p-yellow-500: #F2C94C;   /* primary active */
+  --p-yellow-600: #D9A92E;
+  --p-yellow-700: #B08520;
+  --p-yellow-800: #855F18;   /* warning text on light */
+  --p-yellow-900: #5C4011;
+
+  /* —— Teal (BRAND ink / info) —— */
+  --p-teal-50:  #ECF4F4;
+  --p-teal-100: #CFE5E5;
+  --p-teal-200: #A6CDCE;
+  --p-teal-300: #74ABAE;
+  --p-teal-400: #45898D;
+  --p-teal-500: #226A6E;     /* focus ring */
+  --p-teal-600: #134E51;     /* link */
+  --p-teal-700: #0C3E41;     /* info text */
+  --p-teal-800: #083638;
+  --p-teal-900: #063033;     /* heading ink (anchor) */
+  --p-teal-950: #041F21;
+
+  /* —— Green (SUCCESS / positive) — one family (consolidated) —— */
+  --p-green-50:  #ECFDF5;
+  --p-green-100: #D1FAE5;
+  --p-green-200: #A7F3D0;
+  --p-green-300: #6EE7B7;
+  --p-green-400: #34D399;    /* bright accent / chip (anchor) */
+  --p-green-500: #10B981;
+  --p-green-600: #059669;    /* success solid */
+  --p-green-700: #047857;    /* success text */
+  --p-green-800: #006147;    /* deep (anchor) */
+  --p-green-900: #064E3B;
+
+  /* —— Rose (soft accent / danger) —— */
+  --p-rose-50:  #FEF2F2;
+  --p-rose-100: #FCE4E3;
+  --p-rose-200: #F9CBCA;     /* soft accent (anchor) */
+  --p-rose-300: #F3A6A4;
+  --p-rose-400: #EA7C79;
+  --p-rose-500: #DC5450;
+  --p-rose-600: #C23B37;     /* danger solid / text */
+  --p-rose-700: #9B2D2A;
+  --p-rose-800: #7A2422;
+  --p-rose-900: #5A1B19;
+
+  /* —— Typography ——
+     Modular scale, base 16. Tightens for body, widens toward display.
+     Every line-height is a multiple of 4px → shares the spacing baseline grid. */
+  --p-font-display: "Clash Display", "Inter", Arial, "Helvetica Neue", sans-serif;
+  --p-font-sans:    "Inter", Arial, "Helvetica Neue", Helvetica, sans-serif;
+  --p-font-mono:    ui-monospace, "SF Mono", "JetBrains Mono", Menlo, Consolas, monospace;
+
+  /* size ramp */
+  --p-text-2xs: 11px; --p-text-xs: 12px; --p-text-sm: 14px; --p-text-base: 16px;
+  --p-text-lg:  18px; --p-text-xl: 20px; --p-text-2xl: 24px; --p-text-3xl: 28px;
+  --p-text-4xl: 36px; --p-text-5xl: 48px; --p-text-6xl: 60px;
+
+  /* line-height ramp (all ÷4 = on the spacing grid) */
+  --p-lh-16: 16px; --p-lh-20: 20px; --p-lh-24: 24px; --p-lh-28: 28px;
+  --p-lh-32: 32px; --p-lh-36: 36px; --p-lh-44: 44px; --p-lh-56: 56px; --p-lh-64: 64px;
+
+  /* letter-spacing (tightens as size grows) */
+  --p-tracking-tight: -0.02em; --p-tracking-snug: -0.01em; --p-tracking-normal: 0; --p-tracking-wide: 0.08em;
+
+  --p-weight-regular: 400; --p-weight-medium: 500; --p-weight-semibold: 600; --p-weight-bold: 700;
+
+  /* —— Spacing — 4px base grid. Index = px ÷ 4 (0-5 = 2px micro step).
+     Tight steps (0→6) for component insets/gaps; jumps (7→32) for layout. —— */
+  --p-space-0:   0;
+  --p-space-0-5: 2px;    /* micro — hairline inset, icon nudge */
+  --p-space-1:   4px;    /* tight gap */
+  --p-space-2:   8px;    /* compact inset */
+  --p-space-3:   12px;   /* control inset */
+  --p-space-4:   16px;   /* default gap / card pad */
+  --p-space-5:   20px;
+  --p-space-6:   24px;   /* section gap */
+  --p-space-7:   28px;
+  --p-space-8:   32px;   /* block gap */
+  --p-space-9:   36px;
+  --p-space-10:  40px;
+  --p-space-11:  44px;
+  --p-space-12:  48px;   /* group gap */
+  --p-space-14:  56px;
+  --p-space-16:  64px;   /* layout gap */
+  --p-space-20:  80px;
+  --p-space-24:  96px;   /* section rhythm */
+  --p-space-32:  128px;  /* page band */
+
+  /* —— Radii — none → pill (ascending) —— */
+  --p-radius-none: 0;
+  --p-radius-xs: 2px; --p-radius-sm: 4px; --p-radius-md: 8px;
+  --p-radius-lg: 12px; --p-radius-xl: 16px; --p-radius-2xl: 20px; --p-radius-pill: 9999px;
+  --p-shadow-sm: 0 1px 2px rgba(0,0,0,.06);
+  --p-shadow-md: 0 4px 6px -4px rgba(0,0,0,.1), 0 2px 4px -2px rgba(0,0,0,.06);
+  --p-shadow-lg: 0 10px 15px -3px rgba(0,0,0,.1), 0 4px 6px -4px rgba(0,0,0,.1);
+  --p-ease: cubic-bezier(.4,0,.2,1); --p-dur-in: 500ms; --p-dur-out: 300ms; --p-dur-fast: 120ms;
+  --p-bp-tiny: 479px; --p-bp-small: 640px; --p-bp-medium: 768px; --p-bp-large: 1024px; --p-bp-xl: 1280px; --p-bp-xxl: 1440px;
+
+  /* ===================== 2 · SEMANTIC ===================== */
+
+  /* fonts — two-typeface system:
+       heading (Clash Display) = CONTENT headings only (display, h1–h6).
+       ui / body (Inter)       = ALL product & component text — body, labels,
+                                 inputs, placeholders, buttons, captions, even
+                                 component headers. Better legibility at UI sizes.
+     Weights: 400 body · 500 labels & buttons · 600 headings & emphasis. */
+  --ds-font-heading: var(--p-font-display);
+  --ds-font-body:    var(--p-font-sans);
+  --ds-font-ui:      var(--p-font-sans);   /* alias = body; use for component chrome */
+  --ds-font-mono:    var(--p-font-mono);
+
+  /* text — NEUTRAL only (no hue). Shades chosen for WCAG on white. */
+  --ds-color-text:          var(--p-neutral-900);   /* primary body — #1E1E1E · 16.1:1 (AAA) */
+  --ds-color-text-muted:    var(--p-neutral-600);   /* secondary / subtext — #6B7280 · 4.83:1 (AA) */
+  --ds-color-text-disabled: var(--p-neutral-400);   /* disabled only — #CACBCF · exempt from contrast */
+  --ds-color-text-inverse:  var(--p-white);         /* on dark surfaces */
+  --ds-color-heading:       var(--p-neutral-900);   /* same ink as body */
+  --ds-color-text-strong:   var(--p-neutral-900);   /* alias = text */
+
+  /* surface — neutral (white / light grey) */
+  --ds-color-bg:            var(--p-neutral-50);    /* page */
+  --ds-color-surface:       var(--p-white);         /* card / panel */
+  --ds-color-surface-sunken:var(--p-neutral-100);   /* wells, hovers */
+  --ds-color-surface-muted: var(--p-neutral-100);   /* alias */
+
+  /* accent surface — the ONE brand-tinted surface role (soft yellow wash).
+     For accented section headers / banners, e.g. a collapsed accordion bar. */
+  --ds-color-surface-accent:       var(--p-yellow-50);    /* resting tint */
+  --ds-color-surface-accent-hover: var(--p-yellow-100);   /* hover */
+
+  /* border */
+  --ds-color-border:        var(--p-neutral-300);
+  --ds-color-border-strong: var(--p-neutral-400);
+
+  /* focus + overlay */
+  --ds-color-focus-ring: var(--p-teal-500);
+  --ds-color-backdrop:   rgba(15,16,17,.55);   /* neutral scrim */
+
+  /* action — primary (yellow pill) with states */
+  --ds-action-primary-bg:        var(--p-yellow-300);
+  --ds-action-primary-bg-hover:  var(--p-yellow-400);
+  --ds-action-primary-bg-active: var(--p-yellow-500);
+  --ds-action-primary-fg:        var(--p-black);
+  --ds-action-primary-radius:    var(--p-radius-pill);
+
+  /* action — secondary (ghost: transparent → dark fill on hover) */
+  --ds-action-secondary-bg:        transparent;
+  --ds-action-secondary-bg-hover:  var(--p-neutral-900);
+  --ds-action-secondary-bg-active: var(--p-neutral-950);
+  --ds-action-secondary-fg:        var(--p-neutral-900);
+  --ds-action-secondary-fg-hover:  var(--p-white);
+  --ds-action-secondary-border:    transparent;
+
+  /* feedback (bg / fg / border / solid) — fg picked for AA on bg */
+  --ds-feedback-success-bg: var(--p-green-50);  --ds-feedback-success-fg: var(--p-green-700);  --ds-feedback-success-border: var(--p-green-200);  --ds-feedback-success-solid: var(--p-green-600);
+  --ds-feedback-warning-bg: var(--p-yellow-100);--ds-feedback-warning-fg: var(--p-yellow-800);  --ds-feedback-warning-border: var(--p-yellow-300);--ds-feedback-warning-solid: var(--p-yellow-500);
+  --ds-feedback-danger-bg:  var(--p-rose-50);   --ds-feedback-danger-fg:  var(--p-rose-600);    --ds-feedback-danger-border:  var(--p-rose-200);  --ds-feedback-danger-solid:  var(--p-rose-600);
+  --ds-feedback-info-bg:    var(--p-teal-50);   --ds-feedback-info-fg:    var(--p-teal-700);    --ds-feedback-info-border:    var(--p-teal-200);  --ds-feedback-info-solid:    var(--p-teal-600);
+
+  /* accents (decorative — use 400/500 with dark fg only) */
+  --ds-accent-yellow: var(--p-yellow-300);
+  --ds-accent-teal:   var(--p-teal-500);
+  --ds-accent-green:  var(--p-green-400);
+  --ds-accent-rose:   var(--p-rose-200);
+
+  /* radius roles — one radius per component category */
+  --ds-radius-button: var(--p-radius-pill);   /* buttons / CTAs — brand pill */
+  --ds-radius-chip:   var(--p-radius-pill);   /* chips / tags / badges */
+  --ds-radius-input:  var(--p-radius-md);     /* inputs / selects / menus */
+  --ds-radius-card:   var(--p-radius-lg);     /* cards / popovers */
+  --ds-radius-sheet:  var(--p-radius-xl);     /* modals / dialogs */
+  --ds-radius-control: var(--p-radius-md);    /* alias = input */
+
+  /* controls / motion / elevation */
+  --ds-input-h: 40px; --ds-button-h: 40px;
+  --ds-shadow-lg: var(--p-shadow-lg);
+  --ds-ease: var(--p-ease); --ds-dur-in: var(--p-dur-in); --ds-dur-out: var(--p-dur-out);
+
+  /* —— legacy aliases (keep existing components working) —— */
+  --p-ink-900: var(--p-teal-900);
+  --p-pink-200: var(--p-rose-200);
+  --ds-color-text-strong: var(--p-neutral-900);
+  --ds-ink: var(--p-neutral-900);
+  --ds-muted: var(--p-neutral-600);
+  --ds-surface: var(--p-white);
+  --ds-surface-muted: var(--p-neutral-100);
+  --ds-border: var(--p-neutral-300);
+  --ds-page: var(--p-neutral-50);
+  --ds-backdrop: var(--ds-color-backdrop);
+  --ds-accent-pink: var(--p-rose-200);
+  --ds-radius: var(--p-radius-md);
+  --ds-radius-sm: var(--p-radius-sm);
+  --ds-radius-pill: var(--p-radius-pill);
+  --ds-sheet-w: 576px;
+  --ds-font-sans: var(--p-font-sans);
+}

@@ -1,0 +1,88 @@
+/* Panel (M1) — generic template, styled entirely from the token layer.
+   Colour → --ds-color-* · type → --p-text-*/--p-weight-* · spacing → --p-space-*
+   · radius → --ds-radius-* / --p-radius-*. No raw hex / off-scale px. */
+
+.ds-cp { position: absolute; inset: 0; pointer-events: none; z-index: 40; font-family: var(--ds-font-body); color: var(--ds-color-text); }
+.ds-cp, .ds-cp * { box-sizing: border-box; }   /* keep 100%-width inputs inside the sheet (no h-scroll) */
+.ds-cp.is-open { pointer-events: auto; }
+
+/* overlay (neutral scrim) — click-through until the panel is open */
+.ds-cp__overlay {
+  position: absolute; inset: 0; background: var(--ds-color-backdrop);
+  opacity: 0; pointer-events: none; transition: opacity var(--ds-dur-out) var(--ds-ease);
+}
+.ds-cp.is-open .ds-cp__overlay { opacity: 1; pointer-events: auto; }
+
+/* sheet shell */
+.ds-cp__sheet {
+  position: absolute; top: 0; right: 0; height: 100%;
+  width: var(--ds-sheet-w); max-width: 100%;
+  background: var(--ds-color-surface); border-left: 1px solid var(--ds-color-border);
+  box-shadow: var(--ds-shadow-lg); border-radius: 0;
+  display: flex; flex-direction: column; overflow: hidden;
+  transform: translateX(100%); pointer-events: none;
+  transition: transform var(--ds-dur-out) var(--ds-ease);
+}
+.ds-cp.is-open .ds-cp__sheet { transform: translateX(0); pointer-events: auto; transition: transform var(--ds-dur-in) var(--ds-ease); }
+@media (max-width: 639px) { .ds-cp__sheet { width: 100%; } }   /* mobile full-screen */
+
+/* header — title block left, close top-right, both starting on the same line */
+.ds-cp__head { padding: var(--p-space-6) var(--p-space-6) 0; display: flex; align-items: flex-start; justify-content: space-between; gap: var(--p-space-4); }
+.ds-cp__head-text { min-width: 0; }
+/* component header → Inter (UI), not Clash. Clash is for content headings only. */
+.ds-cp__title { font-family: var(--ds-font-body); font-size: var(--p-text-xl); font-weight: var(--p-weight-semibold); line-height: var(--p-lh-28); color: var(--ds-color-heading); }
+.ds-cp__sub { font-size: var(--p-text-sm); font-weight: var(--p-weight-regular); line-height: var(--p-lh-20); color: var(--ds-color-text-muted); margin-top: var(--p-space-1); }
+.ds-cp__close {
+  flex: none; width: var(--p-lh-28); height: var(--p-lh-28);   /* hit area centred on the title line */
+  border: 0; background: transparent; color: var(--ds-color-text-muted);
+  cursor: pointer; display: flex; align-items: center; justify-content: center;
+  border-radius: var(--ds-radius-sm); line-height: 1; font-size: var(--p-text-base);
+  transition: color var(--p-dur-fast) var(--ds-ease), background-color var(--p-dur-fast) var(--ds-ease);
+}
+.ds-cp__close:hover { color: var(--ds-color-heading); background: var(--ds-color-bg); }
+
+/* body + accordion */
+.ds-cp__body { margin-top: var(--p-space-4); flex: 1; overflow-y: auto; overflow-x: hidden; display: flex; flex-direction: column; }
+.ds-cp__acc { border-top: 1px solid var(--ds-color-border); border-bottom: 1px solid var(--ds-color-border); }
+.ds-cp__acc + .ds-cp__acc { border-top: 0; }
+/* collapsed = soft yellow accent · open = clean white (borders carry the structure) */
+.ds-cp__acc-trigger {
+  width: 100%; display: flex; align-items: center; gap: var(--p-space-3); padding: var(--p-space-3) var(--p-space-5);
+  background: var(--ds-color-surface-accent); border: 0; cursor: pointer; font-family: var(--ds-font-body);
+  transition: background-color var(--p-dur-fast) var(--ds-ease);
+}
+.ds-cp__acc.is-open .ds-cp__acc-trigger { background: var(--ds-color-surface); }
+.ds-cp__acc:not(.is-open) .ds-cp__acc-trigger:hover { background: var(--ds-color-surface-accent-hover); }   /* collapsed → slightly deeper tint */
+.ds-cp__acc.is-open .ds-cp__acc-trigger:hover { background: var(--ds-color-bg); }            /* open → subtle neutral */
+.ds-cp__acc-title { font-size: var(--p-text-sm); font-weight: var(--p-weight-medium); line-height: var(--p-lh-20); color: var(--ds-color-heading); }
+.ds-cp__acc-spacer { flex: 1; }
+.ds-cp__chev { width: 16px; height: 16px; color: var(--ds-color-text-muted); transition: transform var(--p-dur-fast) var(--ds-ease); }
+.ds-cp__acc.is-open .ds-cp__chev { transform: rotate(180deg); }
+.ds-cp__acc-panel { display: none; padding: var(--p-space-4) var(--p-space-6); flex-direction: column; gap: var(--p-space-4); }
+.ds-cp__acc.is-open .ds-cp__acc-panel { display: flex; }
+
+/* read-only rows (display state) */
+.ds-cp__row { display: flex; align-items: baseline; justify-content: space-between; gap: var(--p-space-4); padding-bottom: var(--p-space-3); border-bottom: 1px solid var(--ds-color-border); }
+.ds-cp__row:last-child { border-bottom: 0; padding-bottom: 0; }
+.ds-cp__row-label { font-size: var(--p-text-sm); line-height: var(--p-lh-20); color: var(--ds-color-text-muted); }
+.ds-cp__row-value { font-size: var(--p-text-sm); line-height: var(--p-lh-20); font-weight: var(--p-weight-medium); color: var(--ds-color-text-strong); text-align: right; }
+
+/* editable fields */
+.ds-cp__field label { display: flex; align-items: center; gap: var(--p-space-1); font-size: var(--p-text-2xs); font-weight: var(--p-weight-medium); color: var(--ds-color-text-muted); margin-bottom: var(--p-space-2); }
+.ds-cp__opt { font-size: var(--p-text-2xs); font-weight: var(--p-weight-regular); color: var(--ds-color-text-muted); background: var(--ds-color-surface-muted); border-radius: var(--p-radius-pill); padding: 0 var(--p-space-2); line-height: 1.6; }
+.ds-cp__control {
+  height: var(--ds-input-h); width: 100%; border: 1px solid var(--ds-color-border);
+  background: var(--ds-color-surface); border-radius: var(--ds-radius-input); padding: 0 var(--p-space-3);
+  font-size: var(--p-text-sm); color: var(--ds-color-text-strong); font-family: var(--ds-font-body); outline: none;
+}
+.ds-cp__control:focus { box-shadow: 0 0 0 2px var(--ds-color-surface), 0 0 0 4px var(--ds-color-focus-ring); border-color: var(--ds-color-heading); }
+.ds-cp__control::placeholder { color: var(--ds-color-text-muted); }
+
+/* footer */
+.ds-cp__foot {
+  position: sticky; bottom: 0; display: flex; gap: var(--p-space-3); padding: var(--p-space-4) var(--p-space-6);
+  border-top: 1px solid var(--ds-color-border);
+  background: color-mix(in srgb, var(--ds-color-surface) 85%, transparent);
+  backdrop-filter: blur(6px);
+}
+.ds-cp__foot .ds-btn { flex: 1; }

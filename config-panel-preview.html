@@ -1,0 +1,151 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>M1 · Panel — preview</title>
+<link rel="stylesheet" href="https://api.fontshare.com/v2/css?f[]=clash-display@400,500,600&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap">
+<style>
+  /* TOKENS — website (fronted.com) */
+  :root{
+    --p-white:#FFFFFF;--p-black:#000;--p-ink-900:#063033;
+    --p-neutral-900:#1E1E1E;--p-neutral-700:#333333;--p-neutral-500:#6B7280;--p-neutral-300:#E2E2E2;--p-neutral-200:#F7F7F7;--p-neutral-100:#FAFAFB;
+    --p-yellow-200:#FFF2D7;--p-yellow-300:#FEECA6;--p-green-400:#34D399;--p-pink-200:#F9CBCA;
+    --ds-font-heading:"Clash Display","Inter",Arial,sans-serif; --ds-font-body:"Inter",Arial,sans-serif;
+    --ds-color-heading:var(--p-ink-900);--ds-color-text:var(--p-neutral-700);--ds-color-text-strong:var(--p-neutral-900);--ds-color-text-muted:var(--p-neutral-500);
+    --ds-color-bg:var(--p-neutral-100);--ds-color-surface:var(--p-white);--ds-color-surface-muted:var(--p-neutral-200);--ds-color-border:var(--p-neutral-300);
+    --ds-color-backdrop:rgba(6,48,51,.55);
+    --ds-action-primary-bg:var(--p-yellow-300);--ds-radius:8px;--ds-radius-pill:9999px;--ds-sheet-w:576px;--ds-input-h:40px;--ds-btn-h:36px;
+    --ds-ease:cubic-bezier(.4,0,.2,1);--ds-dur-in:500ms;--ds-dur-out:300ms;
+    --ds-shadow-lg:0 10px 15px -3px rgba(0,0,0,.1),0 4px 6px -4px rgba(0,0,0,.1);
+  }
+  *{box-sizing:border-box;margin:0}
+  body{font-family:var(--ds-font-body);color:var(--ds-color-text);background:#1f2430}
+
+  .toolbar{position:fixed;top:0;left:0;right:0;height:52px;display:flex;align-items:center;gap:14px;padding:0 18px;background:#15181f;border-bottom:1px solid #2a2f3a;z-index:50;color:#e7e9ee;font-size:13px}
+  .toolbar .brand{font-weight:600}
+  .toolbar .brand .dot{display:inline-block;width:9px;height:9px;border-radius:3px;background:var(--p-yellow-300);margin-right:8px;vertical-align:1px}
+  .seg{display:flex;background:#222734;border:1px solid #2f3543;border-radius:8px;overflow:hidden}
+  .seg button{appearance:none;border:0;background:transparent;color:#aab2c2;font:inherit;padding:7px 14px;cursor:pointer}
+  .seg button.active{background:var(--p-yellow-300);color:#111}
+  .toolbar .meta{margin-left:auto;color:#7f8798;font-size:12px}
+
+  .stage{min-height:100vh;padding:84px 24px 40px;display:flex;justify-content:center;align-items:flex-start}
+  .device{position:relative;background:var(--ds-color-bg);border:1px solid #2a2f3a;border-radius:16px;box-shadow:0 24px 60px rgba(0,0,0,.45);overflow:hidden;transition:width var(--ds-dur-out) var(--ds-ease);height:760px}
+  .device[data-vp="desktop"]{width:1180px}.device[data-vp="tablet"]{width:768px}.device[data-vp="mobile"]{width:390px}
+  .vp-label{position:absolute;top:10px;left:14px;font-family:ui-monospace,monospace;font-size:11px;color:var(--ds-color-text-muted)}
+
+  .page{position:absolute;inset:0;display:flex;align-items:center;justify-content:center}
+  .btn{height:var(--ds-btn-h);border:0;border-radius:var(--ds-radius);font-family:var(--ds-font-body);font-size:14px;font-weight:500;display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:0 18px;cursor:pointer;transition:transform .12s var(--ds-ease),box-shadow .12s var(--ds-ease),filter .12s var(--ds-ease)}
+  .btn-primary{background:var(--ds-action-primary-bg);color:#000;border-radius:var(--ds-radius-pill)}
+  .btn-primary:hover{transform:translateY(-.5px);box-shadow:var(--ds-shadow-lg);filter:brightness(.97)}
+  .btn-secondary{background:#fff;border:1px solid var(--ds-color-border);color:var(--ds-color-text-strong)}
+  .btn-secondary:hover{background:var(--ds-color-text-strong);color:#fff}
+
+  .overlay{position:absolute;inset:0;background:var(--ds-color-backdrop);opacity:0;pointer-events:none;transition:opacity var(--ds-dur-out) var(--ds-ease);z-index:10}
+  .device.open .overlay{opacity:1;pointer-events:auto}
+  .sheet{position:absolute;top:0;right:0;height:100%;width:var(--ds-sheet-w);max-width:100%;background:var(--ds-color-surface);border-left:1px solid var(--ds-color-border);box-shadow:var(--ds-shadow-lg);display:flex;flex-direction:column;transform:translateX(100%);transition:transform var(--ds-dur-out) var(--ds-ease);z-index:20;overflow:hidden}
+  .device.open .sheet{transform:translateX(0);transition:transform var(--ds-dur-in) var(--ds-ease)}
+  .device[data-vp="mobile"] .sheet{width:100%}
+
+  .head{padding:24px 24px 0;position:relative}
+  .h-title{font-family:var(--ds-font-heading);font-size:20px;font-weight:600;line-height:1.2;color:var(--ds-color-heading)}
+  .h-sub{font-size:13px;color:var(--ds-color-text-muted);margin-top:6px}
+  .close{position:absolute;top:18px;right:18px;width:16px;height:16px;border:0;background:transparent;color:var(--ds-color-heading);opacity:.7;cursor:pointer;font-size:16px;line-height:1}
+  .close:hover{opacity:1}
+
+  .body{margin-top:16px;flex:1;overflow:auto;display:flex;flex-direction:column}
+  .acc{border-top:1px solid rgba(226,226,226,.7);border-bottom:1px solid rgba(226,226,226,.7)}
+  .acc+.acc{border-top:0}
+  .acc-trigger{width:100%;display:flex;align-items:center;gap:12px;padding:12px 20px;background:var(--p-yellow-200);border:0;cursor:pointer;font-family:var(--ds-font-body)}
+  .acc-title{font-size:15px;font-weight:500;color:var(--ds-color-heading)}
+  .acc-sp{flex:1}
+  .acc-chip{font-size:12px;color:var(--ds-color-heading);background:var(--p-green-400);padding:2px 10px;border-radius:var(--ds-radius-pill)}
+  .chev{width:16px;height:16px;color:var(--ds-color-text-muted);transition:transform .2s var(--ds-ease)}
+  .acc.open .chev{transform:rotate(180deg)}
+  .acc-panel{display:none;padding:16px 24px;flex-direction:column;gap:14px}
+  .acc.open .acc-panel{display:flex}
+
+  /* read-only rows */
+  .row{display:flex;align-items:baseline;justify-content:space-between;gap:16px;padding-bottom:12px;border-bottom:1px solid var(--p-neutral-200)}
+  .row:last-child{border-bottom:0;padding-bottom:0}
+  .row .l{font-size:13px;color:var(--ds-color-text-muted)}
+  .row .v{font-size:13px;font-weight:500;color:var(--ds-color-text-strong);text-align:right}
+
+  /* editable fields */
+  .field label{display:flex;align-items:center;gap:6px;font-size:11px;font-weight:500;color:var(--ds-color-text-muted);margin-bottom:6px}
+  .opt{font-size:9px;color:var(--ds-color-text-muted);background:var(--ds-color-surface-muted);border-radius:var(--ds-radius-pill);padding:0 6px;line-height:1.6}
+  .control{height:var(--ds-input-h);width:100%;border:1px solid var(--ds-color-border);background:#fff;border-radius:var(--ds-radius);padding:0 12px;font-size:13px;color:var(--ds-color-text-strong);font-family:var(--ds-font-body);outline:none}
+  .control:focus{box-shadow:0 0 0 2px #fff,0 0 0 4px rgba(6,48,51,.35);border-color:var(--ds-color-heading)}
+
+  .foot{position:sticky;bottom:0;display:flex;gap:12px;padding:16px 24px;border-top:1px solid var(--ds-color-border);background:rgba(255,255,255,.85);backdrop-filter:blur(6px)}
+  .foot .btn{flex:1}
+
+  /* state toggling */
+  .device[data-state="readonly"] .editable{display:none}
+  .device[data-state="readonly"] .foot{display:none}
+  .device[data-state="editable"] .readonly{display:none}
+</style>
+</head>
+<body>
+  <div class="toolbar">
+    <span class="brand"><span class="dot"></span>Fronted DS · M1 Panel</span>
+    <div class="seg" id="vp">
+      <button data-vp="desktop" class="active">Desktop</button><button data-vp="tablet">Tablet</button><button data-vp="mobile">Mobile</button>
+    </div>
+    <div class="seg" id="state">
+      <button data-state="editable" class="active">Editable</button><button data-state="readonly">Read only</button>
+    </div>
+    <span class="meta">website tokens · placeholder content</span>
+  </div>
+
+  <div class="stage">
+    <div class="device" id="device" data-vp="desktop" data-state="editable">
+      <span class="vp-label" id="vpLabel">desktop · 1180px</span>
+      <div class="page"><button class="btn btn-primary" id="openBtn">Open panel</button></div>
+
+      <div class="overlay" id="overlay"></div>
+      <aside class="sheet" role="dialog" aria-modal="true" aria-label="Panel">
+        <div class="head">
+          <div class="h-title">Main header</div>
+          <div class="h-sub">Supporting subtext line</div>
+          <button class="close" id="closeBtn" aria-label="Close">✕</button>
+        </div>
+        <div class="body">
+          <section class="acc open" data-acc>
+            <button class="acc-trigger" data-acc-trigger><span class="acc-title">Category 1</span><span class="acc-sp"></span><svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg></button>
+            <div class="acc-panel">
+              <div class="readonly"><div class="row"><span class="l">Label 1</span><span class="v">Value</span></div><div class="row"><span class="l">Label 2</span><span class="v">Value</span></div><div class="row"><span class="l">Label 3</span><span class="v">Value</span></div><div class="row"><span class="l">Label 4</span><span class="v">Value</span></div></div>
+              <div class="editable"><div class="field"><label>Label 1</label><input class="control" value="Value"></div></div>
+              <div class="editable"><div class="field"><label>Label 2</label><input class="control" value="Value"></div></div>
+              <div class="editable"><div class="field"><label>Label 3 <span class="opt">Optional</span></label><input class="control" value="Value"></div></div>
+              <div class="editable"><div class="field"><label>Label 4</label><input class="control" value="Value"></div></div>
+            </div>
+          </section>
+          <section class="acc open" data-acc>
+            <button class="acc-trigger" data-acc-trigger><span class="acc-title">Category 2</span><span class="acc-sp"></span><span class="acc-chip">Tag</span><svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg></button>
+            <div class="acc-panel">
+              <div class="readonly"><div class="row"><span class="l">Label 5</span><span class="v">Value</span></div><div class="row"><span class="l">Label 6</span><span class="v">Value</span></div><div class="row"><span class="l">Label 7</span><span class="v">Value</span></div></div>
+              <div class="editable"><div class="field"><label>Label 5</label><input class="control" value="Value"></div></div>
+              <div class="editable"><div class="field"><label>Label 6 <span class="opt">Optional</span></label><input class="control" value="Value"></div></div>
+              <div class="editable"><div class="field"><label>Label 7</label><input class="control" value="Value"></div></div>
+            </div>
+          </section>
+        </div>
+        <div class="foot"><button class="btn btn-secondary">Secondary</button><button class="btn btn-primary">Primary</button></div>
+      </aside>
+    </div>
+  </div>
+<script>
+  const device=document.getElementById('device'),vpLabel=document.getElementById('vpLabel');
+  const sizes={desktop:'1180px',tablet:'768px',mobile:'390px'};
+  document.getElementById('vp').addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;document.querySelectorAll('#vp button').forEach(x=>x.classList.remove('active'));b.classList.add('active');const v=b.dataset.vp;device.dataset.vp=v;vpLabel.textContent=v+' · '+sizes[v];});
+  document.getElementById('state').addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;document.querySelectorAll('#state button').forEach(x=>x.classList.remove('active'));b.classList.add('active');device.dataset.state=b.dataset.state;});
+  document.getElementById('openBtn').onclick=()=>device.classList.add('open');
+  document.getElementById('closeBtn').onclick=()=>device.classList.remove('open');
+  document.getElementById('overlay').onclick=()=>device.classList.remove('open');
+  document.querySelectorAll('[data-acc-trigger]').forEach(t=>t.onclick=()=>t.closest('[data-acc]').classList.toggle('open'));
+</script>
+</body>
+</html>
