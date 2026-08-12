@@ -1,0 +1,92 @@
+/* ============================================================
+   FIELD — Fronted DS · Components
+   Labelled input + states (default / focus / read-only / error /
+   disabled) and the configurator (+ Add field). Semantic tokens only.
+   ============================================================ */
+
+.ds-field { display: flex; flex-direction: column; gap: var(--p-space-1); margin-bottom: var(--p-space-4); }
+
+.ds-field__label {
+  font-family: var(--ds-font-ui); font-size: var(--p-text-sm); line-height: var(--p-lh-20);
+  font-weight: var(--p-weight-medium); color: var(--ds-color-text);
+  display: inline-flex; align-items: center; gap: var(--p-space-2);
+}
+.ds-field__opt, .ds-field__hint { font-size: var(--p-text-xs); font-weight: var(--p-weight-regular); color: var(--ds-color-text-muted); }
+
+/* control (input / select-look) */
+.ds-field__control {
+  font-family: var(--ds-font-ui); font-size: var(--p-text-sm); color: var(--ds-color-text);
+  height: var(--ds-input-h); box-sizing: border-box; width: 100%;
+  background: var(--ds-color-surface);
+  border: 1px solid var(--ds-color-border); border-radius: var(--ds-radius-input);
+  padding: 0 var(--p-space-3);
+  display: flex; align-items: center; gap: var(--p-space-2);
+  transition: border-color var(--p-dur-fast) var(--ds-ease), box-shadow var(--p-dur-fast) var(--ds-ease);
+  outline: none;
+}
+input.ds-field__control::placeholder, .ds-field__ph { color: var(--ds-color-text-muted); }
+.ds-field__control:hover { border-color: var(--ds-color-border-strong); }
+.ds-field__control:focus-visible, .ds-field__control.is-focus {
+  border-color: var(--ds-color-focus-ring);
+  outline: 2px solid var(--ds-color-focus-ring); outline-offset: 1px;
+}
+.ds-field__control.is-error { border-color: var(--ds-feedback-danger-border); color: var(--ds-feedback-danger-fg); }
+.ds-field__control.is-error:focus-visible, .ds-field__control.is-error.is-focus {
+  border-color: var(--ds-feedback-danger-solid); outline: 2px solid var(--ds-feedback-danger-solid); outline-offset: 1px;
+}
+
+/* disabled */
+.ds-field.is-disabled .ds-field__label { color: var(--ds-color-text-muted); }
+.ds-field__control:disabled, .ds-field.is-disabled .ds-field__control {
+  background: var(--ds-color-surface-sunken); color: var(--ds-color-text-muted);
+  border-color: var(--ds-color-border); cursor: not-allowed;
+}
+
+/* select-look container + native select */
+.ds-field__control--select { justify-content: space-between; cursor: pointer; }
+.ds-field__chev { width: 18px; height: 18px; color: var(--ds-color-text-muted); flex: 0 0 auto; }
+select.ds-field__control { display: block; cursor: pointer; }
+
+/* read-only / helper / error */
+.ds-field__value { font-family: var(--ds-font-ui); font-size: var(--p-text-sm); color: var(--ds-color-text); min-height: var(--ds-input-h); display: flex; align-items: center; }
+.ds-field__helper { font-size: var(--p-text-xs); line-height: var(--p-lh-16); color: var(--ds-color-text-muted); margin: 0; }
+.ds-field__error { font-size: var(--p-text-xs); line-height: var(--p-lh-16); color: var(--ds-feedback-danger-fg); margin: 0; }
+
+/* ---- configurator ---- */
+.ds-field-add {
+  display: inline-flex; align-items: center; gap: var(--p-space-2);
+  font-family: var(--ds-font-ui); font-size: var(--p-text-sm); font-weight: var(--p-weight-medium);
+  color: var(--ds-color-text-muted); cursor: pointer;
+  background: transparent; border: 1px dashed var(--ds-color-border-strong); border-radius: var(--ds-radius-input);
+  padding: var(--p-space-2) var(--p-space-4);
+  transition: border-color var(--p-dur-fast) var(--ds-ease), color var(--p-dur-fast) var(--ds-ease), background var(--p-dur-fast) var(--ds-ease);
+}
+.ds-field-add:hover { border-color: var(--ds-color-focus-ring); color: var(--ds-color-text); background: var(--ds-color-surface-sunken); }
+.ds-field-add:focus-visible { outline: 2px solid var(--ds-color-focus-ring); outline-offset: 2px; }
+.ds-field-add__plus { font-size: var(--p-text-base); line-height: 1; }
+
+.ds-field-config {
+  background: var(--ds-color-surface); border: 1px solid var(--ds-color-border);
+  border-radius: var(--ds-radius-card); padding: var(--p-space-4) var(--p-space-5);
+  max-width: 420px; box-shadow: var(--p-shadow-md);
+}
+.ds-field-config__title { font-family: var(--ds-font-ui); font-size: var(--p-text-sm); font-weight: var(--p-weight-semibold); color: var(--ds-color-text); margin-bottom: var(--p-space-3); }
+.ds-field-config .ds-field__label { margin-top: var(--p-space-3); margin-bottom: var(--p-space-1); }
+.ds-field-config .ds-field__label:first-of-type { margin-top: 0; }
+.ds-field-config .ds-field__control { margin-bottom: var(--p-space-1); }
+
+.ds-field-opt { display: flex; align-items: center; gap: var(--p-space-2); margin-bottom: var(--p-space-2); }
+.ds-field-opt .ds-field__control { margin-bottom: 0; }
+.ds-field-opt__del { background: transparent; border: 0; color: var(--ds-color-text-muted); cursor: pointer; font-size: var(--p-text-sm); padding: var(--p-space-1); line-height: 1; }
+.ds-field-opt__del:hover { color: var(--ds-feedback-danger-fg); }
+.ds-field-config__link { background: transparent; border: 0; color: var(--ds-color-focus-ring); font-family: var(--ds-font-ui); font-size: var(--p-text-xs); font-weight: var(--p-weight-medium); cursor: pointer; padding: var(--p-space-1) 0; }
+
+.ds-field-config__req { display: flex; align-items: center; justify-content: space-between; font-family: var(--ds-font-ui); font-size: var(--p-text-sm); color: var(--ds-color-text); border-top: 1px solid var(--ds-color-border); margin-top: var(--p-space-3); padding-top: var(--p-space-3); }
+.ds-field-config__foot { display: flex; justify-content: flex-end; gap: var(--p-space-2); margin-top: var(--p-space-4); }
+
+/* toggle */
+.ds-toggle { width: 38px; height: 22px; border-radius: var(--p-radius-pill); border: 0; background: var(--ds-color-border-strong); position: relative; cursor: pointer; padding: 0; flex: 0 0 auto; transition: background var(--p-dur-fast) var(--ds-ease); }
+.ds-toggle.is-on { background: var(--ds-feedback-info-solid); }
+.ds-toggle__knob { position: absolute; top: 3px; left: 3px; width: 16px; height: 16px; border-radius: 50%; background: var(--p-white); transition: left var(--p-dur-fast) var(--ds-ease); }
+.ds-toggle.is-on .ds-toggle__knob { left: 19px; }
+.ds-toggle:focus-visible { outline: 2px solid var(--ds-color-focus-ring); outline-offset: 2px; }

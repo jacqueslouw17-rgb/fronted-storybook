@@ -1,0 +1,346 @@
+diff --git a/src/Field.css b/src/Field.css
+new file mode 100644
+index 0000000..55d112a
+--- /dev/null
++++ b/src/Field.css
+@@ -0,0 +1,92 @@
++/* ============================================================
++   FIELD — Fronted DS · Components
++   Labelled input + states (default / focus / read-only / error /
++   disabled) and the configurator (+ Add field). Semantic tokens only.
++   ============================================================ */
++
++.ds-field { display: flex; flex-direction: column; gap: var(--p-space-1); margin-bottom: var(--p-space-4); }
++
++.ds-field__label {
++  font-family: var(--ds-font-ui); font-size: var(--p-text-sm); line-height: var(--p-lh-20);
++  font-weight: var(--p-weight-medium); color: var(--ds-color-text);
++  display: inline-flex; align-items: center; gap: var(--p-space-2);
++}
++.ds-field__opt, .ds-field__hint { font-size: var(--p-text-xs); font-weight: var(--p-weight-regular); color: var(--ds-color-text-muted); }
++
++/* control (input / select-look) */
++.ds-field__control {
++  font-family: var(--ds-font-ui); font-size: var(--p-text-sm); color: var(--ds-color-text);
++  height: var(--ds-input-h); box-sizing: border-box; width: 100%;
++  background: var(--ds-color-surface);
++  border: 1px solid var(--ds-color-border); border-radius: var(--ds-radius-input);
++  padding: 0 var(--p-space-3);
++  display: flex; align-items: center; gap: var(--p-space-2);
++  transition: border-color var(--p-dur-fast) var(--ds-ease), box-shadow var(--p-dur-fast) var(--ds-ease);
++  outline: none;
++}
++input.ds-field__control::placeholder, .ds-field__ph { color: var(--ds-color-text-muted); }
++.ds-field__control:hover { border-color: var(--ds-color-border-strong); }
++.ds-field__control:focus-visible, .ds-field__control.is-focus {
++  border-color: var(--ds-color-focus-ring);
++  outline: 2px solid var(--ds-color-focus-ring); outline-offset: 1px;
++}
++.ds-field__control.is-error { border-color: var(--ds-feedback-danger-border); color: var(--ds-feedback-danger-fg); }
++.ds-field__control.is-error:focus-visible, .ds-field__control.is-error.is-focus {
++  border-color: var(--ds-feedback-danger-solid); outline: 2px solid var(--ds-feedback-danger-solid); outline-offset: 1px;
++}
++
++/* disabled */
++.ds-field.is-disabled .ds-field__label { color: var(--ds-color-text-muted); }
++.ds-field__control:disabled, .ds-field.is-disabled .ds-field__control {
++  background: var(--ds-color-surface-sunken); color: var(--ds-color-text-muted);
++  border-color: var(--ds-color-border); cursor: not-allowed;
++}
++
++/* select-look container + native select */
++.ds-field__control--select { justify-content: space-between; cursor: pointer; }
++.ds-field__chev { width: 18px; height: 18px; color: var(--ds-color-text-muted); flex: 0 0 auto; }
++select.ds-field__control { display: block; cursor: pointer; }
++
++/* read-only / helper / error */
++.ds-field__value { font-family: var(--ds-font-ui); font-size: var(--p-text-sm); color: var(--ds-color-text); min-height: var(--ds-input-h); display: flex; align-items: center; }
++.ds-field__helper { font-size: var(--p-text-xs); line-height: var(--p-lh-16); color: var(--ds-color-text-muted); margin: 0; }
++.ds-field__error { font-size: var(--p-text-xs); line-height: var(--p-lh-16); color: var(--ds-feedback-danger-fg); margin: 0; }
++
++/* ---- configurator ---- */
++.ds-field-add {
++  display: inline-flex; align-items: center; gap: var(--p-space-2);
++  font-family: var(--ds-font-ui); font-size: var(--p-text-sm); font-weight: var(--p-weight-medium);
++  color: var(--ds-color-text-muted); cursor: pointer;
++  background: transparent; border: 1px dashed var(--ds-color-border-strong); border-radius: var(--ds-radius-input);
++  padding: var(--p-space-2) var(--p-space-4);
++  transition: border-color var(--p-dur-fast) var(--ds-ease), color var(--p-dur-fast) var(--ds-ease), background var(--p-dur-fast) var(--ds-ease);
++}
++.ds-field-add:hover { border-color: var(--ds-color-focus-ring); color: var(--ds-color-text); background: var(--ds-color-surface-sunken); }
++.ds-field-add:focus-visible { outline: 2px solid var(--ds-color-focus-ring); outline-offset: 2px; }
++.ds-field-add__plus { font-size: var(--p-text-base); line-height: 1; }
++
++.ds-field-config {
++  background: var(--ds-color-surface); border: 1px solid var(--ds-color-border);
++  border-radius: var(--ds-radius-card); padding: var(--p-space-4) var(--p-space-5);
++  max-width: 420px; box-shadow: var(--p-shadow-md);
++}
++.ds-field-config__title { font-family: var(--ds-font-ui); font-size: var(--p-text-sm); font-weight: var(--p-weight-semibold); color: var(--ds-color-text); margin-bottom: var(--p-space-3); }
++.ds-field-config .ds-field__label { margin-top: var(--p-space-3); margin-bottom: var(--p-space-1); }
++.ds-field-config .ds-field__label:first-of-type { margin-top: 0; }
++.ds-field-config .ds-field__control { margin-bottom: var(--p-space-1); }
++
++.ds-field-opt { display: flex; align-items: center; gap: var(--p-space-2); margin-bottom: var(--p-space-2); }
++.ds-field-opt .ds-field__control { margin-bottom: 0; }
++.ds-field-opt__del { background: transparent; border: 0; color: var(--ds-color-text-muted); cursor: pointer; font-size: var(--p-text-sm); padding: var(--p-space-1); line-height: 1; }
++.ds-field-opt__del:hover { color: var(--ds-feedback-danger-fg); }
++.ds-field-config__link { background: transparent; border: 0; color: var(--ds-color-focus-ring); font-family: var(--ds-font-ui); font-size: var(--p-text-xs); font-weight: var(--p-weight-medium); cursor: pointer; padding: var(--p-space-1) 0; }
++
++.ds-field-config__req { display: flex; align-items: center; justify-content: space-between; font-family: var(--ds-font-ui); font-size: var(--p-text-sm); color: var(--ds-color-text); border-top: 1px solid var(--ds-color-border); margin-top: var(--p-space-3); padding-top: var(--p-space-3); }
++.ds-field-config__foot { display: flex; justify-content: flex-end; gap: var(--p-space-2); margin-top: var(--p-space-4); }
++
++/* toggle */
++.ds-toggle { width: 38px; height: 22px; border-radius: var(--p-radius-pill); border: 0; background: var(--ds-color-border-strong); position: relative; cursor: pointer; padding: 0; flex: 0 0 auto; transition: background var(--p-dur-fast) var(--ds-ease); }
++.ds-toggle.is-on { background: var(--ds-feedback-info-solid); }
++.ds-toggle__knob { position: absolute; top: 3px; left: 3px; width: 16px; height: 16px; border-radius: 50%; background: var(--p-white); transition: left var(--p-dur-fast) var(--ds-ease); }
++.ds-toggle.is-on .ds-toggle__knob { left: 19px; }
++.ds-toggle:focus-visible { outline: 2px solid var(--ds-color-focus-ring); outline-offset: 2px; }
+diff --git a/src/Field.tsx b/src/Field.tsx
+new file mode 100644
+index 0000000..e72395a
+--- /dev/null
++++ b/src/Field.tsx
+@@ -0,0 +1,176 @@
++import * as React from "react";
++import { Button } from "./Button";
++import "./tokens.css";
++import "./Field.css";
++
++/**
++ * Field — Fronted DS · Components.
++ * A labelled input with states: default, focus, read-only, error, disabled.
++ * `FieldConfigurator` is the "+ Add field" flow: pick a type, label, value/
++ * options, required — then it renders as a real Field. Token-driven (--ds-*).
++ */
++
++export type FieldType =
++  | "text" | "number" | "amount" | "date" | "daterange"
++  | "time" | "select" | "boolean" | "file" | "country" | "email" | "phone";
++
++export const FIELD_TYPES: { value: FieldType; label: string }[] = [
++  { value: "text", label: "Text" },
++  { value: "number", label: "Number" },
++  { value: "amount", label: "Amount" },
++  { value: "date", label: "Date" },
++  { value: "daterange", label: "Date range" },
++  { value: "time", label: "Time" },
++  { value: "select", label: "Dropdown" },
++  { value: "boolean", label: "Yes / No" },
++  { value: "file", label: "File" },
++  { value: "country", label: "Country" },
++  { value: "email", label: "Email" },
++  { value: "phone", label: "Phone" },
++];
++
++export interface FieldProps {
++  label: string;
++  value?: string;
++  placeholder?: string;
++  type?: FieldType;
++  optional?: boolean;
++  helper?: string;
++  error?: string;
++  readOnly?: boolean;
++  disabled?: boolean;
++  options?: string[];
++  /** demo-only: show the focus ring without real focus (for stories) */
++  forceFocus?: boolean;
++}
++
++const nativeType = (t?: FieldType) =>
++  t === "number" || t === "amount" ? "number"
++  : t === "date" ? "date"
++  : t === "time" ? "time"
++  : t === "email" ? "email"
++  : t === "phone" ? "tel"
++  : "text";
++
++export function Field({
++  label, value, placeholder = "Placeholder", type = "text",
++  optional, helper, error, readOnly, disabled, options, forceFocus,
++}: FieldProps) {
++  const invalid = !!error;
++  const ctl = (extra = "") =>
++    "ds-field__control" + (invalid ? " is-error" : "") + (forceFocus ? " is-focus" : "") + extra;
++  return (
++    <div className={"ds-field" + (disabled ? " is-disabled" : "")}>
++      <label className="ds-field__label">
++        {label}
++        {optional ? <span className="ds-field__opt">Optional</span> : null}
++      </label>
++
++      {readOnly ? (
++        <div className="ds-field__value">{value || "—"}</div>
++      ) : type === "select" ? (
++        <div className={ctl(" ds-field__control--select")}>
++          <span className={value ? "" : "ds-field__ph"}>{value || (options && options[0]) || placeholder}</span>
++          <svg viewBox="0 0 24 24" className="ds-field__chev" fill="none" stroke="currentColor" strokeWidth={2}><path d="M6 9l6 6 6-6" /></svg>
++        </div>
++      ) : (
++        <input
++          className={ctl()}
++          type={nativeType(type)}
++          defaultValue={value}
++          placeholder={placeholder}
++          disabled={disabled}
++          aria-invalid={invalid || undefined}
++        />
++      )}
++
++      {error ? <p className="ds-field__error">{error}</p>
++        : helper ? <p className="ds-field__helper">{helper}</p> : null}
++    </div>
++  );
++}
++
++export interface FieldDraft {
++  type: FieldType;
++  label: string;
++  value?: string;
++  required: boolean;
++  options: string[];
++  helper?: string;
++}
++
++export function FieldConfigurator({ onAdd }: { onAdd?: (f: FieldDraft) => void }) {
++  const [open, setOpen] = React.useState(false);
++  const [type, setType] = React.useState<FieldType>("text");
++  const [label, setLabel] = React.useState("");
++  const [value, setValue] = React.useState("");
++  const [required, setRequired] = React.useState(false);
++  const [helper, setHelper] = React.useState("");
++  const [options, setOptions] = React.useState<string[]>(["", ""]);
++
++  const reset = () => { setType("text"); setLabel(""); setValue(""); setRequired(false); setHelper(""); setOptions(["", ""]); };
++  const cancel = () => { reset(); setOpen(false); };
++  const add = () => {
++    onAdd?.({ type, label: label || "Untitled field", value, required, options: options.filter(Boolean), helper });
++    cancel();
++  };
++
++  if (!open) {
++    return (
++      <button className="ds-field-add" onClick={() => setOpen(true)}>
++        <span className="ds-field-add__plus">+</span> Add field
++      </button>
++    );
++  }
++
++  return (
++    <div className="ds-field-config" role="group" aria-label="Configure new field">
++      <div className="ds-field-config__title">New field</div>
++
++      <label className="ds-field__label">Type</label>
++      <select className="ds-field__control ds-field__native-select" value={type} onChange={(e) => setType(e.target.value as FieldType)}>
++        {FIELD_TYPES.map((t) => <option key={t.value} value={t.value}>{t.label}</option>)}
++      </select>
++
++      <label className="ds-field__label">Label</label>
++      <input className="ds-field__control" value={label} placeholder="e.g. Leave type" onChange={(e) => setLabel(e.target.value)} />
++
++      {type === "select" ? (
++        <>
++          <label className="ds-field__label">Options <span className="ds-field__hint">(dropdown only)</span></label>
++          {options.map((o, i) => (
++            <div className="ds-field-opt" key={i}>
++              <input className="ds-field__control" value={o} placeholder={"Option " + (i + 1)} onChange={(e) => {
++                const next = [...options]; next[i] = e.target.value; setOptions(next);
++              }} />
++              <button className="ds-field-opt__del" aria-label="Remove option" onClick={() => setOptions(options.filter((_, j) => j !== i))}>&#10005;</button>
++            </div>
++          ))}
++          <button className="ds-field-config__link" onClick={() => setOptions([...options, ""])}>+ Add option</button>
++        </>
++      ) : (
++        <>
++          <label className="ds-field__label">Default value <span className="ds-field__hint">(optional)</span></label>
++          <input className="ds-field__control" value={value} placeholder="Placeholder" onChange={(e) => setValue(e.target.value)} />
++        </>
++      )}
++
++      <label className="ds-field__label">Helper text <span className="ds-field__hint">(optional)</span></label>
++      <input className="ds-field__control" value={helper} placeholder="Shown under the field" onChange={(e) => setHelper(e.target.value)} />
++
++      <div className="ds-field-config__req">
++        <span>Required</span>
++        <button role="switch" aria-checked={required} className={"ds-toggle" + (required ? " is-on" : "")} onClick={() => setRequired(!required)}>
++          <span className="ds-toggle__knob" />
++        </button>
++      </div>
++
++      <div className="ds-field-config__foot">
++        <Button variant="secondary" size="sm" shape="rounded" onClick={cancel}>Cancel</Button>
++        <Button variant="primary" size="sm" shape="rounded" onClick={add}>Add field</Button>
++      </div>
++    </div>
++  );
++}
++
++export default Field;
+diff --git a/src/Fields.stories.tsx b/src/Fields.stories.tsx
+new file mode 100644
+index 0000000..75c7899
+--- /dev/null
++++ b/src/Fields.stories.tsx
+@@ -0,0 +1,60 @@
++import * as React from "react";
++import type { Meta, StoryObj } from "@storybook/react";
++import { Field, FieldConfigurator, type FieldDraft } from "./Field";
++import "./tokens.css";
++import "./typography.css";
++
++/**
++ * Components — Fields.
++ * Input field states + the Configure ("+ Add field") flow.
++ * Consumes the SEMANTIC token layer only (--ds-*), like Button.
++ */
++const meta: Meta = { title: "Components/Fields", parameters: { layout: "padded" } };
++export default meta;
++type Story = StoryObj;
++
++const wrap: React.CSSProperties = { fontFamily: "var(--ds-font-body)", color: "var(--ds-color-text)", maxWidth: 760 };
++
++export const Fields: Story = {
++  name: "Fields",
++  render: () => (
++    <div style={wrap}>
++      <h2 className="ds-h2" style={{ marginBottom: "var(--p-space-1)" }}>Fields</h2>
++      <p className="ds-body" style={{ marginBottom: "var(--p-space-6)" }}>
++        Input field states — same token layer as Button. Focus is shown forced for the grid;
++        real inputs get the ring on <code>:focus-visible</code>.
++      </p>
++      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))", gap: "var(--p-space-6)" }}>
++        <Field label="Default" value="Value" />
++        <Field label="Focus" value="Value" forceFocus />
++        <Field label="Read only" value="Value" readOnly />
++        <Field label="Error" value="Value" error="This field is required" />
++        <Field label="Disabled" value="Value" disabled />
++        <Field label="Email" type="email" placeholder="name@company.com" helper="Used only for payslips." optional />
++      </div>
++    </div>
++  ),
++};
++
++export const Configure: Story = {
++  render: () => {
++    const Demo = () => {
++      const [fields, setFields] = React.useState<FieldDraft[]>([]);
++      return (
++        <div style={{ ...wrap, maxWidth: 460 }}>
++          <h2 className="ds-h2" style={{ marginBottom: "var(--p-space-1)" }}>Configure a field</h2>
++          <p className="ds-body" style={{ marginBottom: "var(--p-space-5)" }}>
++            Click <strong>Add field</strong>, choose a type and fill it in — it renders above the button.
++          </p>
++          {fields.map((f, i) => (
++            <Field key={i} label={f.label} type={f.type} optional={!f.required}
++              value={f.value} options={f.options} helper={f.helper}
++              placeholder={f.options[0] || "Value"} />
++          ))}
++          <FieldConfigurator onAdd={(f) => setFields((x) => [...x, f])} />
++        </div>
++      );
++    };
++    return <Demo />;
++  },
++};
