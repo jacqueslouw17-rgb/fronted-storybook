@@ -53,21 +53,19 @@ const SECTION_UNLOCKED_AT: Record<SectionKey, Stage> = {
 const at = (stage: Stage, min: Stage) => STAGE_ORDER.indexOf(stage) >= STAGE_ORDER.indexOf(min);
 const unlocked = (s: SectionKey, stage: Stage) => at(stage, SECTION_UNLOCKED_AT[s]);
 
-/* ── Section card — SectionCard from the drawer (edit mode forces open) ── */
+/* ── Section card — verbatim from SectionAccordion (shared) ── */
 function SectionCard({ title, badge, headerAction, open, children }: { title: string; badge?: React.ReactNode; headerAction?: React.ReactNode; open?: boolean; children: React.ReactNode }) {
   return (
-    <div className="rounded-xl border border-border/60 bg-card/50 overflow-hidden">
-      <div className="flex items-center justify-between gap-2 px-5 py-3">
-        <div className="flex items-center gap-2 min-w-0">
-          <h3 className="text-sm font-medium text-foreground leading-tight truncate">{title}</h3>
-          {badge}
+    <div className="rounded-xl border border-border/30 bg-card/20 overflow-hidden transition-all">
+      <button className="w-full flex items-center gap-3 px-4 py-3 text-left group transition-colors hover:bg-card/40 cursor-pointer">
+        <div className="flex-1 min-w-0">
+          <p className="text-sm font-medium text-foreground leading-tight">{title}</p>
         </div>
-        <div className="flex items-center gap-2 shrink-0">
-          {headerAction}
-          <ChevronDown className={cn("h-4 w-4 text-muted-foreground transition-transform", open && "rotate-180")} />
-        </div>
-      </div>
-      {open && <div className="px-5 pb-4">{children}</div>}
+        {badge}
+        {headerAction && <div>{headerAction}</div>}
+        <ChevronDown className={cn("h-4 w-4 text-muted-foreground/60 shrink-0 transition-transform duration-200", open && "rotate-180")} />
+      </button>
+      {open && <div className="border-t border-border/20"><div className="p-4 pt-3 space-y-3">{children}</div></div>}
     </div>
   );
 }
@@ -110,12 +108,12 @@ function DetailRow({ label, value }: { label: string; value?: string }) {
   );
 }
 
-/* ── Editable field — DetailRow (edit mode) ── */
+/* ── Editable field — verbatim DetailRow (edit mode): Label + Input h-10 ── */
 function EditRow({ label, value }: { label: string; value: string }) {
   return (
-    <div className="py-1.5">
-      <label className="text-[11px] text-muted-foreground mb-1 block">{label}</label>
-      <input readOnly defaultValue={value} className="w-full h-9 rounded-md border border-input bg-background px-3 text-sm text-foreground" />
+    <div className="space-y-1.5 py-1.5">
+      <label className="text-xs font-medium text-foreground/75">{label}</label>
+      <input readOnly defaultValue={value} className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm text-foreground" />
     </div>
   );
 }
@@ -245,9 +243,10 @@ function WorkerDrawer({ stage, edit = false }: { stage: Stage; edit?: boolean })
             {stage !== "onboarding-pending" && (unlocked("documents", stage) ? (
               <SectionCard title="Documents" open={edit || true} badge={!edit ? <Badge variant="outline" className="text-[10px] px-1.5 py-0 h-4 bg-accent-green-fill/10 text-accent-green-text border-accent-green-outline/20">Verified</Badge> : undefined}>
                 <div className="space-y-2">
-                  <DocumentRow name="Employment agreement" status="verified" fileName="Maria_Santos_Agreement_Signed.pdf" />
-                  <DocumentRow name="Identity document" status="verified" fileName="Maria_Santos_ID.pdf" />
-                  <DocumentRow name="Tax form" status="verified" fileName="Maria_Santos_Tax_Form.pdf" />
+                  <DocumentRow name="Employment agreement" status="verified" fileName="Maria_Agreement_Signed.pdf" />
+                  <DocumentRow name="Identity document" status="verified" fileName="Maria_ID_doc.pdf" />
+                  <DocumentRow name="Proof of address" status="verified" fileName="Maria_Proof_of_Address.pdf" />
+                  <DocumentRow name="Tax form" status="verified" fileName="Maria_Tax_Form.pdf" />
                 </div>
               </SectionCard>
             ) : <LockedSectionRow title="Documents" unlockedAt={STAGE_LABEL[SECTION_UNLOCKED_AT.documents]} />)}
