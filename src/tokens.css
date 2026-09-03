@@ -79,6 +79,7 @@
      Every line-height is a multiple of 4px → shares the spacing baseline grid. */
   --p-font-display: "Clash Display", "Inter", Arial, "Helvetica Neue", sans-serif;
   --p-font-sans:    "Inter", Arial, "Helvetica Neue", Helvetica, sans-serif;
+  --p-font-system:  ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; /* interim component font */
   --p-font-mono:    ui-monospace, "SF Mono", "JetBrains Mono", Menlo, Consolas, monospace;
 
   /* size ramp */
@@ -167,20 +168,24 @@
   --ds-color-focus-ring: var(--p-teal-500);
   --ds-color-backdrop:   rgba(15,16,17,.55);   /* neutral scrim */
 
-  /* action — primary (yellow pill) with states */
+  /* action — primary (yellow pill) with states.
+     --ds-action-primary-bg is the button SURFACE (can be a gradient per theme);
+     --ds-color-primary is a SOLID primary for background-color / accents. */
+  --ds-color-primary:            var(--p-yellow-300);
+  --ds-color-primary-fg:         var(--p-black);
   --ds-action-primary-bg:        var(--p-yellow-300);
   --ds-action-primary-bg-hover:  var(--p-yellow-400);
   --ds-action-primary-bg-active: var(--p-yellow-500);
   --ds-action-primary-fg:        var(--p-black);
   --ds-action-primary-radius:    var(--p-radius-pill);
 
-  /* action — secondary (ghost: transparent → dark fill on hover) */
+  /* action — secondary (bordered surface). Fronted = calm light-tint hover, text unchanged. */
   --ds-action-secondary-bg:        transparent;
-  --ds-action-secondary-bg-hover:  var(--p-neutral-900);
-  --ds-action-secondary-bg-active: var(--p-neutral-950);
+  --ds-action-secondary-bg-hover:  var(--ds-color-surface-sunken);
+  --ds-action-secondary-bg-active: var(--p-neutral-200);
   --ds-action-secondary-fg:        var(--p-neutral-900);
-  --ds-action-secondary-fg-hover:  var(--p-white);
-  --ds-action-secondary-border:    transparent;
+  --ds-action-secondary-fg-hover:  var(--ds-color-text);
+  --ds-action-secondary-border:    var(--ds-color-border);
 
   /* feedback (bg / fg / border / solid) — fg picked for AA on bg */
   --ds-feedback-success-bg: var(--p-green-50);  --ds-feedback-success-fg: var(--p-green-700);  --ds-feedback-success-border: var(--p-green-200);  --ds-feedback-success-solid: var(--p-green-600);
@@ -224,4 +229,60 @@
   --ds-radius-pill: var(--p-radius-pill);
   --ds-sheet-w: 576px;
   --ds-font-sans: var(--p-font-sans);
+}
+
+/* ============================================================
+   THEMES — same semantic roles, different brand values.
+   Components consume --ds-* only, so flipping data-theme
+   re-skins the whole system with no component changes.
+   :root (above) = "fronted" (real brand identity).
+   [data-theme="interim"] = the interim launch look (blue→purple
+   gradient, 8px controls, system font for components) captured from
+   the flows. Interim is the DEFAULT we launch with; headings stay on
+   the Fronted display font so we align typography as we go.
+   ============================================================ */
+[data-theme="interim"] {
+  /* typography — system font for components; content headings keep Fronted's Clash Display */
+  --ds-font-body: var(--p-font-system);
+  --ds-font-ui:   var(--p-font-system);
+
+  /* neutrals */
+  --ds-color-text:           #171717;
+  --ds-color-text-strong:    #171717;
+  --ds-color-heading:        #171717;
+  --ds-color-text-muted:     #737373;
+  --ds-color-border:         #E6E6E6;
+  --ds-color-border-strong:  #CACBCF;
+  --ds-color-bg:             #FCFCFC;
+  --ds-color-surface:        #FFFFFF;
+  --ds-color-surface-sunken: #F5F5F5;
+  --ds-color-surface-muted:  #F5F5F5;
+
+  /* brand accent surface (soft blue wash) */
+  --ds-color-surface-accent:       #EEF4FE;
+  --ds-color-surface-accent-hover: #DCEBFE;
+
+  /* secondary hover — Interim keeps the demo's dark-fill + inverted-text hover */
+  --ds-action-secondary-bg-hover: var(--ds-color-text);
+  --ds-action-secondary-fg-hover: var(--ds-color-bg);
+
+  /* focus ring — the demo uses a DARK ring (foreground), not a brand colour */
+  --ds-color-focus-ring: #171717;
+  --ds-color-primary:    #2563EB;
+  --ds-color-primary-fg: #FAFAFA;
+
+  /* primary action — exact demo blue→purple gradient, 8px, near-white text */
+  --ds-action-primary-bg:        linear-gradient(135deg, #2563EB 0%, #7C3AED 100%);
+  --ds-action-primary-bg-hover:  linear-gradient(135deg, #2563EB 0%, #7C3AED 100%);
+  --ds-action-primary-bg-active: linear-gradient(135deg, #1E56D6 0%, #6E2FE0 100%);
+  --ds-action-primary-fg:        #FAFAFA;
+  --ds-action-primary-radius:    8px;
+  --ds-radius-button: 8px;
+  --ds-radius-chip:   9999px;   /* demo badges are full pills, not 8px */
+
+  /* feedback */
+  --ds-feedback-success-solid: #008566; --ds-feedback-success-bg: #D7F9E9; --ds-feedback-success-fg: #00654E; --ds-feedback-success-border: #A7E8D0;
+  --ds-feedback-warning-solid: #B86405; --ds-feedback-warning-bg: #FDF7C4; --ds-feedback-warning-fg: #8A4B03; --ds-feedback-warning-border: #F5D98A;
+  --ds-feedback-danger-solid:  #DC2626; --ds-feedback-danger-bg:  #FEE2E2; --ds-feedback-danger-fg:  #B91C1C; --ds-feedback-danger-border:  #FCA5A5;
+  --ds-feedback-info-solid:    #2463EB; --ds-feedback-info-bg:    #EEF4FE; --ds-feedback-info-fg:    #1147BB; --ds-feedback-info-border:    #BFD4FB;
 }

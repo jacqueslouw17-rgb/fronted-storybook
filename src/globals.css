@@ -1,0 +1,218 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Custom elevation utilities — defined plainly (not via Tailwind's boxShadow theme
+   key) so the computed box-shadow has no ring-composition prefix and matches the
+   live flows byte-for-byte. */
+.shadow-subtle { box-shadow: var(--shadow-subtle); }
+.shadow-card { box-shadow: var(--shadow-card); }
+.shadow-elevated { box-shadow: var(--shadow-elevated); }
+.shadow-overlay { box-shadow: var(--shadow-overlay); }
+/* rebuild trigger: badge input textarea card checkbox workercard preflight select label tooltip avatar switch separator progress tabs collapsible skeleton radio emphasis alert popover dropdown dialog alertdialog sheet command calendar */
+
+@layer base {
+  /* Preflight is disabled to protect the existing CSS components, but Tailwind's
+     ring / shadow / transform / filter utilities depend on these --tw-* defaults
+     that normally ship inside preflight. Re-declare them here (without the reset)
+     so focus rings, shadows and hover brightness render correctly. */
+  *,
+  ::before,
+  ::after {
+    --tw-border-spacing-x: 0;
+    --tw-border-spacing-y: 0;
+    --tw-translate-x: 0;
+    --tw-translate-y: 0;
+    --tw-rotate: 0;
+    --tw-skew-x: 0;
+    --tw-skew-y: 0;
+    --tw-scale-x: 1;
+    --tw-scale-y: 1;
+    --tw-pan-x: ;
+    --tw-pan-y: ;
+    --tw-pinch-zoom: ;
+    --tw-scroll-snap-strictness: proximity;
+    --tw-gradient-from-position: ;
+    --tw-gradient-via-position: ;
+    --tw-gradient-to-position: ;
+    --tw-ordinal: ;
+    --tw-slashed-zero: ;
+    --tw-numeric-figure: ;
+    --tw-numeric-spacing: ;
+    --tw-numeric-fraction: ;
+    --tw-ring-inset: ;
+    --tw-ring-offset-width: 0px;
+    --tw-ring-offset-color: #fff;
+    --tw-ring-color: rgb(59 130 246 / 0.5);
+    --tw-ring-offset-shadow: 0 0 #0000;
+    --tw-ring-shadow: 0 0 #0000;
+    --tw-shadow: 0 0 #0000;
+    --tw-shadow-colored: 0 0 #0000;
+    --tw-blur: ;
+    --tw-brightness: ;
+    --tw-contrast: ;
+    --tw-grayscale: ;
+    --tw-hue-rotate: ;
+    --tw-invert: ;
+    --tw-saturate: ;
+    --tw-sepia: ;
+    --tw-drop-shadow: ;
+    --tw-backdrop-blur: ;
+    --tw-backdrop-brightness: ;
+    --tw-backdrop-contrast: ;
+    --tw-backdrop-grayscale: ;
+    --tw-backdrop-hue-rotate: ;
+    --tw-backdrop-invert: ;
+    --tw-backdrop-opacity: ;
+    --tw-backdrop-saturate: ;
+    --tw-backdrop-sepia: ;
+  }
+
+  /* Border + form-control resets normally supplied by preflight.
+     Without these, Tailwind's `border` utility (which only sets width) leaves
+     the browser's default `outset`/`inset` bevel, and native buttons/inputs keep
+     their UA appearance — producing offset-rectangle outlines everywhere. */
+  *,
+  ::before,
+  ::after {
+    box-sizing: border-box;
+    border-width: 0;
+    border-style: solid;
+    border-color: var(--ds-color-border);
+  }
+
+  button,
+  [type="button"],
+  [type="reset"],
+  [type="submit"] {
+    -webkit-appearance: button;
+    background-color: transparent;
+    background-image: none;
+  }
+
+  button,
+  input,
+  optgroup,
+  select,
+  textarea {
+    font-family: inherit;
+    font-size: 100%;
+    font-weight: inherit;
+    line-height: inherit;
+    color: inherit;
+    margin: 0;
+    padding: 0;
+  }
+
+  /* Preflight margin reset (preflight is disabled) — headings, p, hr, etc. → 0,
+     so text sits tight exactly as in the flows. Utility margins still override. */
+  blockquote, dl, dd, h1, h2, h3, h4, h5, h6, hr, figure, p, pre {
+    margin: 0;
+  }
+
+  /* App base — body font-size 15px (--text-base) + smoothing, matching the
+     flows, so inherited text sizes and line-height multipliers line up. */
+  body {
+    font-size: 15px;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  /* ----------------------------------------------------------------
+     shadcn/ui theme vars — HSL TRIPLETS (space-separated) so Tailwind
+     opacity utilities (bg-foreground/8, bg-primary/10, text-foreground/70)
+     resolve to hsl(var(--x) / <alpha>). This is what makes the demo's
+     tinted Badge / Select / Button render correctly.
+       :root                  = Fronted brand (the destination)
+       [data-theme="interim"] = the interim launch look (demo-exact values)
+     Components consume these; flipping data-theme re-skins everything.
+     ---------------------------------------------------------------- */
+  :root, [data-theme="fronted"] {
+    --background: 240 20% 98%;
+    --foreground: 0 0% 12%;
+    --card: 0 0% 100%;
+    --card-foreground: 0 0% 12%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 0 0% 12%;
+
+    --primary: 46 96% 82%;            /* yellow pill — FILL / OUTLINE only */
+    --primary-foreground: 0 0% 0%;    /* black ink on gold */
+    /* Yellow fails as a text colour on light (1.x:1). Emphasis / link / active
+       TEXT + icons use this dark-grey ink instead; yellow stays for fills, tints
+       and borders. In interim this equals --primary (blue) so text is unchanged. */
+    --primary-emphasis: 0 0% 20%;     /* dark grey ink for text/icons */
+    --secondary: 0 0% 97%;
+    --secondary-foreground: 0 0% 12%;
+    --muted: 0 0% 97%;
+    --muted-foreground: 220 9% 46%;
+    --accent: 183 53% 28%;            /* brand teal */
+    --accent-foreground: 0 0% 98%;
+    --destructive: 2 56% 49%;
+    --destructive-foreground: 0 0% 98%;
+
+    --border: 0 0% 89%;
+    --input: 0 0% 89%;
+    --ring: 183 53% 28%;              /* teal focus ring */
+    --radius: 8px;
+
+    --gradient-primary: linear-gradient(135deg, hsl(46 96% 82%) 0%, hsl(45 94% 74%) 100%);
+  }
+
+  [data-theme="interim"] {
+    --background: 0 0% 99%;
+    --foreground: 0 0% 9%;
+    --card: 0 0% 100%;
+    --card-foreground: 0 0% 9%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 0 0% 9%;
+
+    --primary: 221 83% 53%;           /* rich blue */
+    --primary-foreground: 0 0% 98%;
+    --primary-emphasis: 221 83% 53%;  /* interim: emphasis text = blue (unchanged) */
+    --secondary: 262 83% 58%;         /* purple */
+    --secondary-foreground: 0 0% 98%;
+    --muted: 0 0% 97%;
+    --muted-foreground: 0 0% 45%;
+    --accent: 142 76% 36%;            /* emerald */
+    --accent-foreground: 0 0% 98%;
+    --destructive: 0 72% 51%;
+    --destructive-foreground: 0 0% 98%;
+
+    --border: 0 0% 90%;
+    --input: 0 0% 90%;
+    --ring: 0 0% 9%;                  /* dark ring — demo uses foreground */
+    --radius: 8px;
+
+    --gradient-primary: linear-gradient(135deg, hsl(221 83% 53%) 0%, hsl(262 83% 58%) 100%);
+  }
+
+  /* Soft Accent System (Stripe-inspired) — the fill/outline/text triples the
+     flows use for status & role badges. Same across themes. */
+  :root {
+    --accent-green-outline: 166 100% 26%;  --accent-green-fill: 152 76% 91%;  --accent-green-text: 164 100% 19%;
+    --accent-yellow-outline: 32 95% 37%;   --accent-yellow-fill: 54 92% 88%;  --accent-yellow-text: 32 95% 31%;
+    /* amber — the flows reference accent-amber (verification/warning) but the app never
+       defines it; completing the Soft Accent set here (Tailwind amber 100/600/800). */
+    --accent-amber-outline: 32 95% 44%;    --accent-amber-fill: 48 96% 89%;   --accent-amber-text: 26 90% 37%;
+    --accent-blue-outline: 221 83% 40%;    --accent-blue-fill: 214 95% 93%;   --accent-blue-text: 221 83% 32%;
+    --accent-purple-outline: 262 83% 41%;  --accent-purple-fill: 262 90% 96%; --accent-purple-text: 262 73% 35%;
+
+    /* Semantic success/warning — success is in the app (142 71% 45%); warning is
+       referenced (bg-warning/8) but undefined there, so completed here (amber-500). */
+    --success: 142 71% 45%;   --success-foreground: 0 0% 98%;
+    --warning: 38 92% 50%;    --warning-foreground: 0 0% 98%;
+
+    /* Elevation — Stripe-inspired shadow scale (used by cards / popovers / sheets) */
+    --shadow-subtle: 0 1px 2px 0 hsl(0 0% 0% / 0.05);
+    --shadow-card: 0 1px 3px 0 hsl(0 0% 0% / 0.1), 0 1px 2px 0 hsl(0 0% 0% / 0.06);
+    --shadow-elevated: 0 4px 6px -1px hsl(0 0% 0% / 0.1), 0 2px 4px -1px hsl(0 0% 0% / 0.06);
+    --shadow-overlay: 0 10px 15px -3px hsl(0 0% 0% / 0.1), 0 4px 6px -2px hsl(0 0% 0% / 0.05);
+  }
+}
+/* badge raw colors: blue-100 amber-100 emerald-100 accent-green-text/15 */
+/* patterns: border-dashed bg-gradient-to-br via-secondary accent tag chip */
+/* accent-amber: bg-accent-amber-fill text-accent-amber-text border-accent-amber-outline */
+/* table amber count badge: bg-amber-500 text-accent-amber-text */
+/* segmented + members: bg-accent-amber-fill/30 rounded-sm p-0.5 */
+/* contract highlight: bg-yellow-100 */
+/* signing success/warning + orange pending: bg-success/5 text-success bg-warning bg-orange-100 font-mono */

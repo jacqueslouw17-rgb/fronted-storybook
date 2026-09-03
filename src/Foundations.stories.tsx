@@ -1,5 +1,7 @@
 import * as React from "react";
 import type { Meta, StoryObj } from "@storybook/react";
+import { ChevronDown, Pencil, Trash2, X, ListPlus, type LucideIcon } from "lucide-react";
+import { PageHeader } from "./_docTable";
 import "./tokens.css";
 import "./typography.css";
 
@@ -76,18 +78,65 @@ function Feedback({ kind, label }: { kind: string; label: string }) {
   );
 }
 
+/* Theme-reactive brand roles — these read live --ds-* tokens, so the whole block
+   flips when you switch Theme in the toolbar (First Launch = blue, Fronted = yellow). */
+function BrandTile({ label, role, bg, fg = "var(--ds-color-text)", ring }: { label: string; role: string; bg: string; fg?: string; ring?: boolean }) {
+  return (
+    <div style={card}>
+      <div style={{ height: 72, background: bg, display: "flex", alignItems: "flex-end", padding: 8,
+                    outline: ring ? "3px solid var(--ds-color-focus-ring)" : "none", outlineOffset: -6 }}>
+        <span style={{ fontSize: 11, fontWeight: 700, color: fg, background: "rgba(255,255,255,.75)", borderRadius: 4, padding: "1px 5px" }}>{role}</span>
+      </div>
+      <div style={{ padding: "7px 10px", borderTop: "1px solid var(--ds-color-border)" }}>
+        <div style={{ fontSize: 12, fontWeight: 600 }}>{label}</div>
+      </div>
+    </div>
+  );
+}
+
+function BrandHero() {
+  return (
+    <div style={{ border: "1px solid var(--ds-color-border)", borderRadius: 16, overflow: "hidden", marginBottom: 4 }}>
+      <div style={{ padding: "12px 16px", background: "var(--ds-color-surface-accent)", borderBottom: "1px solid var(--ds-color-border)", display: "flex", alignItems: "center", justifyContent: "space-between", flexWrap: "wrap", gap: 8 }}>
+        <strong style={{ fontSize: 13 }}>Brand roles — reflect the active theme</strong>
+        <span style={mono}>switch Theme in the toolbar ↑ to flip these</span>
+      </div>
+      <div style={{ padding: 16 }}>
+        <div style={grid(150)}>
+          <BrandTile label="Primary action" role="--ds-action-primary-bg" bg="var(--ds-action-primary-bg)" />
+          <BrandTile label="Primary solid" role="--ds-color-primary" bg="var(--ds-color-primary)" />
+          <BrandTile label="Accent surface" role="--ds-color-surface-accent" bg="var(--ds-color-surface-accent)" />
+          <BrandTile label="Focus ring" role="--ds-color-focus-ring" bg="var(--ds-color-surface)" ring />
+        </div>
+        <div style={{ display: "flex", alignItems: "center", gap: 14, flexWrap: "wrap", marginTop: 16 }}>
+          <button style={{ height: 38, padding: "0 18px", borderRadius: "var(--ds-radius-button)", background: "var(--ds-action-primary-bg)", color: "var(--ds-action-primary-fg)", fontFamily: "var(--ds-font-ui)", fontSize: 14, fontWeight: 500, border: "none" }}>Primary button</button>
+          <span style={{ fontSize: 13, padding: "3px 10px", borderRadius: 999, background: "var(--ds-color-surface-accent)", color: "var(--ds-color-text)", border: "1px solid var(--ds-color-border)" }}>Accent chip</span>
+          <span style={mono}>First Launch → blue · Fronted Brand → yellow</span>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 export const Colors: Story = {
   render: () => (
     <div style={wrap}>
-      <h2 className="ds-h2" style={{ marginBottom: 6 }}>Color</h2>
-      <p className="ds-body" style={{ marginBottom: 6 }}>One ramp per hue (50→900). <b style={{ outline: "2px solid var(--ds-color-heading)", outlineOffset: 1, padding: "0 4px", borderRadius: 3 }}>Outlined</b> shades are the exact steps referenced by a token (semantic, action or feedback) — the rest are reserve.</p>
+      <PageHeader
+        category="Foundations"
+        title="Color"
+        lead={<>Two layers. <b>Brand roles</b> are assigned per theme and <b>swap</b> when you change Theme — primary is blue in First Launch, yellow in Fronted Brand. The <b>palette</b> beneath is a fixed reference: the same raw ramps in both themes.</>}
+        meta="Brand roles read live --ds-* tokens · palette = raw --p-* ramps"
+      />
 
-      <h3 style={{ ...eyebrow, marginTop: 10 }}>Ramps</h3>
+      <BrandHero />
+
+      <h3 style={{ ...eyebrow, marginTop: 22 }}>Palette — fixed reference (same in both themes)</h3>
+      <p style={{ fontSize: 13, color: "var(--ds-color-text-muted)", margin: "0 0 12px", maxWidth: 700 }}>One ramp per hue (50→900). <b style={{ outline: "2px solid var(--ds-color-heading)", outlineOffset: 1, padding: "0 4px", borderRadius: 3 }}>Outlined</b> shades are steps a token references; the rest are reserve. Hue → role is assigned by the active theme above, not fixed here.</p>
       <Ramp name="Neutral" family="neutral" stops={NEUTRAL} />
-      <Ramp name="Yellow — primary" family="yellow" stops={YELLOW} />
-      <Ramp name="Teal — brand / ink" family="teal" stops={TEAL} />
-      <Ramp name="Green — success" family="green" stops={GREEN} />
-      <Ramp name="Rose — danger" family="rose" stops={ROSE} />
+      <Ramp name="Yellow" family="yellow" stops={YELLOW} />
+      <Ramp name="Teal" family="teal" stops={TEAL} />
+      <Ramp name="Green" family="green" stops={GREEN} />
+      <Ramp name="Rose" family="rose" stops={ROSE} />
 
       <h3 style={eyebrow}>Semantic — text, surface &amp; border</h3>
       <p style={{ fontSize: 13, color: "var(--ds-color-text)", margin: "0 0 12px", maxWidth: 680 }}>
@@ -167,10 +216,12 @@ const TYPE: TypeRow[] = [
 export const Typography: Story = {
   render: () => (
     <div style={wrap}>
-      <h2 className="ds-h2" style={{ marginBottom: 6 }}>Typography</h2>
-      <p className="ds-body" style={{ marginBottom: 8, maxWidth: 720 }}>
-        Modular scale (base 16) — tightens for body, widens toward display. Two typefaces, by role: <b>Clash Display</b> for content headings only (display, H1–H6); <b>Inter</b> for all product &amp; component text — body, labels, inputs, placeholders, buttons, even component headers. Clash is expressive at large sizes; Inter stays legible at UI sizes.
-      </p>
+      <PageHeader
+        category="Foundations"
+        title="Typography"
+        lead={<>Modular scale (base 16) — tightens for body, widens toward display. Two typefaces, by role: <b>Clash Display</b> for content headings only (display, H1–H6); <b>Inter</b> for all product &amp; component text — body, labels, inputs, placeholders, buttons, even component headers.</>}
+        meta="Every line-height is a multiple of 4px → text sits on the baseline grid"
+      />
       <div style={{ display: "flex", flexWrap: "wrap", gap: "6px 18px", margin: "0 0 12px" }}>
         {[
           ["Regular 400", "body, placeholders"],
@@ -252,11 +303,12 @@ export const SpacingAndRadii: Story = {
     const srow: React.CSSProperties = { display: "grid", gridTemplateColumns: "84px 44px 1fr", gap: 14, alignItems: "center", padding: "5px 0" };
     return (
       <div style={wrap}>
-        <h2 className="ds-h2" style={{ marginBottom: 6 }}>Spacing &amp; Radii</h2>
-        <p className="ds-body" style={{ marginBottom: 4, maxWidth: 720 }}>
-          One <b>4px base grid</b> drives every gap, inset and line-height. Token index = px ÷ 4 (the <code>0-5</code> micro step = 2px). Tight steps (0→6) handle component insets; the wider jumps (7→32) handle layout rhythm.
-        </p>
-        <p style={{ ...mono, marginBottom: 18 }}>Same grid as type line-heights → vertical rhythm stays consistent across the system.</p>
+        <PageHeader
+          category="Foundations"
+          title="Spacing & Radii"
+          lead={<>One <b>4px base grid</b> drives every gap, inset and line-height. Token index = px ÷ 4 (the <code>0-5</code> micro step = 2px). Tight steps (0→6) handle component insets; the wider jumps (7→32) handle layout rhythm.</>}
+          meta="Same grid as type line-heights → vertical rhythm stays consistent"
+        />
 
         <h3 style={{ ...eyebrow, marginTop: 4 }}>Spacing scale</h3>
         <div style={{ display: "grid", gridTemplateColumns: "84px 44px 1fr", gap: 14, paddingBottom: 6, borderBottom: "1px solid var(--ds-color-border)" }}>
@@ -310,4 +362,177 @@ export const SpacingAndRadii: Story = {
       </div>
     );
   },
+};
+
+type IconRow = { C: LucideIcon; name: string; use: string };
+const ICONS: IconRow[] = [
+  { C: ChevronDown, name: "ChevronDown", use: "Dropdowns & disclosure — Field select, config type" },
+  { C: Pencil,      name: "Pencil",      use: "Edit a field (hover action)" },
+  { C: Trash2,      name: "Trash2",      use: "Remove a field / option (destructive)" },
+  { C: X,           name: "X",           use: "Close the panel · remove an option" },
+  { C: ListPlus,    name: "ListPlus",    use: "Empty state — add your first field" },
+];
+const ICON_SIZES = [12, 16, 20, 24];
+const ICON_STATES: { label: string; color: string; token: string; C: LucideIcon }[] = [
+  { label: "Default",  color: "var(--ds-color-text-muted)",     token: "--ds-color-text-muted",    C: Pencil },
+  { label: "Strong",   color: "var(--ds-color-text)",           token: "--ds-color-text",          C: Pencil },
+  { label: "Brand",    color: "var(--p-teal-600)",              token: "--p-teal-600",             C: ChevronDown },
+  { label: "Danger",   color: "var(--ds-feedback-danger-fg)",   token: "--ds-feedback-danger-fg",  C: Trash2 },
+  { label: "Disabled", color: "var(--ds-color-text-disabled)",  token: "--ds-color-text-disabled", C: Pencil },
+];
+
+export const Icons: Story = {
+  render: () => {
+    const cell: React.CSSProperties = { display: "flex", alignItems: "center", justifyContent: "center", color: "var(--ds-color-text)" };
+    const cols = "1fr repeat(4, 56px)";
+    const act: React.CSSProperties = { display: "inline-flex", alignItems: "center", justifyContent: "center", width: 24, height: 24, borderRadius: 8 };
+    return (
+      <div style={wrap}>
+        <PageHeader
+          category="Foundations"
+          title="Icons"
+          lead={<>One icon set: <b>Lucide React</b> (2px stroke, rounded). Icons draw with <code>currentColor</code>, so colour carries the state. Sized on the 4px grid.</>}
+          meta={`import { Pencil } from "lucide-react" · size = 12 · 16 · 20 · 24`}
+        />
+
+        <h3 style={{ ...eyebrow, marginTop: 4 }}>Sizes</h3>
+        <div style={{ display: "flex", alignItems: "flex-end", gap: 28, marginBottom: 10 }}>
+          {ICON_SIZES.map((s) => (
+            <div key={s} style={{ textAlign: "center" }}>
+              <div style={{ height: 28, display: "flex", alignItems: "center", justifyContent: "center", color: "var(--ds-color-text)" }}><Pencil size={s} /></div>
+              <div style={{ fontSize: 12, fontWeight: 600, marginTop: 8 }}>{s}px</div>
+            </div>
+          ))}
+        </div>
+        <p style={{ fontSize: 13, color: "var(--ds-color-text-muted)", maxWidth: 700, margin: "0 0 8px" }}>
+          In product today: <b>14px</b> inline actions (edit / remove), <b>18px</b> controls (chevron, close), <b>24px</b> feature / empty-state. Keep the tap target ≥ 24px even when the glyph is 14 (Fitts’s Law) — pair small icons with a hover-revealed hit area.
+        </p>
+
+        <h3 style={eyebrow}>In use — across components &amp; patterns</h3>
+        <div style={{ ...card, maxWidth: 760 }}>
+          <div style={{ display: "grid", gridTemplateColumns: cols, gap: 14, padding: "10px 16px", background: "var(--ds-color-surface-sunken)" }}>
+            <div style={mono}>icon · where</div>
+            {ICON_SIZES.map((s) => <div key={s} style={{ ...mono, textAlign: "center" }}>{s}</div>)}
+          </div>
+          {ICONS.map(({ C, name, use }) => (
+            <div key={name} style={{ display: "grid", gridTemplateColumns: cols, gap: 14, alignItems: "center", padding: "12px 16px", borderTop: "1px solid var(--ds-color-border)" }}>
+              <div style={{ minWidth: 0 }}>
+                <div style={{ fontSize: 13, fontWeight: 600 }}>{name}</div>
+                <div style={mono}>{use}</div>
+              </div>
+              {ICON_SIZES.map((s) => <div key={s} style={cell}><C size={s} /></div>)}
+            </div>
+          ))}
+        </div>
+
+        <h3 style={eyebrow}>Colour = state</h3>
+        <p style={{ fontSize: 13, color: "var(--ds-color-text-muted)", margin: "0 0 12px", maxWidth: 700 }}>
+          Icons don’t carry their own colour — they inherit the text colour, so the same glyph reads default, brand, danger or disabled by context.
+        </p>
+        <div style={grid(120)}>
+          {ICON_STATES.map(({ label, color, token, C }) => (
+            <div key={label} style={card}>
+              <div style={{ height: 56, display: "flex", alignItems: "center", justifyContent: "center", color, background: "#fff" }}><C size={22} /></div>
+              <div style={{ padding: "7px 10px", borderTop: "1px solid var(--ds-color-border)" }}>
+                <div style={{ fontSize: 12, fontWeight: 600 }}>{label}</div>
+                <div style={mono}>{token}</div>
+              </div>
+            </div>
+          ))}
+        </div>
+
+        <h3 style={eyebrow}>As an action — ghost icon button</h3>
+        <p style={{ fontSize: 13, color: "var(--ds-color-text-muted)", margin: "0 0 12px", maxWidth: 700 }}>
+          How edit / remove appear on a field: 14px glyph in a 24px hit area, transparent at rest, tinted on hover (remove goes danger).
+        </p>
+        <div style={{ display: "flex", gap: 28, flexWrap: "wrap" }}>
+          {[
+            { name: "Edit · rest",   C: Pencil, s: { ...act, background: "transparent", color: "var(--ds-color-text-muted)" } },
+            { name: "Edit · hover",  C: Pencil, s: { ...act, background: "var(--ds-color-surface-sunken)", color: "var(--ds-color-text)" } },
+            { name: "Remove · rest", C: Trash2, s: { ...act, background: "transparent", color: "var(--ds-color-text-muted)" } },
+            { name: "Remove · hover",C: Trash2, s: { ...act, background: "var(--ds-feedback-danger-bg)", color: "var(--ds-feedback-danger-fg)" } },
+          ].map(({ name, C, s }) => (
+            <div key={name} style={{ textAlign: "center" }}>
+              <div style={{ height: 32, display: "flex", alignItems: "center", justifyContent: "center" }}><span style={s}><C size={14} /></span></div>
+              <div style={{ ...mono, marginTop: 6 }}>{name}</div>
+            </div>
+          ))}
+        </div>
+
+        <h3 style={eyebrow}>Guidelines</h3>
+        <ul style={{ fontSize: 13, lineHeight: 1.7, color: "var(--ds-color-text)", paddingLeft: 18, maxWidth: 720 }}>
+          <li>One library only — <b>Lucide</b>. Don’t mix icon sets or restyle the 2px stroke.</li>
+          <li>Size to context: <b>14</b> inline actions · <b>16</b> default · <b>18–20</b> controls · <b>24</b> feature / empty-state.</li>
+          <li>Colour comes from <code>currentColor</code>: muted at rest, foreground on hover, teal for brand / disclosure, rose for destructive, disabled grey.</li>
+          <li>Every icon-only control needs an <code>aria-label</code> and a hit area of at least 24px.</li>
+        </ul>
+      </div>
+    );
+  },
+};
+
+const THEME_ROLES: { label: string; varName: string }[] = [
+  { label: "Focus ring", varName: "--ds-color-focus-ring" },
+  { label: "Accent surface", varName: "--ds-color-surface-accent" },
+  { label: "Page background", varName: "--ds-color-bg" },
+  { label: "Text", varName: "--ds-color-text" },
+  { label: "Border", varName: "--ds-color-border" },
+  { label: "Success", varName: "--ds-feedback-success-solid" },
+  { label: "Warning", varName: "--ds-feedback-warning-solid" },
+  { label: "Danger", varName: "--ds-feedback-danger-solid" },
+  { label: "Info", varName: "--ds-feedback-info-solid" },
+];
+
+export const Themes: Story = {
+  render: () => (
+    <div style={wrap}>
+      <PageHeader
+        category="Foundations"
+        title="Themes"
+        lead={<>One component set, two brand identities. Components consume <b>semantic tokens</b> (<code>--ds-*</code>) only — so switching <b>Theme</b> in the toolbar re-skins the entire system with no component changes. <b>First Launch</b> is the launch look (default); <b>Fronted Brand</b> is the real identity we align toward.</>}
+        meta={`Toolbar → Theme · or scope any subtree with data-theme="interim" / "fronted"`}
+      />
+
+      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(340px, 1fr))", gap: 20 }}>
+        {([["interim", "First Launch"], ["fronted", "Fronted Brand"]] as const).map(([t, label]) => (
+          <div key={t} data-theme={t} className="rounded-2xl border border-border overflow-hidden bg-background">
+            <div className="px-5 py-3 border-b border-border flex items-center justify-between bg-muted/40">
+              <span className="text-sm font-semibold text-foreground">{label}</span>
+              <span style={mono}>data-theme="{t}"</span>
+            </div>
+            <div className="p-5 space-y-4">
+              {/* buttons — brand-driven */}
+              <div className="flex flex-wrap gap-2 items-center">
+                <button className="h-9 px-4 rounded-md bg-gradient-primary text-primary-foreground text-sm font-medium">Primary</button>
+                <button className="h-9 px-4 rounded-md border border-border bg-background text-sm font-medium text-foreground hover:bg-foreground hover:text-background transition-colors">Outline</button>
+                <button className="h-9 px-3 rounded-md text-sm font-medium text-emphasis">Link</button>
+              </div>
+              {/* badges — brand tint + accent (swap) then status (fixed) */}
+              <div className="flex flex-wrap gap-2 items-center">
+                <span className="text-[11px] px-2 py-0.5 rounded-full bg-primary/10 text-emphasis border border-primary/20">Info</span>
+                <span className="text-[11px] px-2 py-0.5 rounded-full bg-accent/10 text-accent border border-accent/20">Accent</span>
+                <span className="text-[11px] px-2 py-0.5 rounded-full bg-accent-green-fill/20 text-accent-green-text border border-accent-green-outline/30">Active</span>
+                <span className="text-[11px] px-2 py-0.5 rounded-full bg-accent-amber-fill/30 text-accent-amber-text border border-accent-amber-outline/30">Pending</span>
+              </div>
+              {/* input + focus ring */}
+              <div className="space-y-1.5">
+                <span className="text-xs font-medium text-foreground/75 block">Email</span>
+                <div className="h-10 rounded-md border border-input bg-background px-3 flex items-center text-sm text-muted-foreground">you@company.com</div>
+              </div>
+              {/* card */}
+              <div className="rounded-xl border border-border bg-card p-4">
+                <div className="flex items-center justify-between">
+                  <span className="text-sm font-semibold text-foreground">Payout summary</span>
+                  <span className="text-[11px] px-2 py-0.5 rounded-full bg-primary/10 text-emphasis">Ready</span>
+                </div>
+                <div className="mt-2 flex justify-between text-sm"><span className="text-muted-foreground">Net total</span><span className="font-medium text-foreground tabular-nums">NOK 50,900</span></div>
+              </div>
+              <button className="h-9 px-4 rounded-md border border-border bg-background text-sm text-foreground ring-2 ring-ring ring-offset-2 ring-offset-background">Focus ring</button>
+            </div>
+          </div>
+        ))}
+      </div>
+      <p style={{ ...mono, marginTop: 14 }}>Brand elements swap (primary, gradient, accent, link/emphasis text, focus ring). Status colours (Active / Pending) stay fixed by design — semantics don't rebrand.</p>
+    </div>
+  ),
 };
