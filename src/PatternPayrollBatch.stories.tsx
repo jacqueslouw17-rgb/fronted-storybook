@@ -17,7 +17,7 @@ const meta: Meta = { title: "Patterns/Payroll Batch", parameters: { layout: "pad
 export default meta;
 type Story = StoryObj;
 
-const initials = (s: string) => s.split(" ").map((w) => w[0]).join("").slice(0, 2);
+const initials = (s: string) => s.split(" ").map((w) => w[0]).join("").toUpperCase().slice(0, 2);
 
 type Row = { n: string; c: string; a: string; status: "ready" | "pending"; count?: number };
 const ROWS: Row[] = [
@@ -63,12 +63,13 @@ function PayrollRow({ r }: { r: Row }) {
 /** The batch selector trigger chip — verbatim: transparent centred button, pulsing amber dot. */
 function BatchChip() {
   return (
-    <button className="group flex items-center gap-2 px-2 py-1 rounded-md bg-transparent hover:bg-muted/40 transition-colors text-sm font-medium text-foreground">
-      <span className="relative inline-flex h-2 w-2">
-        <span className="absolute inline-flex h-full w-full rounded-full bg-amber-500 opacity-40 animate-ping" />
-        <span className="relative inline-flex h-2 w-2 rounded-full bg-amber-500" />
+    <button className="group flex items-center gap-2 px-1 py-1 rounded-md bg-transparent hover:bg-muted/40 transition-colors duration-150 ease-out focus:outline-none focus-visible:ring-2 focus-visible:ring-primary/30">
+      <span className="relative inline-flex">
+        <span className="absolute inline-flex rounded-full opacity-40 animate-ping h-2.5 w-2.5 bg-amber-500" />
+        <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-amber-500" />
       </span>
-      Monthly · Jan 2026<ChevronDown className="h-3.5 w-3.5 text-muted-foreground" />
+      <span className="text-[15px] font-semibold text-foreground tracking-tight">Monthly · Jan 2026</span>
+      <ChevronDown className="h-3.5 w-3.5 text-muted-foreground transition-transform duration-200" />
     </button>
   );
 }
@@ -117,7 +118,7 @@ function RunRow({ r }: { r: Run }) {
 function BatchSelectorPanel() {
   const label = "text-[10px] font-semibold text-muted-foreground/70 uppercase tracking-[0.08em]";
   return (
-    <div className="w-[360px] p-0 bg-popover/95 backdrop-blur-xl border border-border/60 rounded-xl shadow-2xl shadow-black/10 overflow-hidden">
+    <div className="w-[360px] p-0 bg-popover/95 backdrop-blur-xl border border-border/60 rounded-xl shadow-2xl shadow-black/10 overflow-hidden max-h-[420px] overflow-y-auto overscroll-contain">
       <div>
         <div className="px-4 pt-3 pb-1.5"><span className={label}>Active Runs</span></div>
         <div className="px-2 pb-2 space-y-0.5">
@@ -133,7 +134,7 @@ function BatchSelectorPanel() {
       <div className="mx-4 border-t border-border/40" />
       <div>
         <div className="px-4 pt-2.5 pb-1.5"><span className={label}>History</span></div>
-        <div className="px-2 pb-2 space-y-0.5">
+        <div className="px-2 pb-2 space-y-0.5 max-h-[180px] overflow-y-auto overscroll-contain">
           <RunRow r={{ type: "Monthly", date: "Dec 2025", status: "paid", history: true }} />
           <RunRow r={{ type: "Monthly", date: "Nov 2025", status: "paid", history: true }} />
         </div>
@@ -153,8 +154,8 @@ function BatchStatus({ s }: { s: "review" | "processing" | "paid" }) {
  *  Container padding + spacing verbatim from live: p-3 sm:p-4 space-y-1.5. */
 function BatchCard() {
   return (
-    <div className="w-full rounded-2xl border border-border/40 bg-muted/20 overflow-hidden">
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 px-3 sm:px-4 pt-3 pb-2">
+    <div className="w-full rounded-xl border border-border/40 bg-card/20 !shadow-none overflow-hidden">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 px-4 sm:px-5 pt-4 pb-3 border-b border-border/40">
         <div className="flex items-center gap-2 min-w-0"><span className="text-xs font-medium text-muted-foreground">14 employees on payroll</span></div>
         <div className="flex items-center gap-2">
           <div className="relative w-full sm:w-44">
@@ -164,7 +165,7 @@ function BatchCard() {
           <button className="inline-flex items-center justify-center gap-2 whitespace-nowrap font-medium rounded-md px-2.5 h-8 text-xs w-full sm:w-auto bg-gradient-primary text-primary-foreground hover:opacity-90 hover:shadow-lg hover:-translate-y-0.5 transition-all">Continue to payout</button>
         </div>
       </div>
-      <div className="p-3 sm:p-4 pt-1 space-y-1.5">
+      <div className="p-3 sm:p-4 space-y-1.5">
         {ROWS.map((r) => <PayrollRow key={r.n} r={r} />)}
       </div>
     </div>

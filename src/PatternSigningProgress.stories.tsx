@@ -44,14 +44,22 @@ function Step({ state, label, desc, action }: { state: State; label: string; des
 function Drawer({ pct, steps }: { pct: number; steps: React.ReactNode }) {
   return (
     <div className="w-full max-w-[420px] rounded-xl border border-border/40 bg-card overflow-hidden">
-      <div className="px-5 py-4 border-b border-border/40">
-        <div className="flex items-center gap-2 font-semibold">Marcus Chen <span>🇸🇬</span></div>
-        <p className="text-xs text-muted-foreground mt-0.5">Senior Backend Engineer · Singapore</p>
+      <div className="px-5 pt-4 pb-3 border-b border-border/30">
+        <div className="flex items-center gap-2">
+          <span className="text-base font-semibold text-foreground leading-tight truncate">Marcus Chen</span>
+          <span className="text-base shrink-0">🇸🇬</span>
+        </div>
+        <p className="text-[11px] text-muted-foreground/60 mt-0.5">Senior Backend Engineer · Singapore</p>
       </div>
-      <div className="px-5 py-4">
-        <div className="flex items-center justify-between mb-1.5"><span className="text-xs text-muted-foreground">Signing Progress</span><span className="text-xs font-medium text-foreground tabular-nums">{pct}%</span></div>
-        <div className="h-1.5 w-full bg-muted rounded-full overflow-hidden mb-4"><div className="h-full bg-primary rounded-full" style={{ width: `${pct}%` }} /></div>
-        <div className="space-y-2">{steps}</div>
+      <div className="px-5 py-4 space-y-5">
+        <div className="space-y-1.5">
+          <div className="flex justify-between items-center">
+            <span className="text-xs text-muted-foreground">Signing Progress</span>
+            <span className="text-xs font-medium text-foreground">{pct}%</span>
+          </div>
+          <div className="h-1.5 w-full bg-muted rounded-full overflow-hidden"><div className="h-full bg-primary rounded-full" style={{ width: `${pct}%` }} /></div>
+        </div>
+        <div className="space-y-1.5">{steps}</div>
       </div>
     </div>
   );

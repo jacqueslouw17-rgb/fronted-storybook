@@ -74,7 +74,7 @@ const POOL: (PoolItem & { selected: boolean })[] = [
 function SelectionView() {
   const selectedCount = POOL.filter((p) => p.selected).length;
   return (
-    <div className="rounded-xl border border-border/40 bg-card/20 shadow-none overflow-hidden">
+    <div className="rounded-xl border border-border/40 bg-card/20 !shadow-none overflow-hidden">
       {/* Toolbar */}
       <div className="px-4 sm:px-5 pt-4 pb-3 border-b border-border/40 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <div className="min-w-0">
@@ -133,7 +133,7 @@ const REVIEW: ReviewWorker[] = [
 /* ── Review view container ── */
 function ReviewView() {
   return (
-    <div className="rounded-xl border border-border/40 bg-card/20 shadow-none overflow-hidden">
+    <div className="rounded-xl border border-border/40 bg-card/20 !shadow-none overflow-hidden">
       <div className="px-4 sm:px-5 pt-4 pb-3 border-b border-border/40 flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
         <div className="flex items-center gap-2 min-w-0">
           <p className="text-sm text-muted-foreground truncate">2 workers in this batch · 3 adjustments</p>

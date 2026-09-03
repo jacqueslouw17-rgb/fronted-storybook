@@ -50,12 +50,12 @@ export const AttachmentsLoading: Story = {
         <AttRow name="receipt-jan.pdf" meta="PDF · 240 KB" icon={FileText} />
         <AttRow name="hotel-invoice.png" meta="PNG · 1.1 MB" icon={ImageIcon} />
       </div>
-      <p style={note}>row border-border/40 bg-card/30 · icon tile h-7 w-7 bg-primary/[0.06] border-primary/20 · external-link on hover</p>
+      <p style={note}>row border-border/30 bg-muted/20 · icon tile h-7 w-7 bg-primary/[0.06] border-primary/20 · external-link on hover</p>
 
       <h3 style={eyebrow}>Empty + inline chip</h3>
       <div className="flex items-center gap-6">
         <p className="text-xs text-muted-foreground/60">No attachments provided</p>
-        <span className="inline-flex items-center gap-0.5 text-[10px] text-muted-foreground/70"><Paperclip className="h-2.5 w-2.5" /> 2 attachments</span>
+        <span className="inline-flex items-center gap-0.5 text-[10px] text-muted-foreground/70"><Paperclip className="h-2.5 w-2.5" /> 2</span>
       </div>
       <p style={note}>empty text-xs text-muted-foreground/60 · chip Paperclip h-2.5 + count text-[10px]</p>
 

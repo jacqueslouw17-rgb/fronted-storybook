@@ -1,6 +1,6 @@
 import * as React from "react";
 import type { Meta, StoryObj } from "@storybook/react";
-import { ChevronRight, Search, CheckCircle2, Clock, Upload, FileText, X } from "lucide-react";
+import { ChevronRight, Search, CheckCircle2, Clock } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
@@ -68,7 +68,7 @@ function PayoutRow({ r }: { r: Row }) {
 /* ── Payout table container — verbatim shell from F1v6_PayoutTable ── */
 function PayoutTable() {
   return (
-    <div className="rounded-xl overflow-hidden border border-border/40 bg-card/20 shadow-none">
+    <div className="rounded-xl overflow-hidden border border-border/40 bg-card/20 text-card-foreground shadow-none">
       <div className="px-4 sm:px-5 pt-4 pb-3 border-b border-border/40 flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between sm:gap-3">
         <div className="flex items-center gap-2 min-w-0">
           <span className="text-xs font-medium text-muted-foreground">14 employees on payroll</span>
@@ -100,13 +100,13 @@ function ManualPayoutDrawer() {
             <AvatarFallback className="bg-muted text-[11px] font-semibold text-muted-foreground">AH</AvatarFallback>
           </Avatar>
           <div className="min-w-0">
-            <div className="truncate text-base font-semibold">Alex Hansen</div>
+            <div className="truncate text-base font-semibold text-foreground">Alex Hansen</div>
             <div className="text-xs text-muted-foreground">🇳🇴 Norway · Employee</div>
           </div>
         </div>
       </div>
 
-      <div className="flex-1 space-y-5 px-5 py-5">
+      <div className="flex-1 space-y-5 overflow-y-auto px-5 py-5">
         {/* Net pay entry (manual entry) */}
         <div className="space-y-2">
           <div className="flex items-center justify-between gap-3">
@@ -120,20 +120,25 @@ function ManualPayoutDrawer() {
 
         <div className="border-t border-border/40" />
 
-        {/* Document upload slot */}
-        <div className="space-y-2">
-          <button className="flex w-full flex-col items-center justify-center gap-1.5 rounded-lg border border-dashed border-border/60 bg-muted/20 px-4 py-6 text-center transition-colors hover:bg-muted/30">
-            <Upload className="h-4 w-4 text-muted-foreground" />
-            <span className="text-xs font-medium text-foreground">Upload payslip</span>
-            <span className="text-[11px] text-muted-foreground">PDF, JPG or PNG</span>
-          </button>
-          <div className="flex items-center justify-between gap-2 rounded-lg border border-border/40 bg-card px-3 py-2">
-            <span className="flex min-w-0 items-center gap-2">
-              <FileText className="h-3.5 w-3.5 shrink-0 text-muted-foreground" />
-              <span className="truncate text-xs text-foreground">alex-hansen-payslip.pdf</span>
-            </span>
-            <button className="shrink-0 rounded p-0.5 hover:bg-muted/50"><X className="h-3.5 w-3.5 text-muted-foreground" /></button>
+        {/* Document upload field — verbatim from DocumentUploadField (single, rowAction="view", helper={null}) */}
+        <div className="space-y-1.5">
+          {/* Attached file row — UploadedDocRow (done state) */}
+          <div className="space-y-1.5">
+            <div className="flex items-center justify-between gap-3 rounded-lg border px-3 py-2.5 transition-colors border-border/60 bg-muted/20">
+              <div className="min-w-0 flex-1">
+                <p className="truncate text-sm font-medium text-foreground">alex-hansen-payslip.pdf</p>
+                <p className="mt-0.5 truncate text-[11px] text-muted-foreground">PDF</p>
+              </div>
+              <div className="flex shrink-0 items-center gap-3">
+                <button type="button" className="rounded text-[11px] font-medium text-foreground/80 transition-colors hover:text-foreground hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background">View</button>
+                <button type="button" className="rounded text-[11px] font-medium transition-colors hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background text-muted-foreground hover:text-destructive">Remove</button>
+              </div>
+            </div>
           </div>
+          {/* Empty upload slot — addDocClass label (shown when no document attached) */}
+          <label className="flex w-full cursor-pointer items-center justify-center rounded-lg border border-dashed border-border/60 px-3 py-2.5 text-xs font-medium text-muted-foreground transition-colors hover:border-primary/40 hover:bg-muted/30 hover:text-foreground focus-within:border-primary/50 focus-within:bg-muted/30 focus-within:text-foreground focus-within:ring-2 focus-within:ring-ring focus-within:ring-offset-2 focus-within:ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background">
+            <span>Upload payslip</span>
+          </label>
         </div>
 
         <Button className="w-full">Mark as paid</Button>
@@ -174,7 +179,7 @@ export const PayoutTable_: Story = {
       <DocTable head={["Part", "Detail", "classes"]} w0={150} rows={[
         ["Header", "avatar + name + flag · country · type", "border-b border-border/50 px-5 py-4 · h-10 avatar"],
         ["Net pay", "currency label + right-aligned tabular input", "flex justify-between · Input h-9 w-36 text-right tabular-nums"],
-        ["Upload", "empty upload slot → attached file row", "dashed border-border/60 bg-muted/20 · file row border-border/40"],
+        ["Upload", "attached file row + empty upload slot", "file row border-border/60 bg-muted/20 · View/Remove text actions · dashed label border-border/60"],
         ["Confirm", "Mark as paid (disabled until doc + net pay)", "Button w-full"],
       ]} />
     </div>
