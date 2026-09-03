@@ -26,7 +26,7 @@ const NAV: { title: string; desc: string; href: string }[] = [
 
 const STATS: [string, string][] = [
   ["25", "Components"],
-  ["12", "Patterns"],
+  ["16", "Patterns"],
   ["12", "Principles"],
   ["2", "Themes"],
 ];

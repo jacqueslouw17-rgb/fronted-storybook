@@ -44,6 +44,10 @@ const PATTERNS: [string, string][] = [
   ["Worker Pipeline", "F1 workers kanban — stage columns, worker cards, stage-based action pairs"],
   ["Payroll Run", "F1 payroll run stepper — Submissions → Exceptions → Approve → Track, step states"],
   ["Payslip Preview", "F1 payslip dialog — header, worker card, Gross/Deductions/Net tiles, line items"],
+  ["Payroll Exceptions", "F1 exceptions queue + fix drawer — blocking reasons, suggested fixes, actions"],
+  ["Payout Table", "F1 payout table + manual payout drawer — amounts, status pills, mark as paid"],
+  ["Off-cycle Run", "F1 off-cycle selection pool + per-worker review summary"],
+  ["Payroll Verification", "F1 verification drawer — progress, grouped sections, verified/flagged rows"],
 ];
 
 // Composite list/table views documented inside Components/Table & List.
