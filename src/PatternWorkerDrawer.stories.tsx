@@ -1,6 +1,6 @@
 import * as React from "react";
 import type { Meta, StoryObj } from "@storybook/react";
-import { ChevronDown, Lock, Info, ExternalLink, AlertTriangle } from "lucide-react";
+import { ChevronDown, Lock, Info } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { DocTable, wrap, eyebrow, note, PageHeader } from "./_docTable";
@@ -169,20 +169,6 @@ function WorkerDrawer({ stage, edit = false }: { stage: Stage; edit?: boolean })
 
       <div className="flex-1 overflow-y-auto">
         <div className="px-6 pb-6 pt-3 space-y-3">
-          {/* Awaiting-details alert — worker still needs to submit the data form */}
-          {(stage === "offer" || stage === "data-pending") && (
-            <div className="p-4 rounded-xl border border-amber-500/30 bg-amber-500/5">
-              <div className="flex items-start gap-3">
-                <AlertTriangle className="h-5 w-5 text-amber-600 shrink-0 mt-0.5" />
-                <div className="flex-1">
-                  <h4 className="text-sm font-medium text-amber-700 mb-1">Awaiting worker details</h4>
-                  <p className="text-xs text-muted-foreground mb-3">Only offer terms are available until the worker submits their data form.</p>
-                  <Button variant="outline" size="sm" className="h-7 text-xs gap-1.5 hover:bg-amber-500/10"><ExternalLink className="h-3 w-3" />Go to data collection</Button>
-                </div>
-              </div>
-            </div>
-          )}
-
           <div className="space-y-3">
             {/* 1) Personal Profile */}
             {unlocked("personal", stage) ? (
@@ -284,7 +270,7 @@ function WorkerDrawer({ stage, edit = false }: { stage: Stage; edit?: boolean })
 
 const STEPS: { stage: Stage; heading: string; blurb: string }[] = [
   { stage: "offer", heading: "1 · Offer Accepted", blurb: "Worker accepted the offer. Only offer-level Personal + Engagement are populated; everything else is locked until data is collected." },
-  { stage: "data-pending", heading: "2 · Awaiting worker details", blurb: "Data form sent, not yet returned. Same unlocks as Offer Accepted — the amber alert links to data collection." },
+  { stage: "data-pending", heading: "2 · Awaiting worker details", blurb: "Data form sent, not yet returned. Same unlocks as Offer Accepted — only offer-level Personal + Engagement are populated." },
   { stage: "drafting", heading: "3 · Prepare Contract", blurb: "Worker submitted their details. Full Personal profile and full Working Engagement (contract terms) now unlock; Documents still pending." },
   { stage: "awaiting-signature", heading: "4 · Waiting for Signature", blurb: "Contract drafted and sent. Details stay unlocked; Documents unlock once onboarding begins." },
   { stage: "trigger-onboarding", heading: "5 · Onboard Worker", blurb: "Contract signed — ready to start onboarding. Same view as Waiting for Signature until onboarding kicks off." },
