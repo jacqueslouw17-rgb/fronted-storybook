@@ -120,7 +120,7 @@ function RequestBody({ resetKey }: { resetKey: number }) {
         ) : (
           <div className="space-y-5">
             {sel.fields.map((f) => <FieldRow key={f.label} f={f} />)}
-            <Button className="w-full">Request adjustment</Button>
+            <Button variant="secondary" className="w-full">Request adjustment</Button>
           </div>
         )}
       </div>
@@ -134,7 +134,7 @@ function RequestDrawer() {
   return (
     <Sheet open={open} onOpenChange={(o) => { setOpen(o); if (!o) setResetKey((k) => k + 1); }}>
       <SheetTrigger asChild>
-        <Button size="sm" className="h-9 text-xs gap-1.5 bg-gradient-primary"><Plus className="h-3.5 w-3.5" /> Request adjustment</Button>
+        <Button variant="outline" size="sm" className="h-9 text-xs gap-1.5"><Plus className="h-3.5 w-3.5" /> Request adjustment</Button>
       </SheetTrigger>
       <SheetContent side="right" className={sheetCls}><RequestBody resetKey={resetKey} /></SheetContent>
     </Sheet>

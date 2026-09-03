@@ -3,6 +3,8 @@ import type { Meta, StoryObj } from "@storybook/react";
 import { ChevronDown, Lock, Info } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import { DocTable, wrap, eyebrow, note, PageHeader } from "./_docTable";
 import { cn } from "@/lib/utils";
 import "./tokens.css";
@@ -108,12 +110,12 @@ function DetailRow({ label, value }: { label: string; value?: string }) {
   );
 }
 
-/* ── Editable field — verbatim DetailRow (edit mode): Label + Input h-10 ── */
+/* ── Editable field — verbatim DetailRow (edit mode): the Label + Input atoms ── */
 function EditRow({ label, value }: { label: string; value: string }) {
   return (
     <div className="space-y-1.5 py-1.5">
-      <label className="text-xs font-medium text-foreground/75">{label}</label>
-      <input readOnly defaultValue={value} className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm text-foreground" />
+      <Label className="text-xs font-medium text-foreground/75">{label}</Label>
+      <Input readOnly defaultValue={value} className="h-10" />
     </div>
   );
 }
