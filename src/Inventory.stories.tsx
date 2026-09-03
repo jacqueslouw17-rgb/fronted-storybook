@@ -49,6 +49,11 @@ const PATTERNS: [string, string][] = [
   ["Off-cycle Run", "F1 off-cycle selection pool + per-worker review summary"],
   ["Worker Drawer", "F1 worker drawer — read-only + edit, sections unlock across the 7 pipeline stages"],
   ["Workers Grid", "F6 company-admin workers grid — worker cards with status + View"],
+  ["Payout & Invoice Hero", "F4.1/F4.2 dashboard hero — last/next payout (employee) + invoice (contractor)"],
+  ["Contractor Invoicing", "F4.2 invoices section + invoice breakdown + invoice history"],
+  ["Time-off Request", "F4.1 leave section + request drawer + time input"],
+  ["Adjustment Detail", "F4.1 adjustment detail modal — summary, status, receipt"],
+  ["Dashboard Dialogs", "F4 confirm pay/invoice · withdraw · submit-no-changes dialogs"],
 ];
 
 // Composite list/table views documented inside Components/Table & List.
