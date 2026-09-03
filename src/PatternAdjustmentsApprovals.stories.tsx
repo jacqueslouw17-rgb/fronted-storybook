@@ -1,6 +1,6 @@
 import * as React from "react";
 import type { Meta, StoryObj } from "@storybook/react";
-import { Check, X, ShieldCheck, Paperclip } from "lucide-react";
+import { Check, X, ShieldCheck, Paperclip, ChevronDown } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { DocTable, wrap, eyebrow, note, PageHeader } from "./_docTable";
@@ -9,12 +9,12 @@ import "./tokens.css";
 import "./typography.css";
 
 /**
- * Patterns — Adjustments & Approvals (verbatim from F4.1 employee dashboard,
- * F41v81_AdjustmentsSection + F41v81_ApprovalsSection). One shared list-row molecule used two
- * ways: the worker's own Adjustments list (with a withdraw action) and the manager's Approvals
- * table (with per-row checkboxes, a select-all bar, bulk Approve, and inline approve/reject).
- * Row tint carries the status — rejected = destructive, approved = accent-green. Markup verbatim
- * from source (active-tab text uses text-emphasis per the a11y swap).
+ * Patterns — Adjustments & Approvals (verbatim from the LIVE F4.1 / F4.2 dashboards).
+ * One shared list-row molecule used across the worker's Adjustments list, the manager's
+ * Approvals table, and the contractor's Additions/Deductions. Each row shows Type · detail with
+ * type-specific affordances: an expandable items list (Expense), an expandable "N included"
+ * coverage list (Per diem), and an attachment-count popover trigger. Row tint carries status —
+ * rejected = destructive, approved = accent-green. Captured verbatim from the live DOM.
  */
 const meta: Meta = { title: "Patterns/Adjustments & Approvals", parameters: { layout: "padded" } };
 export default meta;
@@ -27,23 +27,60 @@ const rowShell = (s: RowState) => cn(
     : s === "approved" ? "border-accent-green/25 bg-accent-green/[0.04] hover:bg-accent-green/[0.08]"
       : "border-border/30 bg-card hover:bg-muted/30");
 
-/* Static tab bar — TabsList / TabsTrigger classes verbatim (active = Pending) */
-function TabBar({ tabs, active }: { tabs: string[]; active: string }) {
+const sep = <span className="text-muted-foreground/40 text-xs hidden sm:inline shrink-0">·</span>;
+const typeCls = "text-xs font-semibold text-foreground truncate shrink-0 max-w-[55%]";
+const detailCls = "text-xs text-muted-foreground truncate hidden sm:inline min-w-0 flex-1";
+
+function AttBtn({ n }: { n: number }) {
+  return <button className="inline-flex items-center gap-0.5 rounded px-1 py-0.5 text-[11px] tabular-nums text-muted-foreground hover:text-foreground hover:bg-muted transition-colors shrink-0" aria-label={`${n} attachment${n > 1 ? "s" : ""}`}><Paperclip className="h-2.5 w-2.5" />{n}</button>;
+}
+function ExpBtn({ children }: { children: React.ReactNode }) {
+  return <button className="group/exp min-w-0 flex items-center gap-1.5 rounded text-left text-xs transition-colors shrink-0">{children}<ChevronDown className="h-3 w-3 text-muted-foreground/60 rotate-180" /></button>;
+}
+function Right({ date, state }: { date: string; state: RowState }) {
   return (
-    <div className="h-8 bg-muted/30 p-0.5 rounded-md inline-flex items-center justify-start gap-0.5">
-      {tabs.map((t) => (
-        <span key={t} className={cn("text-xs h-7 px-3 inline-flex items-center rounded-sm whitespace-nowrap",
-          t === active ? "bg-primary/[0.08] text-emphasis border border-primary/30" : "text-muted-foreground")}>{t}</span>
+    <div className="shrink-0 self-center flex items-center gap-3 sm:gap-2">
+      <span className="hidden sm:inline w-[64px] text-right text-[11px] text-muted-foreground tabular-nums whitespace-nowrap">{date}</span>
+      {state === "pending"
+        ? <button className="p-1 rounded transition-all shrink-0 group/x hover:bg-destructive/10" aria-label="Withdraw request"><X className="h-3.5 w-3.5 text-muted-foreground" /></button>
+        : <span className={cn("shrink-0 self-center text-right text-[11px] font-medium whitespace-nowrap", state === "approved" ? "text-accent-green-text" : "text-destructive/80")}>{state === "approved" ? "Admin approved" : "Admin rejected"}</span>}
+    </div>
+  );
+}
+
+/* Expanded item rows */
+function ExpenseItems({ items }: { items: [string, number, string][] }) {
+  return (
+    <div className="space-y-0 pl-3 pr-2 pb-2">
+      {items.map(([cat, att, amt]) => (
+        <div key={cat} className="flex items-center gap-2.5 pl-2.5 pr-2 py-0.5 rounded-md hover:bg-muted/50 transition-colors w-fit max-w-full">
+          <span className="min-w-0 truncate text-xs text-muted-foreground shrink">{cat}</span>
+          <AttBtn n={att} />
+          <span className="shrink-0 text-xs tabular-nums font-mono text-foreground/80">{amt}</span>
+        </div>
+      ))}
+    </div>
+  );
+}
+function IncludedItems({ items }: { items: string[] }) {
+  return (
+    <div className="space-y-0 pl-3 pr-2 pb-2">
+      {items.map((i) => (
+        <div key={i} className="flex w-fit max-w-full items-center gap-2.5 rounded-md py-0.5 pl-2.5 pr-2 transition-colors hover:bg-muted/50"><span className="min-w-0 truncate text-xs text-muted-foreground">{i}</span></div>
       ))}
     </div>
   );
 }
 
-function Att({ n }: { n: number }) {
-  return <span className="inline-flex items-center gap-0.5 text-[11px] text-muted-foreground/70"><Paperclip className="h-2.5 w-2.5" />{n}</span>;
-}
-function Card({ children }: { children: React.ReactNode }) {
-  return <div className="rounded-xl border border-border/40 shadow-none bg-card/20 overflow-hidden"><div className="p-4 sm:p-5">{children}</div></div>;
+const Card = ({ children }: { children: React.ReactNode }) => (
+  <div className="rounded-xl border border-border/40 shadow-none bg-card/20 overflow-hidden"><div className="p-4 sm:p-5">{children}</div></div>
+);
+function TabBar({ tabs, active }: { tabs: string[]; active: string }) {
+  return (
+    <div className="h-8 bg-muted/30 p-0.5 rounded-md inline-flex items-center justify-start gap-0.5">
+      {tabs.map((t) => <span key={t} className={cn("text-xs h-7 px-3 inline-flex items-center rounded-sm whitespace-nowrap", t === active ? "bg-primary/[0.08] text-emphasis border border-primary/30" : "text-muted-foreground")}>{t}</span>)}
+    </div>
+  );
 }
 
 export const AdjustmentsApprovals: Story = {
@@ -54,82 +91,132 @@ export const AdjustmentsApprovals: Story = {
         category="Pattern"
         status="Stable"
         title="Adjustments & Approvals"
-        lead={<>One shared list-row molecule used two ways in the F4.1 dashboard: the worker's own <strong>Adjustments</strong> list (Pending / Approved / Rejected, with a withdraw action) and the manager's <strong>Approvals</strong> table (per-row checkboxes, a select-all bar, bulk Approve, inline approve / reject). The row tint carries the status — rejected is destructive-tinted, approved is accent-green. Markup verbatim from F41v81_AdjustmentsSection + F41v81_ApprovalsSection.</>}
-        meta="Verbatim from F4.1 · Adjustments & Approvals (employee-dashboard-v8-1)"
+        lead={<>The shared adjustment row used across the F4.1 / F4.2 dashboards. Every row is <strong>Type · detail</strong>; some types add affordances — Expense expands to an itemised list, Per diem expands to an “N included” coverage list, and any row can carry an attachment-count popover trigger. The row tint carries status. The worker sees a withdraw action, the manager sees checkboxes + inline approve / reject, and contractors see Addition / Deduction. Captured verbatim from the live prototypes.</>}
+        meta="Verbatim from live F4.1 / F4.2 · Adjustments & Approvals"
       />
 
-      {/* ── Adjustments list (worker) ── */}
-      <h3 style={eyebrow}>Adjustments list (worker)</h3>
+      {/* ── Employee adjustments — one of each type ── */}
+      <h3 style={eyebrow}>Adjustments list (employee) — every type</h3>
       <div style={{ display: "flex", justifyContent: "center", padding: "8px 0" }}>
-        <div className="w-[620px] max-w-full">
+        <div className="w-[640px] max-w-full">
           <Card>
             <div className="flex items-center justify-between gap-2 mb-4">
               <TabBar tabs={["Pending (6)", "Approved (1)", "Rejected (1)"]} active="Pending (6)" />
               <Button variant="outline" size="sm" className="h-7 px-2.5 text-xs">Request adjustment</Button>
             </div>
             <div className="space-y-1.5">
+
+              {/* Leave */}
               <div className={rowShell("pending")}>
                 <div className="flex items-center gap-3 px-3 py-2.5">
-                  <div className="flex-1 min-w-0 flex items-center gap-2">
-                    <span className="text-xs font-semibold text-foreground truncate">Bonus</span>
-                    <span className="text-muted-foreground/40 text-xs">·</span>
-                    <span className="text-xs text-muted-foreground truncate">Q4 performance bonus · PHP 12,000</span>
-                    <Att n={1} />
+                  <div className="flex-1 min-w-0 pr-2 flex items-center gap-2">
+                    <span className={typeCls}>Paid leave</span>{sep}
+                    <span className={detailCls} title="Paid leave · 2 days · 22 Feb 2026 – 23 Feb 2026">Paid leave · 2 days · 22 Feb 2026 – 23 Feb 2026</span>
+                    <AttBtn n={1} />
                   </div>
-                  <div className="shrink-0 self-center flex items-center gap-2">
-                    <span className="text-[11px] text-muted-foreground tabular-nums whitespace-nowrap">18 Feb</span>
-                    <button className="p-1 rounded transition-colors hover:bg-muted" aria-label="Withdraw request"><X className="h-3.5 w-3.5 text-muted-foreground" /></button>
-                  </div>
+                  <Right date="22 Jan" state="pending" />
                 </div>
               </div>
-              <div className={rowShell("approved")}>
+
+              {/* Expense — multi-item, expanded */}
+              <div className={rowShell("pending")}>
                 <div className="flex items-center gap-3 px-3 py-2.5">
-                  <div className="flex-1 min-w-0 flex items-center gap-2">
-                    <span className="text-xs font-semibold text-foreground truncate">Per diem</span>
-                    <span className="text-muted-foreground/40 text-xs">·</span>
-                    <span className="text-xs text-muted-foreground truncate">Manila · Domestic · 3 days</span>
+                  <div className="flex-1 min-w-0 pr-2 flex items-center gap-2">
+                    <span className={typeCls}>Expense</span>{sep}
+                    <ExpBtn><span className="truncate font-medium text-foreground/80">NY trip</span><span className="shrink-0 text-muted-foreground/80">· 2 items</span></ExpBtn>
+                    <AttBtn n={5} />
                   </div>
-                  <div className="shrink-0 self-center flex items-center gap-2">
-                    <span className="text-[11px] text-muted-foreground tabular-nums whitespace-nowrap">13 Feb</span>
-                    <span className="shrink-0 self-center text-right text-[11px] font-medium whitespace-nowrap text-accent-green-text">Admin approved</span>
+                  <Right date="2 Mar" state="pending" />
+                </div>
+                <ExpenseItems items={[["Travel", 3, "PHP 5,200"], ["Meals", 2, "PHP 3,300"]]} />
+              </div>
+
+              {/* Expense — single line */}
+              <div className={rowShell("pending")}>
+                <div className="flex items-center gap-3 px-3 py-2.5">
+                  <div className="flex-1 min-w-0 pr-2 flex items-center gap-2">
+                    <span className={typeCls}>Client dinner expense</span>{sep}
+                    <span className={detailCls} title="Meals · PHP 6,350">Meals · PHP 6,350</span>
+                    <AttBtn n={1} />
                   </div>
+                  <Right date="1 Mar" state="pending" />
                 </div>
               </div>
+
+              {/* Bonus */}
+              <div className={rowShell("pending")}>
+                <div className="flex items-center gap-3 px-3 py-2.5">
+                  <div className="flex-1 min-w-0 pr-2 flex items-center gap-2">
+                    <span className={typeCls}>Bonus</span>{sep}
+                    <span className={detailCls} title="Q4 performance bonus · PHP 12,000">Q4 performance bonus · PHP 12,000</span>
+                    <AttBtn n={1} />
+                  </div>
+                  <Right date="18 Feb" state="pending" />
+                </div>
+              </div>
+
+              {/* Per diem — expanded coverage */}
+              <div className={rowShell("pending")}>
+                <div className="flex items-center gap-3 px-3 py-2.5">
+                  <div className="flex-1 min-w-0 pr-2 flex items-center gap-2">
+                    <span className={typeCls}>Per diem</span>{sep}
+                    <span className={detailCls} title="Manila, Philippines · 3 days · 10–12 Feb 2026">Manila, Philippines · 3 days · 10–12 Feb 2026</span>{sep}
+                    <ExpBtn><span className="shrink-0 text-muted-foreground/80">4 included</span></ExpBtn>
+                  </div>
+                  <Right date="13 Feb" state="pending" />
+                </div>
+                <IncludedItems items={["Breakfast provided", "Lunch provided", "Dinner provided", "Hotel booked"]} />
+              </div>
+
+              {/* Overtime */}
+              <div className={rowShell("pending")}>
+                <div className="flex items-center gap-3 px-3 py-2.5">
+                  <div className="flex-1 min-w-0 pr-2 flex items-center gap-2">
+                    <span className={typeCls}>Overtime</span>{sep}
+                    <span className={detailCls} title="Weekday OT · Client deadline · 8h · 11 Jan 2026">Weekday OT · Client deadline · 8h · 11 Jan 2026</span>
+                  </div>
+                  <Right date="11 Jan" state="pending" />
+                </div>
+              </div>
+
+              {/* Other / Deduction */}
+              <div className={rowShell("pending")}>
+                <div className="flex items-center gap-3 px-3 py-2.5">
+                  <div className="flex-1 min-w-0 pr-2 flex items-center gap-2">
+                    <span className={typeCls}>Deduction</span>{sep}
+                    <span className={detailCls} title="Personal use of company phone plan · PHP 1,800">Personal use of company phone plan · PHP 1,800</span>
+                  </div>
+                  <Right date="20 Feb" state="pending" />
+                </div>
+              </div>
+
+              {/* rejected example with reason */}
               <div className={rowShell("rejected")}>
                 <div className="flex items-center gap-3 px-3 py-2.5">
-                  <div className="flex-1 min-w-0 flex items-center gap-2">
-                    <span className="text-xs font-semibold text-foreground truncate">Other</span>
-                    <span className="text-muted-foreground/40 text-xs">·</span>
-                    <span className="text-xs text-muted-foreground truncate">Deduction · Personal use of company phone plan · PHP 1,800</span>
+                  <div className="flex-1 min-w-0 pr-2 flex items-center gap-2">
+                    <span className={typeCls}>Deduction</span>{sep}
+                    <span className={detailCls} title="Uniform cost · PHP 900">Uniform cost · PHP 900</span>
                   </div>
-                  <div className="shrink-0 self-center flex items-center gap-2">
-                    <span className="text-[11px] text-muted-foreground tabular-nums whitespace-nowrap">20 Feb</span>
-                    <span className="shrink-0 self-center text-right text-[11px] font-medium whitespace-nowrap text-destructive/80">Admin rejected</span>
-                  </div>
+                  <Right date="9 Feb" state="rejected" />
                 </div>
-                <div className="grid grid-rows-[1fr] transition-[grid-template-rows] duration-200">
-                  <div className="overflow-hidden"><div className="px-2.5 pb-2 pt-0.5">
-                    <p className="text-xs text-destructive/80 bg-destructive/5 rounded px-2 py-1.5 border-l-2 border-destructive/30">Not an eligible deduction for this cycle.</p>
-                  </div></div>
-                </div>
+                <div className="px-2.5 pb-2 pt-0.5"><p className="text-xs text-destructive/80 bg-destructive/5 rounded px-2 py-1.5 border-l-2 border-destructive/30">Not an eligible deduction for this cycle.</p></div>
               </div>
             </div>
           </Card>
         </div>
       </div>
-      <p style={{ ...note, marginTop: 4 }}>Card border-border/40 !shadow-none bg-card/20 · tabs h-8 bg-muted/30 (active bg-primary/[0.08] text-emphasis border-primary/30) · row group rounded-lg border · pending border-border/30 bg-card + withdraw X · approved accent-green tint + “Admin approved” · rejected destructive tint + reason border-l-2.</p>
+      <p style={{ ...note, marginTop: 4 }}>Row group rounded-lg border · type font-semibold max-w-[55%] · detail truncate w/ title tooltip · Expense = group/exp expander (“NY trip · 2 items”) → items pl-3 (category · attachment · font-mono amount) · Per diem = group/inc expander (“4 included”) → coverage list · attachment = popover trigger px-1 py-0.5 · right w-[64px] date + withdraw X (hover, hover:bg-destructive/10).</p>
 
       {/* ── Approvals table (manager) ── */}
       <h3 style={eyebrow}>Approvals table (manager)</h3>
       <div style={{ display: "flex", justifyContent: "center", padding: "8px 0" }}>
-        <div className="w-[620px] max-w-full">
+        <div className="w-[640px] max-w-full">
           <Card>
             <div className="flex items-center justify-between gap-2 mb-4">
               <TabBar tabs={["Pending (7)", "Approved (4)", "Rejected (1)"]} active="Pending (7)" />
               <Button size="sm" className="h-7 px-2.5 text-xs">Approve</Button>
             </div>
-            {/* select-all bar */}
-            <div className="flex flex-wrap items-center gap-x-3 gap-y-1 rounded-lg border border-border/30 bg-muted/20 px-3 py-2 mb-1.5 hover:bg-muted/40 transition-colors">
+            <div className="flex flex-wrap items-center gap-x-3 rounded-lg border border-border/30 bg-muted/20 px-3 py-2 mb-1.5 hover:bg-muted/40 transition-colors">
               <Checkbox className="h-4 w-4 shrink-0 rounded-[4px] border-border [&_svg]:h-3 [&_svg]:w-3" />
               <span className="text-[11px] font-medium text-muted-foreground">Select all (7)</span>
             </div>
@@ -138,11 +225,10 @@ export const AdjustmentsApprovals: Story = {
                 <div key={who as string} className={rowShell("pending") + " cursor-pointer"}>
                   <div className="flex items-center gap-3 px-3 py-2.5">
                     <Checkbox className="h-4 w-4 shrink-0 rounded-[4px] border-border [&_svg]:h-3 [&_svg]:w-3" />
-                    <div className="flex-1 min-w-0 flex items-center gap-2">
-                      <span className="text-xs font-semibold text-foreground truncate">{who}</span>
-                      <span className="text-muted-foreground/40 text-xs">·</span>
-                      <span className="text-xs text-muted-foreground truncate">{detail}</span>
-                      {(att as number) > 0 && <Att n={att as number} />}
+                    <div className="flex-1 min-w-0 pr-2 flex items-center gap-2">
+                      <span className={typeCls}>{who}</span>{sep}
+                      <span className={detailCls} title={detail as string}>{detail}</span>
+                      {(att as number) > 0 && <AttBtn n={att as number} />}
                     </div>
                     <div className="shrink-0 self-center flex items-center gap-2">
                       <span className="text-[11px] text-muted-foreground tabular-nums whitespace-nowrap">{date}</span>
@@ -154,29 +240,43 @@ export const AdjustmentsApprovals: Story = {
                   </div>
                 </div>
               ))}
-              {/* an already-approved row */}
-              <div className={rowShell("approved")}>
-                <div className="flex items-center gap-3 px-3 py-2.5">
-                  <div className="flex-1 min-w-0 flex items-center gap-2">
-                    <span className="text-xs font-semibold text-foreground truncate">Ana Santos · Bonus</span>
-                    <span className="text-muted-foreground/40 text-xs">·</span>
-                    <span className="text-xs text-muted-foreground truncate">Q4 performance bonus · PHP 12,000</span>
-                  </div>
-                  <div className="shrink-0 self-center flex items-center gap-2">
-                    <span className="text-[11px] text-muted-foreground tabular-nums whitespace-nowrap">18 Feb</span>
-                    <span className="shrink-0 self-center text-right text-[11px] font-medium whitespace-nowrap text-accent-green-text">Approved by You</span>
-                  </div>
-                </div>
-              </div>
             </div>
           </Card>
         </div>
       </div>
-      <p style={{ ...note, marginTop: 4 }}>Same row molecule + per-row Checkbox (pending) · select-all bar rounded-lg border-border/30 bg-muted/20 · bulk Approve Button size=sm h-7 · inline actions button p-1 hover:bg-muted (Check / X) · decided rows use DecisionLabel text-accent-green-text / text-destructive/80.</p>
+      <p style={{ ...note, marginTop: 4 }}>Same row molecule + leading Checkbox (pending) · select-all bar bg-muted/20 · bulk Approve Button h-7 · inline actions button p-1 hover:bg-muted (Check / X) · decided rows use the accent-green / destructive DecisionLabel.</p>
+
+      {/* ── Contractor ── */}
+      <h3 style={eyebrow}>Adjustments list (contractor)</h3>
+      <div style={{ display: "flex", justifyContent: "center", padding: "8px 0" }}>
+        <div className="w-[640px] max-w-full">
+          <Card>
+            <div className="flex items-center justify-between gap-2 mb-4">
+              <TabBar tabs={["Pending (4)", "Approved (2)", "Rejected (1)"]} active="Pending (4)" />
+              <Button variant="outline" size="sm" className="h-7 px-2.5 text-xs">Request adjustment</Button>
+            </div>
+            <div className="space-y-1.5">
+              {[["Addition", "Client dinner at City Restaurant, Chicago · EUR 109", "2 Mar", 1], ["Addition", "Extra project milestone delivered ahead of schedule · EUR 1,500", "1 Mar", 0], ["Deduction", "Overbilled hours in December invoice · -EUR 240", "20 Feb", 1]].map(([type, detail, date, att]) => (
+                <div key={detail as string} className={rowShell("pending")}>
+                  <div className="flex items-center gap-3 px-3 py-2.5">
+                    <div className="flex-1 min-w-0 pr-2 flex items-center gap-2">
+                      <span className={typeCls}>{type}</span>{sep}
+                      <span className={detailCls} title={detail as string}>{detail}</span>
+                      {(att as number) > 0 && <AttBtn n={att as number} />}
+                    </div>
+                    <Right date={date as string} state="pending" />
+                  </div>
+                </div>
+              ))}
+            </div>
+          </Card>
+        </div>
+      </div>
+      <p style={{ ...note, marginTop: 4 }}>Contractor uses only Addition / Deduction — flat description · amount (deductions negative, e.g. -EUR 240), attachment popover, no leave/per-diem/expense expanders.</p>
 
       <h3 style={eyebrow}>Empty state (Approvals)</h3>
       <div style={{ display: "flex", justifyContent: "center", padding: "8px 0" }}>
-        <div className="w-[620px] max-w-full">
+        <div className="w-[640px] max-w-full">
           <Card>
             <div className="flex flex-col items-center text-center py-8 px-4 rounded-lg bg-gradient-to-br from-primary/[0.06] via-secondary/[0.04] to-accent/[0.06]">
               <div className="w-12 h-12 rounded-full bg-background/80 border border-primary/20 flex items-center justify-center mb-4 shadow-sm"><ShieldCheck className="h-5 w-5 text-emphasis" /></div>
@@ -187,14 +287,16 @@ export const AdjustmentsApprovals: Story = {
         </div>
       </div>
 
-      <h3 style={eyebrow}>Anatomy</h3>
-      <DocTable head={["Part", "Detail", "classes"]} w0={150} rows={[
-        ["Card", "section container for either list", "rounded-xl border-border/40 !shadow-none bg-card/20 · p-4 sm:p-5"],
-        ["Tabs", "Pending / Approved / Rejected with counts", "h-8 bg-muted/30 · active bg-primary/[0.08] text-emphasis border-primary/30"],
-        ["Row", "shared molecule — tint carries status", "group rounded-lg border · pending bg-card · approved accent-green · rejected destructive"],
-        ["Worker action", "withdraw (pending) / DecisionLabel (decided)", "button p-1 hover:bg-muted + X · label text-accent-green-text / text-destructive/80"],
-        ["Manager action", "checkbox + select-all + bulk Approve + inline ✓/✕", "Checkbox rounded-[4px] · select-all bar bg-muted/20 · Approve Button h-7"],
-        ["Empty", "Nothing to approve", "gradient from-primary/[0.06] · ShieldCheck + heading + hint"],
+      <h3 style={eyebrow}>Type → detail display</h3>
+      <DocTable head={["Type", "How the detail is shown", "notes"]} w0={150} rows={[
+        ["Expense (multi)", "expander “{trip} · N items” → itemised list", "each item: category · attachment · font-mono +amount"],
+        ["Expense (single)", "“Meals · PHP 6,350” + attachment", "flat detail, no expander"],
+        ["Per diem", "detail + expander “N included” → coverage list", "Breakfast / Lunch / Dinner / Hotel provided"],
+        ["Bonus", "“Q4 performance bonus · PHP 12,000” + attachment", "flat detail"],
+        ["Paid leave", "“Paid leave · 2 days · date – date” + attachment", "flat detail"],
+        ["Overtime", "“Weekday OT · Client deadline · 8h · date”", "flat detail"],
+        ["Other / Deduction", "“{reason} · PHP 1,800”", "flat detail"],
+        ["Contractor", "Addition / Deduction · description · amount", "deductions negative; no expanders"],
       ]} />
     </div>
   ),

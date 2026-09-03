@@ -1,6 +1,6 @@
 import * as React from "react";
 import type { Meta, StoryObj } from "@storybook/react";
-import { Search, ChevronRight, ChevronDown, CheckCircle2, Plus, Loader2, Clock, Calendar } from "lucide-react";
+import { Search, ChevronRight, ChevronDown, CheckCircle2, Plus, Loader2, Clock, Calendar, Paperclip } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { DocTable, wrap, eyebrow, note, PageHeader } from "./_docTable";
@@ -217,6 +217,85 @@ export const PayrollBatch: Story = {
         ["Pending + count", <div className="w-[280px]"><PayrollRow r={{ n: "Maria Santos", c: "🇵🇭 Philippines", a: "PHP 238,000", status: "pending", count: 8 }} /></div>, "amber pill + count badge = open adjustments to resolve"],
         ["Manual", <div className="w-[280px]"><PayrollRow r={{ n: "Alex Hansen", c: "🇳🇴 Norway · Manual", a: "—", status: "pending", count: 4 }} /></div>, "amount “—” · “· Manual” in subtext · handled outside the auto-run"],
       ]} />
+
+      <h3 style={eyebrow}>Adjustments in payroll (admin review)</h3>
+      <p style={{ ...note, marginTop: 0, marginBottom: 12 }}>Opening a worker with a count badge shows their pay-breakdown drawer, where submitted adjustments appear as Earnings / Deductions line items — the <b>same expandable display</b> as the worker dashboard (an Expense expands to its items), each carrying a <b>pending</b> badge and a signed <code>font-mono</code> amount, with Approve-all / Reject-all at the foot.</p>
+      <div style={{ display: "flex", justifyContent: "center", padding: "4px 0" }}>
+        <div className="w-[440px] max-w-full rounded-lg border border-border bg-background shadow-overlay overflow-hidden">
+          <div className="px-5 pt-4 pb-3 border-b border-border/30">
+            <div className="flex items-center gap-2"><span className="text-base font-semibold text-foreground">Maria Santos</span><span>🇵🇭</span></div>
+            <p className="text-[11px] text-muted-foreground/60 mt-0.5">Employee · Jan 1 – Jan 31</p>
+          </div>
+          <div className="p-5 space-y-4">
+            <div className="text-center">
+              <p className="text-[10px] uppercase tracking-wide text-muted-foreground/70">Estimated net</p>
+              <p className="text-2xl font-bold text-foreground tabular-nums">PHP 238,000</p>
+            </div>
+
+            {/* Earnings */}
+            <div>
+              <div className="flex items-center justify-between mb-2"><span className="text-xs font-medium text-muted-foreground uppercase tracking-wide">Earnings</span><span className="text-[10px] text-muted-foreground/60 tabular-nums">4</span></div>
+              <div className="space-y-1.5">
+                {/* Expense — expandable */}
+                <div>
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-1 min-w-0">
+                      <span className="text-sm font-semibold text-foreground truncate">NY trip</span>
+                      <ChevronDown className="h-3.5 w-3.5 text-muted-foreground/60 rotate-180" />
+                      <div className="flex items-center gap-1.5 ml-1">
+                        <span className="text-[10px] font-medium text-orange-500 dark:text-orange-400">2 pending</span>
+                        <span className="text-[10px] text-muted-foreground/50">2 items</span>
+                      </div>
+                    </div>
+                    <span className="text-sm tabular-nums font-mono text-foreground shrink-0">+₱8,500.00</span>
+                  </div>
+                  <div className="mt-1 space-y-0.5">
+                    {([["Travel", 3, "+₱5,200.00"], ["Meals", 2, "+₱3,300.00"]] as [string, number, string][]).map(([cat, att, amt]) => (
+                      <div key={cat} className="rounded-md hover:bg-muted border border-transparent">
+                        <div className="flex items-center gap-2.5 pl-2.5 pr-2 py-1">
+                          <div className="flex-1 min-w-0"><div className="flex items-center gap-2">
+                            <span className="text-xs font-medium text-foreground">{cat}</span>
+                            <span className="inline-flex items-center h-4 px-1.5 rounded text-[9px] font-semibold uppercase tracking-wide bg-orange-100/80 dark:bg-orange-500/15 text-orange-600 dark:text-orange-400">pending</span>
+                            <span className="text-[10px] text-muted-foreground/50 flex items-center gap-0.5"><Paperclip className="h-2.5 w-2.5" /> {att}</span>
+                          </div></div>
+                          <span className="text-xs tabular-nums font-mono font-medium text-foreground shrink-0">{amt}</span>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+                {/* Bonus — flat */}
+                <div className="flex items-center justify-between px-0.5">
+                  <div className="flex items-center gap-2 min-w-0">
+                    <span className="text-sm font-medium text-foreground truncate">Q2 delivery bonus</span>
+                    <span className="inline-flex items-center h-4 px-1.5 rounded text-[9px] font-semibold uppercase tracking-wide bg-orange-100/80 dark:bg-orange-500/15 text-orange-600 dark:text-orange-400">pending</span>
+                  </div>
+                  <span className="text-sm tabular-nums font-mono text-foreground shrink-0">+PHP 6,500.00</span>
+                </div>
+              </div>
+            </div>
+
+            {/* Deductions */}
+            <div>
+              <div className="flex items-center justify-between mb-2"><span className="text-xs font-medium text-muted-foreground uppercase tracking-wide">Deductions</span><span className="text-[10px] text-muted-foreground/60 tabular-nums">2</span></div>
+              <div className="flex items-center justify-between px-0.5">
+                <div className="flex items-center gap-2 min-w-0">
+                  <span className="text-sm font-medium text-foreground truncate">Overtime</span>
+                  <span className="inline-flex items-center h-4 px-1.5 rounded text-[9px] font-semibold uppercase tracking-wide bg-orange-100/80 dark:bg-orange-500/15 text-orange-600 dark:text-orange-400">pending</span>
+                  <span className="text-[11px] text-muted-foreground/70 truncate hidden sm:inline">Mixed · Exceeded daily threshold · 12h</span>
+                </div>
+                <span className="text-sm tabular-nums font-mono text-foreground shrink-0">+PHP 0.00</span>
+              </div>
+            </div>
+
+            <div className="flex gap-2 pt-3 border-t border-border/40">
+              <Button variant="outline" size="sm" className="flex-1 h-8 text-xs">Reject all (11)</Button>
+              <Button size="sm" className="flex-1 h-8 text-xs">Approve all (11)</Button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <p style={{ ...note, marginTop: 10 }}>Line item name text-sm font-semibold + ChevronDown · “N pending” text-orange-500 + “N items” text-muted-foreground/50 · signed amount font-mono · sub-item pending badge bg-orange-100/80 text-orange-600 h-4 px-1.5 + Paperclip count · footer Reject all / Approve all.</p>
     </div>
   ),
 };
