@@ -42,6 +42,8 @@ const PATTERNS: [string, string][] = [
   ["Login", "logged-out auth flow — sign in, reset password, check email, set new password"],
   ["Payroll Batch", "F1 payroll — batch selector, status lifecycle, white-card rows, batch types"],
   ["Worker Pipeline", "F1 workers kanban — stage columns, worker cards, stage-based action pairs"],
+  ["Payroll Run", "F1 payroll run stepper — Submissions → Exceptions → Approve → Track, step states"],
+  ["Payslip Preview", "F1 payslip dialog — header, worker card, Gross/Deductions/Net tiles, line items"],
 ];
 
 // Composite list/table views documented inside Components/Table & List.
