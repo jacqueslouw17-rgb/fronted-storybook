@@ -1,6 +1,6 @@
 import * as React from "react";
 import type { Meta, StoryObj } from "@storybook/react";
-import { Check, X, Sparkles, Paperclip, ChevronDown } from "lucide-react";
+import { Check, X, Paperclip, ChevronDown } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { DocTable, wrap, eyebrow, note, PageHeader } from "./_docTable";
@@ -274,27 +274,14 @@ export const AdjustmentsApprovals: Story = {
       </div>
       <p style={{ ...note, marginTop: 4 }}>Contractor uses only Addition / Deduction — flat description · amount (deductions negative, e.g. -EUR 240), attachment popover, no leave/per-diem/expense expanders.</p>
 
-      <h3 style={eyebrow}>Empty states</h3>
-      <p style={{ ...note, marginTop: 0, marginBottom: 10 }}>Two real states: a plain <b>per-tab label</b> when a tab has no rows (this is what shows on Adjustments / Approvals), and the shared <b>MinimalEmptyState</b> (soft gradient + icon) only when the whole list is empty — reused by Payslips (“No payslips yet”) and Invoices (“No invoices yet”).</p>
-      <div style={{ display: "grid", gap: 14 }}>
-        <div>
-          <p style={{ ...note, marginTop: 0, marginBottom: 6 }}>Per-tab empty — the tabs stay, the row area just shows a plain label (verbatim from live). Text is per-tab: “No pending requests.” / “No approved requests.” / “No rejected requests.” No Approve or select-all bar when the tab is empty.</p>
-          <div className="w-[640px] max-w-full">
-            <Card>
-              <div className="mb-4"><TabBar tabs={["Pending (0)", "Approved (12)", "Rejected (1)"]} active="Pending (0)" /></div>
-              <p className="text-sm text-muted-foreground py-6 text-center">No pending requests.</p>
-            </Card>
-          </div>
-        </div>
-        <div>
-          <p style={{ ...note, marginTop: 0, marginBottom: 6 }}>Whole-list empty — MinimalEmptyState (payslips / invoices / no adjustments at all)</p>
-          <div className="w-[640px] max-w-full"><Card>
-            <div className="flex flex-col items-center text-center py-8 px-4 -m-4 sm:-m-5 rounded-lg bg-gradient-to-br from-primary/[0.06] via-secondary/[0.04] to-accent/[0.06]">
-              <div className="w-12 h-12 rounded-full bg-background/80 border border-primary/20 flex items-center justify-center mb-4 shadow-sm"><Sparkles className="h-5 w-5 text-emphasis" /></div>
-              <h2 className="text-lg font-semibold text-foreground mb-1">No adjustments</h2>
-              <p className="text-sm text-muted-foreground max-w-[240px]">Expenses, overtime, or time off you request will show up here.</p>
-            </div>
-          </Card></div>
+      <h3 style={eyebrow}>Empty state</h3>
+      <p style={{ ...note, marginTop: 0, marginBottom: 10 }}>The tabs stay; the row area just shows a plain per-tab label (verbatim from live) — “No pending requests.” / “No approved requests.” / “No rejected requests.” No Approve or select-all bar when the tab is empty.</p>
+      <div style={{ display: "flex", justifyContent: "center", padding: "4px 0" }}>
+        <div className="w-[640px] max-w-full">
+          <Card>
+            <div className="mb-4"><TabBar tabs={["Pending (0)", "Approved (12)", "Rejected (1)"]} active="Pending (0)" /></div>
+            <p className="text-sm text-muted-foreground py-6 text-center">No pending requests.</p>
+          </Card>
         </div>
       </div>
 
