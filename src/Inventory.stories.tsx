@@ -45,6 +45,9 @@ const PATTERNS: [string, string][] = [
   ["Payslip Preview", "F1 payslip dialog — header, worker card, Gross/Deductions/Net tiles, line items"],
   ["Payout Table", "F1 payout table + manual payout drawer — amounts, status pills, mark as paid"],
   ["Off-cycle Run", "F1 off-cycle selection pool + per-worker review summary"],
+  ["Worker Detail", "F1 worker profile drawer — active + done (read-only) variants, detail sections"],
+  ["Worker Drawers", "F1 Add Candidate / Manual Worker / Onboarding Form drawers"],
+  ["Workers Grid", "F6 company-admin workers grid — worker cards with status + View"],
 ];
 
 // Composite list/table views documented inside Components/Table & List.
