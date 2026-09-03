@@ -260,6 +260,18 @@ export const ContractorInvoicing: Story = {
       <div style={{ display: "flex", justifyContent: "center", padding: "8px 0" }}><InvoiceHistoryDrawer /></div>
       <p style={{ ...note, marginTop: 10 }}>F42v81_InvoiceHistoryDrawer (list view) · Sheet w-full sm:max-w-md · header "Previous invoices" + description · list space-y-3 of cards p-4 rounded-lg border-border bg-card hover:bg-muted/30 with a bg-muted/50 FileText chip, period + "Invoiced on {"{date}"}", right-aligned amount + status badge (paid = emerald, processing = blue, pending = amber) · footer border-t "available for download within 12 months". Clicking a row opens the same receipt-style breakdown detail (with back arrow).</p>
 
+      <h3 style={eyebrow}>Empty state (no invoices)</h3>
+      <div style={{ display: "flex", justifyContent: "center", padding: "8px 0" }}>
+        <div className="w-[520px] max-w-full rounded-xl border border-border/40 bg-card/20 p-4 sm:p-5">
+          <div className="flex flex-col items-center text-center py-8 px-4 -m-4 sm:-m-5 rounded-lg bg-gradient-to-br from-primary/[0.06] via-secondary/[0.04] to-accent/[0.06]">
+            <div className="w-12 h-12 rounded-full bg-background/80 border border-primary/20 flex items-center justify-center mb-4 shadow-sm"><FileText className="h-5 w-5 text-emphasis" /></div>
+            <h2 className="text-lg font-semibold text-foreground mb-1">No invoices yet</h2>
+            <p className="text-sm text-muted-foreground max-w-[240px]">Invoices will appear here once you have been paid.</p>
+          </div>
+        </div>
+      </div>
+      <p style={{ ...note, marginTop: 10 }}>Shared MinimalEmptyState (verbatim) — gradient from-primary/[0.06] · icon circle bg-background/80 border-primary/20 + FileText · h2 “No invoices yet” + description. Same primitive as Payslips (“No payslips yet”).</p>
+
       <h3 style={eyebrow}>Anatomy</h3>
       <DocTable head={["Part", "Detail", "classes"]} w0={170} rows={[
         ["List shell", "Bordered container, count toolbar, divided rows, pagination", "rounded-xl border-border/40 bg-card/20 · toolbar border-b · rows space-y-1.5"],

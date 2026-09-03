@@ -287,11 +287,14 @@ export const TableListStory: Story = {
       <p style={note}>row group rounded-lg border-border/30 bg-card px-4 py-3 hover:bg-muted/30 · icon tile w-8 h-8 rounded-md bg-primary/[0.06] border-primary/20 + FileText text-primary/70 · amount tabular-nums · Paid pill bg-emerald-50 text-emerald-700 border-emerald-200 · Download p-1.5 hover:bg-muted/50 · contractor = invoices</p>
 
       <h3 style={eyebrow}>Empty state (pipeline column)</h3>
-      <div className="w-[240px] rounded-xl border border-border/40 bg-muted/10 flex flex-col items-center justify-center text-center py-12 px-4">
-        <p className="text-sm font-medium text-foreground">No workers yet</p>
-        <p className="text-xs text-muted-foreground mt-1">Workers appear here once Fronted starts the process.</p>
+      <div className="w-[240px] rounded-xl border border-border/40 bg-muted/10">
+        <div className="min-h-[240px] flex flex-col items-center justify-center px-4 text-center">
+          <h3 className="text-sm font-medium text-foreground mb-1">No workers yet</h3>
+          <p className="text-xs text-muted-foreground mb-4 max-w-[200px]">Add your first worker to start the contracting process</p>
+          <Button size="sm">Add Worker</Button>
+        </div>
       </div>
-      <p style={note}>pipeline column empty · centred text-sm title + text-xs muted body</p>
+      <p style={note}>pipeline column empty (verbatim) · centred min-h flex · h3 text-sm font-medium “No workers yet” + p text-xs muted “Add your first worker…” + <b>Add Worker</b> button</p>
       <Guidance k="table" />
     </div>
   ),
