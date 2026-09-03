@@ -53,6 +53,7 @@ const PATTERNS: [string, string][] = [
   ["Contractor Invoicing", "F4.2 invoices section + invoice breakdown + invoice history"],
   ["Dashboard Dialogs", "F4 confirm pay/invoice · withdraw · submit-no-changes dialogs"],
   ["Adjustments & Approvals", "F4.1 worker adjustments list + manager approvals table (shared row)"],
+  ["Settings", "F1 client settings — landing + Company details + Managers assignment"],
 ];
 
 // Composite list/table views documented inside Components/Table & List.
