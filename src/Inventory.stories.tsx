@@ -39,7 +39,9 @@ const PATTERNS: [string, string][] = [
   ["Tag Input", "chips + counter + suggestions"],
   ["Attachments & Loading", "attachment chips + table skeletons"],
   ["Adjustment Request", "6-type picker panel → per-type form (F4.1 / F4.2)"],
-  ["Login", "logged-out auth screen — glass card, email/password, Sign In"],
+  ["Login", "logged-out auth flow — sign in, reset password, check email, set new password"],
+  ["Payroll Batch", "F1 payroll — batch selector, status lifecycle, white-card rows, batch types"],
+  ["Worker Pipeline", "F1 workers kanban — stage columns, worker cards, stage-based action pairs"],
 ];
 
 // Composite list/table views documented inside Components/Table & List.
