@@ -19,7 +19,7 @@ type Story = StoryObj;
 const wrap: React.CSSProperties = { fontFamily: "var(--ds-font-body)", color: "var(--ds-color-text)", padding: 16 };
 const note: React.CSSProperties = { fontFamily: "var(--ds-font-mono)", fontSize: 11, color: "var(--ds-color-text-muted)", marginTop: 12, padding: "0 16px" };
 
-const V = ({ children }: { children: React.ReactNode }) => <mark className="bg-yellow-100 text-foreground rounded-sm px-0.5">{children}</mark>;
+const V = ({ children }: { children: React.ReactNode }) => <mark className="bg-yellow-200 text-foreground px-0.5 font-semibold">{children}</mark>;
 
 const WorkerCard = () => (
   <div className="rounded-xl border border-border/40 bg-card p-4">
@@ -46,7 +46,7 @@ export const ContractPreview: Story = {
         <h2 className="ds-h2" style={{ marginBottom: 2 }}>Reviewing Marcus's Contract</h2>
         <p className="ds-body" style={{ color: "var(--ds-color-text-muted)", marginBottom: 16 }}>Preview how this contract will appear to the worker before sending for signature.</p>
 
-        <div className="flex flex-col lg:flex-row gap-3 items-start mx-auto" style={{ maxWidth: 1040 }}>
+        <div className="flex flex-col lg:flex-row gap-2 items-start mx-auto" style={{ maxWidth: 1040 }}>
           {/* mobile: collapsed sidebar summary above the doc */}
           <div className="lg:hidden w-full">
             <button className="w-full flex items-center justify-between gap-3 px-4 py-3 rounded-xl border border-border/30 bg-card/20 hover:bg-card/40 transition-colors text-left">

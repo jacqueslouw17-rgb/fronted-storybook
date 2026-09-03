@@ -22,7 +22,7 @@ const wrap: React.CSSProperties = { fontFamily: "var(--ds-font-body)", color: "v
 const eyebrow: React.CSSProperties = { fontSize: 12, textTransform: "uppercase", letterSpacing: ".06em", color: "var(--ds-color-text-muted)", margin: "28px 0 12px", fontWeight: 600 };
 const note: React.CSSProperties = { fontFamily: "var(--ds-font-mono)", fontSize: 11, color: "var(--ds-color-text-muted)", marginTop: 10 };
 
-const Pending = () => <span className="inline-flex items-center h-4 px-1.5 rounded text-[9px] font-semibold uppercase tracking-wide bg-orange-100/80 text-orange-600">pending</span>;
+const Pending = () => <span className="inline-flex items-center h-4 px-1.5 rounded text-[9px] font-semibold uppercase tracking-wide bg-orange-100/80 dark:bg-orange-500/15 text-orange-600 dark:text-orange-400">pending</span>;
 const Attach = ({ n }: { n: number }) => <span className="inline-flex shrink-0 items-center gap-0.5 text-[10px] text-muted-foreground/70"><Paperclip className="h-2.5 w-2.5" />{n}</span>;
 const SectionHead = ({ label, count, open = true }: { label: string; count: number; open?: boolean }) => (
   <div className="flex items-center gap-1.5 pt-4 pb-1">

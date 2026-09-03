@@ -1,6 +1,5 @@
 import * as React from "react";
 import type { Meta, StoryObj } from "@storybook/react";
-import { Plus } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { DocTable, PageHeader } from "./_docTable";
 import "./tokens.css";
@@ -19,8 +18,8 @@ const wrap: React.CSSProperties = { fontFamily: "var(--ds-font-body)", color: "v
 const eyebrow: React.CSSProperties = { fontSize: 12, textTransform: "uppercase", letterSpacing: ".06em", color: "var(--ds-color-text-muted)", margin: "28px 0 12px", fontWeight: 600 };
 const note: React.CSSProperties = { fontFamily: "var(--ds-font-mono)", fontSize: 11, color: "var(--ds-color-text-muted)", marginTop: 10 };
 
-const addDocClass = "flex w-full cursor-pointer items-center justify-center gap-1.5 rounded-lg border border-dashed border-border/60 px-3 py-2.5 text-xs font-medium text-muted-foreground transition-colors hover:border-primary/40 hover:bg-muted/30 hover:text-foreground";
-const actionClass = "rounded text-[11px] font-medium text-foreground/80 transition-colors hover:text-foreground hover:underline";
+const addDocClass = "flex w-full cursor-pointer items-center justify-center rounded-lg border border-dashed border-border/60 px-3 py-2.5 text-xs font-medium text-muted-foreground transition-colors hover:border-primary/40 hover:bg-muted/30 hover:text-foreground focus-within:border-primary/50 focus-within:bg-muted/30 focus-within:text-foreground focus-within:ring-2 focus-within:ring-ring focus-within:ring-offset-2 focus-within:ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background";
+const actionClass = "rounded text-[11px] font-medium text-foreground/80 transition-colors hover:text-foreground hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background";
 
 function DocRow({ name, meta: m, status = "done", error }: { name: string; meta?: string; status?: "done" | "uploading" | "error"; error?: string }) {
   const isError = status === "error", isUploading = status === "uploading";
@@ -53,7 +52,7 @@ export const DocumentUpload: Story = {
       />
 
       <h3 style={eyebrow}>Add dropzone</h3>
-      <div className="w-[420px]"><label className={addDocClass}><Plus className="h-3.5 w-3.5" /> Upload document</label></div>
+      <div className="w-[420px]"><label className={addDocClass}><span>Upload document</span></label></div>
       <p style={note}>border border-dashed border-border/60 px-3 py-2.5 text-xs · hover:border-primary/40 hover:bg-muted/30 · focus ring</p>
 
       <h3 style={eyebrow}>Uploaded row states</h3>

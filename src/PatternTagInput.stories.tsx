@@ -44,20 +44,20 @@ export const TagInput: Story = {
       <h3 style={eyebrow}>With tags + counter</h3>
       <div className="space-y-1.5 w-[380px]">
         <Label className="text-xs">Tags</Label>
-        <div className="flex flex-wrap items-center gap-1.5 rounded-md border border-input bg-background px-2 py-1.5 min-h-10">
+        <div className="flex flex-wrap items-center gap-1.5 min-h-[36px] px-2.5 py-1.5 rounded-md border bg-background transition-colors cursor-text border-input">
           <Chip label="NY trip" />
           <Chip label="Client dinner" />
           <input className="flex-1 min-w-[80px] bg-transparent text-xs outline-none placeholder:text-muted-foreground" placeholder="" />
         </div>
         <div className="flex items-start justify-between gap-3">
-          <p className="text-[11px] text-muted-foreground">Add tags to group expenses or give context (e.g., 'NY trip').</p>
+          <p className="text-[11px] text-muted-foreground">Add tags to group expenses or give context (e.g., ‘NY trip’, ‘Client dinner’).</p>
           <p className="text-[11px] tabular-nums text-muted-foreground shrink-0 ml-auto">120 characters left</p>
         </div>
       </div>
 
       <h3 style={eyebrow}>Empty + suggestions open</h3>
       <div className="space-y-1.5 w-[380px]">
-        <div className="flex flex-wrap items-center gap-1.5 rounded-md border border-input bg-background px-2 py-1.5 min-h-10">
+        <div className="flex flex-wrap items-center gap-1.5 min-h-[36px] px-2.5 py-1.5 rounded-md border bg-background transition-colors cursor-text border-input">
           <input className="flex-1 min-w-[80px] bg-transparent text-xs outline-none placeholder:text-muted-foreground" placeholder="Type and press Enter" />
         </div>
         <div className="rounded-md border border-border/60 bg-popover shadow-md py-1 max-h-[140px] overflow-y-auto">
