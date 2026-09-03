@@ -278,8 +278,13 @@ export const AdjustmentsApprovals: Story = {
       <p style={{ ...note, marginTop: 0, marginBottom: 10 }}>Two real states: a plain <b>per-tab label</b> when a tab has no rows (this is what shows on Adjustments / Approvals), and the shared <b>MinimalEmptyState</b> (soft gradient + icon) only when the whole list is empty — reused by Payslips (“No payslips yet”) and Invoices (“No invoices yet”).</p>
       <div style={{ display: "grid", gap: 14 }}>
         <div>
-          <p style={{ ...note, marginTop: 0, marginBottom: 6 }}>Per-tab empty — Adjustments / Approvals (the common case)</p>
-          <div className="w-[640px] max-w-full"><Card><p className="text-sm text-muted-foreground py-6 text-center">No pending requests.</p></Card></div>
+          <p style={{ ...note, marginTop: 0, marginBottom: 6 }}>Per-tab empty — the tabs stay, the row area just shows a plain label (verbatim from live). Text is per-tab: “No pending requests.” / “No approved requests.” / “No rejected requests.” No Approve or select-all bar when the tab is empty.</p>
+          <div className="w-[640px] max-w-full">
+            <Card>
+              <div className="mb-4"><TabBar tabs={["Pending (0)", "Approved (12)", "Rejected (1)"]} active="Pending (0)" /></div>
+              <p className="text-sm text-muted-foreground py-6 text-center">No pending requests.</p>
+            </Card>
+          </div>
         </div>
         <div>
           <p style={{ ...note, marginTop: 0, marginBottom: 6 }}>Whole-list empty — MinimalEmptyState (payslips / invoices / no adjustments at all)</p>
