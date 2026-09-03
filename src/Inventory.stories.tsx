@@ -36,7 +36,6 @@ const PATTERNS: [string, string][] = [
   ["Signature Workflow", "F1 signing drawer — progress + Admin/Send/Worker steps + signed card"],
   ["Contract Preview", "sidebar + doc viewer + highlighted variables"],
   ["Contract Workspace", "F1 review-details form — Personal + Working Engagement + country terms"],
-  ["Agreement Viewer", "F1 read-only signed agreement — document + signature block"],
   ["Document Upload", "dropzone + file rows (done / uploading / error)"],
   ["Tag Input", "chips + counter + suggestions"],
   ["Attachments & Loading", "attachment chips + table skeletons"],
