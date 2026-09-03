@@ -36,6 +36,8 @@ const PATTERNS: [string, string][] = [
   ["Signature Workflow", "F1 signing drawer — progress + Admin/Send/Worker steps + signed card"],
   ["Contract Preview", "sidebar + doc viewer + highlighted variables"],
   ["Contract Workspace", "F1 review-details form — Personal + Working Engagement + country terms"],
+  ["Data Collection Stepper", "F2 wizard progress — Intro · Core · Payroll · Review · Success"],
+  ["Onboarding Steps", "F3 self-onboarding — Welcome, Personal Profile, Tax, Bank, Completion"],
   ["Document Upload", "dropzone + file rows (done / uploading / error)"],
   ["Tag Input", "chips + counter + suggestions"],
   ["Attachments & Loading", "attachment chips + table skeletons"],
