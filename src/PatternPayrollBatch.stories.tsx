@@ -64,12 +64,26 @@ function BatchStatus({ s }: { s: "review" | "processing" | "paid" }) {
   return <span className="inline-flex items-center gap-1.5 text-xs font-medium text-accent-green-text"><CheckCircle2 className="h-3 w-3" />Paid</span>;
 }
 
-/** The batch selector chip (opens the selector below). */
+/** The batch selector chip (opens the selector). Verbatim: transparent button, pulsing
+ *  amber "in review" dot, sits inside a bordered container above the table. */
 function BatchChip() {
   return (
-    <button className="inline-flex items-center gap-2 rounded-full border border-border/60 bg-card px-3.5 py-1.5 text-sm font-medium text-foreground hover:bg-muted/30">
-      <span className="h-2 w-2 rounded-full bg-amber-500" />Monthly · Jan 2026<ChevronDown className="h-3.5 w-3.5 text-muted-foreground" />
+    <button className="group flex items-center gap-2 px-2 py-1 rounded-md bg-transparent hover:bg-muted/40 transition-colors text-sm font-medium text-foreground">
+      <span className="relative inline-flex h-2 w-2">
+        <span className="absolute inline-flex h-full w-full rounded-full bg-amber-400 opacity-40 animate-ping" />
+        <span className="relative inline-flex h-2 w-2 rounded-full bg-amber-500" />
+      </span>
+      Monthly · Jan 2026<ChevronDown className="h-3.5 w-3.5 text-muted-foreground" />
     </button>
+  );
+}
+
+/** The container that wraps the batch selector above the table. */
+function BatchHeaderContainer() {
+  return (
+    <div className="flex items-center justify-center rounded-xl border border-border/60 bg-card px-4 py-2.5">
+      <BatchChip />
+    </div>
   );
 }
 
@@ -107,9 +121,9 @@ export const PayrollBatch: Story = {
       />
 
       <h3 style={eyebrow}>Batch — in review</h3>
-      <div style={{ display: "flex", justifyContent: "center", marginBottom: 12 }}><BatchChip /></div>
+      <div style={{ marginBottom: 12 }}><BatchHeaderContainer /></div>
       <BatchCard status="review" />
-      <p style={{ ...note, marginTop: 10 }}>Chip ● Monthly · Jan 2026 (amber = in review) · header 14 employees on payroll + search + gradient Continue to payout · divided rows.</p>
+      <p style={{ ...note, marginTop: 10 }}>Batch selector sits in a bordered container above the table · pulsing amber dot = in review · header 14 employees on payroll + search + gradient Continue to payout · divided rows.</p>
 
       <h3 style={eyebrow}>Batch selector</h3>
       <div style={{ maxWidth: 360, border: "1px solid var(--ds-color-border)", borderRadius: 14, overflow: "hidden", background: "var(--ds-color-surface)", boxShadow: "var(--shadow-overlay)" }}>
@@ -122,7 +136,7 @@ export const PayrollBatch: Story = {
             <div><div className="text-sm font-medium text-foreground">Fortnightly · Jan 15–31</div><div className="text-[11px] text-muted-foreground">Pay date · 30 Jan</div></div>
             <BatchStatus s="review" />
           </div>
-          <button className="mt-1 flex w-full items-center justify-center gap-1.5 rounded-lg border border-dashed border-border/70 px-3 py-2 text-xs font-medium text-emphasis hover:bg-muted/30"><Plus className="h-3.5 w-3.5" /> Create Off-Cycle Batch</button>
+          <button className="mt-1 flex w-full items-center justify-center gap-1.5 rounded-lg border border-dashed border-accent-purple-outline/40 px-3 py-2 text-xs font-medium text-accent-purple-text hover:bg-accent-purple-fill/50"><Plus className="h-3.5 w-3.5" /> Create Off-Cycle Batch</button>
         </div>
         <div className="border-t border-border/40 px-3 pt-2 pb-1"><span className="text-[10px] font-semibold uppercase tracking-wide text-muted-foreground">History</span></div>
         <div className="px-1.5 pb-1.5">
@@ -142,11 +156,14 @@ export const PayrollBatch: Story = {
 
       <h3 style={eyebrow}>Batch types</h3>
       <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
-        {["Monthly", "Fortnightly", "Off-cycle"].map((t) => (
-          <span key={t} className="inline-flex items-center gap-1.5 rounded-full border border-border/60 bg-card px-3 py-1 text-xs font-medium text-foreground"><Clock className="h-3 w-3 text-muted-foreground" />{t}</span>
+        {[{ t: "Monthly" }, { t: "Fortnightly" }, { t: "Off-cycle", purple: true }].map(({ t, purple }) => (
+          <span key={t} className={cn("inline-flex items-center gap-1.5 rounded-full border px-3 py-1 text-xs font-medium",
+            purple ? "border-accent-purple-outline/40 bg-accent-purple-fill/40 text-accent-purple-text" : "border-border/60 bg-card text-foreground")}>
+            <Clock className={cn("h-3 w-3", purple ? "text-accent-purple-text" : "text-muted-foreground")} />{t}
+          </span>
         ))}
       </div>
-      <p style={{ ...note, marginTop: 10 }}>Monthly &amp; Fortnightly are recurring; Off-cycle is created on demand (Create Off-Cycle Batch) for an ad-hoc run — same list pattern.</p>
+      <p style={{ ...note, marginTop: 10 }}>Monthly &amp; Fortnightly are recurring; <b>Off-cycle is created on demand and carries a purple treatment</b> (accent-purple tokens) — same list pattern, ad-hoc run.</p>
 
       <h3 style={eyebrow}>Row variants (reused from Table &amp; List)</h3>
       <DocTable head={["Variant", "Example", "Notes"]} w0={130} rows={[
