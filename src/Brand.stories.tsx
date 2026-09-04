@@ -19,6 +19,7 @@ const TEAL = "var(--ds-color-focus-ring)";           // teal accent
 const INK = "var(--ds-color-heading)";
 const BORDER = "var(--ds-color-border)";
 const MUTED = "var(--ds-color-text-muted)";
+const LOGO = "https://cdn.prod.website-files.com/683ed5bafb6d925e61d1e818/68652122561ff150f9475f5d_Asset%2031%402x.avif";
 
 const heading = (s: React.CSSProperties = {}): React.CSSProperties => ({ fontFamily: "var(--ds-font-heading)", color: INK, ...s });
 const label: React.CSSProperties = { fontSize: 10.5, fontWeight: 700, textTransform: "uppercase", letterSpacing: ".12em", color: TEAL };
@@ -62,10 +63,8 @@ export const BrandPage: Story = {
           {/* Header band */}
           <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", gap: 24, flexWrap: "wrap", padding: "26px 28px", borderBottom: `1px solid ${BORDER}`, background: YELLOW_TINT }}>
             <div style={{ minWidth: 0 }}>
-              <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 14 }}>
-                <span style={{ width: 26, height: 26, borderRadius: 8, background: YELLOW, display: "inline-flex", alignItems: "center", justifyContent: "center", fontWeight: 800, color: INK, fontFamily: "var(--ds-font-heading)", fontSize: 15 }}>F</span>
-                <span style={{ ...label, color: INK, opacity: 0.7 }}>Fronted · Brand Canvas</span>
-              </div>
+              <img src={LOGO} alt="Fronted" style={{ height: 30, width: "auto", display: "block", marginBottom: 12 }} />
+              <div style={{ ...label, color: INK, opacity: 0.6, marginBottom: 12 }}>Brand Canvas</div>
               <h1 style={heading({ fontSize: 34, fontWeight: 600, letterSpacing: "-0.02em", lineHeight: 1.1, margin: 0 })}>The only partner you need to go global.</h1>
             </div>
             <div style={{ maxWidth: 300, borderLeft: `3px solid ${YELLOW}`, paddingLeft: 16 }}>
@@ -102,17 +101,23 @@ export const BrandPage: Story = {
               </div>
             </Cell>
 
-            {/* Positioning + Audience */}
-            <Cell span={3}>
-              {cellLabel("Positioning · what we are")}
-              <p style={{ fontSize: 13.5, lineHeight: 1.55, margin: 0, color: MUTED }}>
-                Fronted handles <b style={{ color: INK }}>recruitment, employment and entity setup & management</b> in one place — so growth companies go abroad fast and compliant, without stitching together a provider per country.
+            {/* Problem → Positioning → Audience */}
+            <Cell span={2}>
+              {cellLabel("The problem · why we exist")}
+              <p style={{ fontSize: 13, lineHeight: 1.55, margin: 0, color: MUTED }}>
+                Going global is slow and risky. Companies <b style={{ color: INK }}>stitch together a provider per country</b> — recruiters, lawyers, payroll, accountants, EOR — with no single system, and carry the compliance risk themselves.
               </p>
             </Cell>
-            <Cell span={3} style={{ borderRight: "none" }}>
+            <Cell span={2}>
+              {cellLabel("Positioning · what we are")}
+              <p style={{ fontSize: 13, lineHeight: 1.55, margin: 0, color: MUTED }}>
+                <b style={{ color: INK }}>One partner</b> for recruitment, employment and entity setup &amp; management — so growth companies go abroad fast and compliant, without the patchwork.
+              </p>
+            </Cell>
+            <Cell span={2} style={{ borderRight: "none" }}>
               {cellLabel("Audience · who it's for")}
-              <p style={{ fontSize: 13.5, lineHeight: 1.55, margin: 0, color: MUTED }}>
-                Forward-leaning <b style={{ color: INK }}>growth companies & scale-ups</b> — Nordics first, EU & U.S. — going global. Founders/CEOs and People/HR leaders. And the <b style={{ color: INK }}>workers</b>: paid correctly, on time, with a human on the other end.
+              <p style={{ fontSize: 13, lineHeight: 1.55, margin: 0, color: MUTED }}>
+                Forward-leaning <b style={{ color: INK }}>growth companies &amp; scale-ups</b> — Nordics first, EU &amp; U.S. Founders/CEOs and People/HR leaders — and the <b style={{ color: INK }}>workers</b>: paid correctly, on time, with a human on the other end.
               </p>
             </Cell>
 
@@ -167,13 +172,11 @@ export const BrandPage: Story = {
                 </div>
               ))}
             </div>
-            <div style={{ fontSize: 11.5, color: MUTED, maxWidth: 300, textAlign: "right" }}>
-              Distilled from <a href="https://app.notion.com/p/This-is-Fronted-1cbe1940ba3881aba56cd1f62d44ddc6" target="_blank" rel="noreferrer" style={{ color: INK, fontWeight: 600 }}>“This is Fronted”</a> &amp; <a href="https://fronted.com" target="_blank" rel="noreferrer" style={{ color: INK, fontWeight: 600 }}>fronted.com</a>. Living source in Notion — keep in sync, don't fork.
+            <div style={{ fontSize: 11.5, color: MUTED, maxWidth: 320, textAlign: "right" }}>
+              Distilled from <a href="https://app.notion.com/p/This-is-Fronted-1cbe1940ba3881aba56cd1f62d44ddc6" target="_blank" rel="noreferrer" style={{ color: INK, fontWeight: 600 }}>“This is Fronted”</a> &amp; <a href="https://fronted.com" target="_blank" rel="noreferrer" style={{ color: INK, fontWeight: 600 }}>fronted.com</a>.
             </div>
           </div>
         </div>
-
-        <p style={{ fontSize: 12, color: MUTED, textAlign: "center", margin: "18px 0 0" }}>Brand → Design Strategy → Foundations → Components → Patterns. This canvas is the top of the ladder the system builds on.</p>
       </div>
     </div>
   ),
