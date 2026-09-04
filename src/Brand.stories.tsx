@@ -1,173 +1,179 @@
 import * as React from "react";
-import type { Meta, StoryObj } from "@storybook/react";
 import "./tokens.css";
 import "./typography.css";
+import type { Meta, StoryObj } from "@storybook/react";
 
 /**
- * Brand — the strategy the design system ladders up from.
+ * Brand — a single designed canvas of Fronted's strategy, on the Fronted brand.
  * Distilled from the CEO's "This is Fronted" (Notion · Company Overview) and fronted.com.
- * This page is a read-only mirror; the living source stays in Notion.
+ * Read-only mirror — the living source stays in Notion. Locked to the Fronted brand identity.
  */
 const meta: Meta = { title: "Brand", parameters: { layout: "fullscreen" } };
 export default meta;
 type Story = StoryObj;
 
-const page: React.CSSProperties = { fontFamily: "var(--ds-font-body)", color: "var(--ds-color-text)", maxWidth: 1040, margin: "0 auto", padding: "56px 40px 96px" };
-const muted: React.CSSProperties = { color: "var(--ds-color-text-muted)" };
-const eyebrow: React.CSSProperties = { fontSize: 11.5, fontWeight: 700, textTransform: "uppercase", letterSpacing: ".13em", color: "var(--ds-color-text-muted)" };
-const h2: React.CSSProperties = { fontFamily: "var(--ds-font-heading)", fontSize: 12, fontWeight: 700, textTransform: "uppercase", letterSpacing: ".1em", color: "var(--ds-color-heading)", margin: "0 0 16px" };
-const card: React.CSSProperties = { border: "1px solid var(--ds-color-border)", borderRadius: 16, padding: "22px 24px", background: "var(--ds-color-surface)" };
-const rule = () => <div style={{ height: 1, background: "var(--ds-color-border)", margin: "44px 0" }} />;
+/* brand tokens (Fronted :root) */
+const YELLOW = "var(--ds-action-primary-bg)";       // brand yellow
+const YELLOW_TINT = "var(--ds-color-surface-accent)"; // yellow-50
+const TEAL = "var(--ds-color-focus-ring)";           // teal accent
+const INK = "var(--ds-color-heading)";
+const BORDER = "var(--ds-color-border)";
+const MUTED = "var(--ds-color-text-muted)";
 
-const MODULES: { stage: string; name: string; who: string; body: string; tint: string }[] = [
-  { stage: "Starter · First hire abroad", name: "Recruitment", who: "Find the right people, wherever they are", body: "Source and recruit key talent in the country, market or timezone you need — not limited by your local pool. The entry point that converts naturally into EOR and Entity.", tint: "var(--ds-color-focus-ring)" },
-  { stage: "Growth · Build your team", name: "EOR + COR", who: "Hire employees or contractors, no local entity", body: "Employer of Record and Contractor of Record: local contracts, payroll, benefits and labour law handled across countries — one invoice a month, so you stay focused on growth.", tint: "#16a34a" },
-  { stage: "Scale · Own your entity", name: "Entity as a Service", who: "When you outgrow EOR", body: "We set up your local entity and keep it running across 40+ countries — bookkeeping, VAT, payroll, annual accounts, tax filings, compliance. All on autopilot.", tint: "#7c3aed" },
+const heading = (s: React.CSSProperties = {}): React.CSSProperties => ({ fontFamily: "var(--ds-font-heading)", color: INK, ...s });
+const label: React.CSSProperties = { fontSize: 10.5, fontWeight: 700, textTransform: "uppercase", letterSpacing: ".12em", color: TEAL };
+
+/* a canvas cell: label chip + content, grid lines drawn by the board */
+function Cell({ span = 2, tint, children, style }: { span?: number; tint?: string; children: React.ReactNode; style?: React.CSSProperties }) {
+  return (
+    <div style={{ gridColumn: `span ${span}`, borderRight: `1px solid ${BORDER}`, borderBottom: `1px solid ${BORDER}`, padding: 22, background: tint ?? "transparent", minWidth: 0, ...style }}>
+      {children}
+    </div>
+  );
+}
+const cellLabel = (t: string) => <div style={{ ...label, marginBottom: 10 }}>{t}</div>;
+
+const MODULES = [
+  { stage: "Starter", name: "Recruitment", who: "First hire abroad", body: "Source and recruit talent in the country, market or timezone you need. The entry point that converts into EOR & Entity.", tint: TEAL },
+  { stage: "Growth", name: "EOR + COR", who: "Build your team", body: "Hire employees or contractors with no local entity — contracts, payroll, benefits & compliance, one invoice a month.", tint: "#16a34a" },
+  { stage: "Scale", name: "Entity as a Service", who: "Own your entity", body: "We set up & run your local entity across 40+ countries — bookkeeping, VAT, payroll, accounts, tax, compliance.", tint: "#7c3aed" },
 ];
-
 const PILLARS: [string, string][] = [
-  ["One partner, not ten vendors", "Recruitment, employment and entity in one system — no patchwork of providers to stitch together."],
-  ["Compliant by design", "Nordic standards applied globally: clear processes, transparency, trust — no surprises."],
-  ["Fast execution", "Speed and flexibility are the core advantage. Move fast without shortcuts."],
-  ["The human touch", "When the stakes are high, customers reach experienced people — not chatbots."],
-  ["Always productising", "A software-enabled service: every repeatable manual process becomes a product."],
+  ["One partner, not ten vendors", "Recruitment, employment & entity in one system — no patchwork."],
+  ["Compliant by design", "Nordic standards, applied globally. No surprises."],
+  ["Fast execution", "Speed & flexibility are the advantage — without shortcuts."],
+  ["The human touch", "When stakes are high, real people — not chatbots."],
+  ["Always productising", "Every repeatable manual process becomes a product."],
 ];
-
-const BEHAVIOURS: [string, string][] = [
-  ["Be a good person", "Kind, good intentions, integrity. How you treat people matters as much as what you deliver."],
-  ["Always be productising", "When there's repeatability, build a system to make it better."],
-  ["Take action, now", "Don't wait for perfect information — make a call, move, adjust. Bring a solution."],
-  ["Stay curious", "Ask why. Question assumptions. The best insight comes from being genuinely interested."],
-  ["Be authentic", "Use best practice, but bring yourself. People trust people, not processes."],
-];
-
-const VOICE_DO = ["Clear and direct — plain language, no jargon", "Warm and human — talk to a person, not an account", "Confident, not hype — proof over adjectives", "Transparent — set expectations, no surprises"];
-const VOICE_DONT = ["Corporate or legalistic wording", "Over-promising or salesy superlatives", "Cold, faceless “platform” tone", "Hiding cost, effort or caveats"];
-
-const STATS: [string, string][] = [["$100M", "ARR ambition (2031)"], ["5,000", "employees on EOR"], ["1,000+", "entity customers"], ["125%+", "net revenue retention"]];
+const BEHAVIOURS = ["Be a good person", "Always be productising", "Take action, now", "Stay curious", "Be authentic"];
+const VOICE_DO = ["Clear & direct — plain language", "Warm & human — a person, not an account", "Confident, not hype — proof over adjectives", "Transparent — no surprises"];
+const VOICE_DONT = ["Corporate or legalistic wording", "Salesy superlatives & over-promising", "Cold, faceless “platform” tone", "Hiding cost, effort or caveats"];
+const STATS: [string, string][] = [["$100M", "ARR (2031)"], ["5,000", "on EOR"], ["1,000+", "entity customers"], ["125%+", "net revenue retention"]];
 
 export const BrandPage: Story = {
   name: "Brand",
   render: () => (
-    <div style={page}>
-      {/* Hero */}
-      <div style={{ display: "flex", alignItems: "center", gap: 9, marginBottom: 18 }}>
-        <span style={{ width: 7, height: 7, borderRadius: 999, background: "var(--ds-color-focus-ring)" }} />
-        <span style={eyebrow}>Fronted · Brand</span>
-      </div>
-      <h1 style={{ fontFamily: "var(--ds-font-heading)", fontSize: 54, lineHeight: 1.03, letterSpacing: "-0.03em", fontWeight: 600, color: "var(--ds-color-heading)", margin: 0, maxWidth: 860 }}>
-        The only partner you need to go global.
-      </h1>
-      <p style={{ fontSize: 19, lineHeight: 1.6, opacity: 0.85, maxWidth: 680, margin: "22px 0 0" }}>
-        Fronted handles recruitment, employment and entity setup &amp; management — so companies go abroad fast and compliant, without the usual hassle. This page distils the brand the design system ladders up from.
-      </p>
+    <div data-theme="fronted" style={{ fontFamily: "var(--ds-font-body)", color: "var(--ds-color-text)", background: "var(--ds-color-surface-sunken, #fafafa)", minHeight: "100vh", padding: "40px 32px 72px" }}>
+      <div style={{ maxWidth: 1120, margin: "0 auto" }}>
 
-      {rule()}
+        {/* Board */}
+        <div style={{ border: `1px solid ${BORDER}`, borderRadius: 22, overflow: "hidden", background: "var(--ds-color-surface)", boxShadow: "0 24px 60px -30px rgba(16,24,40,0.28)" }}>
 
-      {/* Mission + Vision */}
-      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(320px, 1fr))", gap: 18 }}>
-        <div style={{ ...card, background: "var(--ds-color-surface-accent)" }}>
-          <div style={eyebrow}>Mission</div>
-          <p style={{ fontFamily: "var(--ds-font-heading)", fontSize: 22, lineHeight: 1.3, fontWeight: 600, color: "var(--ds-color-heading)", margin: "10px 0 0" }}>
-            Make operating in any country as easy as operating at home.
-          </p>
-        </div>
-        <div style={card}>
-          <div style={eyebrow}>Vision · the 2031 ambition</div>
-          <p style={{ fontSize: 15.5, lineHeight: 1.6, margin: "10px 0 0" }}>
-            <b style={{ color: "var(--ds-color-heading)" }}>The global company operating system.</b> The one partner you need to go global — instead of five per country. The infrastructure layer that puts international operations on autopilot. Not a consultancy or a point solution.
-          </p>
-        </div>
-      </div>
-
-      {rule()}
-
-      {/* The growth ladder */}
-      <h2 style={h2}>The growth ladder — one partner, from first hire to your own entity</h2>
-      <p style={{ ...muted, fontSize: 14, margin: "-6px 0 18px", maxWidth: 720 }}>Start where you are. Three modules deliver the “one partner” promise — no vendor switching as you grow.</p>
-      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))", gap: 16 }}>
-        {MODULES.map((m) => (
-          <div key={m.name} style={{ ...card, position: "relative", overflow: "hidden" }}>
-            <div style={{ position: "absolute", top: 0, left: 0, right: 0, height: 3, background: m.tint }} />
-            <div style={{ ...eyebrow, color: m.tint }}>{m.stage}</div>
-            <div style={{ fontFamily: "var(--ds-font-heading)", fontSize: 20, fontWeight: 600, color: "var(--ds-color-heading)", margin: "8px 0 2px" }}>{m.name}</div>
-            <div style={{ fontSize: 13, fontWeight: 600, ...muted, marginBottom: 8 }}>{m.who}</div>
-            <p style={{ fontSize: 13.5, lineHeight: 1.55, ...muted, margin: 0 }}>{m.body}</p>
+          {/* Header band */}
+          <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", gap: 24, flexWrap: "wrap", padding: "26px 28px", borderBottom: `1px solid ${BORDER}`, background: YELLOW_TINT }}>
+            <div style={{ minWidth: 0 }}>
+              <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 14 }}>
+                <span style={{ width: 26, height: 26, borderRadius: 8, background: YELLOW, display: "inline-flex", alignItems: "center", justifyContent: "center", fontWeight: 800, color: INK, fontFamily: "var(--ds-font-heading)", fontSize: 15 }}>F</span>
+                <span style={{ ...label, color: INK, opacity: 0.7 }}>Fronted · Brand Canvas</span>
+              </div>
+              <h1 style={heading({ fontSize: 34, fontWeight: 600, letterSpacing: "-0.02em", lineHeight: 1.1, margin: 0 })}>The only partner you need to go global.</h1>
+            </div>
+            <div style={{ maxWidth: 300, borderLeft: `3px solid ${YELLOW}`, paddingLeft: 16 }}>
+              <div style={{ ...label, marginBottom: 6 }}>Mission</div>
+              <p style={heading({ fontSize: 16, fontWeight: 600, lineHeight: 1.35, margin: 0 })}>Make operating in any country as easy as operating at home.</p>
+            </div>
           </div>
-        ))}
-      </div>
 
-      {rule()}
+          {/* Canvas grid */}
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(6, 1fr)", borderTop: `1px solid ${BORDER}` }}>
 
-      {/* Audience */}
-      <h2 style={h2}>Who it's for</h2>
-      <p style={{ fontSize: 16, lineHeight: 1.6, maxWidth: 760, margin: 0 }}>
-        Forward-leaning <b style={{ color: "var(--ds-color-heading)" }}>growth companies and scale-ups</b> in Europe — the Nordics first — and the U.S., going global. The buyers are founders/CEOs and People/HR leaders who want to move fast and stay compliant, without assembling a patchwork of country-by-country providers. Two audiences the product serves: <b style={{ color: "var(--ds-color-heading)" }}>the companies</b> hiring and operating abroad, and <b style={{ color: "var(--ds-color-heading)" }}>the workers</b> (employees &amp; contractors) who want to be paid correctly, on time, with a human on the other end.
-      </p>
+            {/* Vision — full width */}
+            <Cell span={6} style={{ borderRight: "none" }}>
+              {cellLabel("Vision · the 2031 ambition")}
+              <p style={{ fontSize: 15.5, lineHeight: 1.55, margin: 0 }}>
+                <b style={{ color: INK }}>The global company operating system.</b> The one partner you need to go global — instead of five per country. The infrastructure layer that puts international operations on autopilot. <span style={{ color: MUTED }}>Not a consultancy or a point solution.</span>
+              </p>
+            </Cell>
 
-      {rule()}
+            {/* Growth ladder — full width, 3 connected stages */}
+            <Cell span={6} style={{ borderRight: "none" }}>
+              {cellLabel("The growth ladder · one partner, from first hire to your own entity")}
+              <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 14, marginTop: 4 }}>
+                {MODULES.map((m, i) => (
+                  <div key={m.name} style={{ position: "relative", border: `1px solid ${BORDER}`, borderRadius: 14, padding: "16px 16px 18px", background: "var(--ds-color-surface)" }}>
+                    <div style={{ position: "absolute", top: 0, left: 0, right: 0, height: 3, borderTopLeftRadius: 14, borderTopRightRadius: 14, background: m.tint }} />
+                    {i < 2 && <div style={{ position: "absolute", right: -12, top: "50%", transform: "translateY(-50%)", color: MUTED, fontSize: 16, zIndex: 1 }}>→</div>}
+                    <div style={{ display: "inline-block", ...label, color: m.tint, border: `1px solid ${m.tint}`, borderRadius: 999, padding: "2px 8px", marginBottom: 8 }}>{m.stage}</div>
+                    <div style={heading({ fontSize: 17, fontWeight: 600, margin: "0 0 1px" })}>{m.name}</div>
+                    <div style={{ fontSize: 12, fontWeight: 600, color: MUTED, marginBottom: 8 }}>{m.who}</div>
+                    <p style={{ fontSize: 12.5, lineHeight: 1.5, color: MUTED, margin: 0 }}>{m.body}</p>
+                  </div>
+                ))}
+              </div>
+            </Cell>
 
-      {/* Brand pillars */}
-      <h2 style={h2}>Brand pillars — why growth companies choose Fronted</h2>
-      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))", gap: 14 }}>
-        {PILLARS.map(([t, d]) => (
-          <div key={t} style={card}>
-            <div style={{ fontSize: 15, fontWeight: 600, color: "var(--ds-color-heading)", marginBottom: 4 }}>{t}</div>
-            <p style={{ fontSize: 13.5, lineHeight: 1.55, ...muted, margin: 0 }}>{d}</p>
+            {/* Positioning + Audience */}
+            <Cell span={3}>
+              {cellLabel("Positioning · what we are")}
+              <p style={{ fontSize: 13.5, lineHeight: 1.55, margin: 0, color: MUTED }}>
+                Fronted handles <b style={{ color: INK }}>recruitment, employment and entity setup & management</b> in one place — so growth companies go abroad fast and compliant, without stitching together a provider per country.
+              </p>
+            </Cell>
+            <Cell span={3} style={{ borderRight: "none" }}>
+              {cellLabel("Audience · who it's for")}
+              <p style={{ fontSize: 13.5, lineHeight: 1.55, margin: 0, color: MUTED }}>
+                Forward-leaning <b style={{ color: INK }}>growth companies & scale-ups</b> — Nordics first, EU & U.S. — going global. Founders/CEOs and People/HR leaders. And the <b style={{ color: INK }}>workers</b>: paid correctly, on time, with a human on the other end.
+              </p>
+            </Cell>
+
+            {/* Pillars — full width, 5 across */}
+            <Cell span={6} style={{ borderRight: "none" }}>
+              {cellLabel("Brand pillars · why growth companies choose Fronted")}
+              <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(180px, 1fr))", gap: 12, marginTop: 4 }}>
+                {PILLARS.map(([t, d]) => (
+                  <div key={t} style={{ borderTop: `2px solid ${YELLOW}`, paddingTop: 10 }}>
+                    <div style={heading({ fontSize: 13.5, fontWeight: 600, marginBottom: 3, lineHeight: 1.25 })}>{t}</div>
+                    <p style={{ fontSize: 12, lineHeight: 1.45, color: MUTED, margin: 0 }}>{d}</p>
+                  </div>
+                ))}
+              </div>
+            </Cell>
+
+            {/* Behaviours + Voice */}
+            <Cell span={3}>
+              {cellLabel("Behaviours · how the team shows up")}
+              <div style={{ display: "flex", flexDirection: "column", gap: 8, marginTop: 2 }}>
+                {BEHAVIOURS.map((b, i) => (
+                  <div key={b} style={{ display: "flex", alignItems: "center", gap: 10 }}>
+                    <span style={{ width: 20, height: 20, borderRadius: 6, background: YELLOW_TINT, color: INK, display: "inline-flex", alignItems: "center", justifyContent: "center", fontFamily: "var(--ds-font-heading)", fontSize: 12, fontWeight: 700, flexShrink: 0 }}>{i + 1}</span>
+                    <span style={{ fontSize: 13.5, color: INK, fontWeight: 500 }}>{b}</span>
+                  </div>
+                ))}
+              </div>
+            </Cell>
+            <Cell span={3} style={{ borderRight: "none" }}>
+              {cellLabel("Voice & tone · Nordic mindset, every word")}
+              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16 }}>
+                <div>
+                  <div style={{ ...label, color: "#16a34a", marginBottom: 6 }}>Do</div>
+                  {VOICE_DO.map((x) => <p key={x} style={{ fontSize: 11.5, lineHeight: 1.4, color: MUTED, margin: "0 0 6px" }}>{x}</p>)}
+                </div>
+                <div>
+                  <div style={{ ...label, color: "#dc2626", marginBottom: 6 }}>Don't</div>
+                  {VOICE_DONT.map((x) => <p key={x} style={{ fontSize: 11.5, lineHeight: 1.4, color: MUTED, margin: "0 0 6px" }}>{x}</p>)}
+                </div>
+              </div>
+            </Cell>
+
           </div>
-        ))}
-      </div>
 
-      {rule()}
-
-      {/* Behaviours */}
-      <h2 style={h2}>Behaviours — how the team shows up</h2>
-      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))", gap: 14 }}>
-        {BEHAVIOURS.map(([t, d], i) => (
-          <div key={t} style={{ ...card, display: "flex", gap: 14 }}>
-            <div style={{ fontFamily: "var(--ds-font-heading)", fontSize: 22, fontWeight: 700, color: "var(--ds-color-focus-ring)", lineHeight: 1 }}>{i + 1}</div>
-            <div><div style={{ fontSize: 15, fontWeight: 600, color: "var(--ds-color-heading)", marginBottom: 3 }}>{t}</div><p style={{ fontSize: 13.5, lineHeight: 1.55, ...muted, margin: 0 }}>{d}</p></div>
+          {/* Footer band — stats + source */}
+          <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 24, flexWrap: "wrap", padding: "20px 28px", borderTop: `1px solid ${BORDER}`, background: YELLOW_TINT }}>
+            <div style={{ display: "flex", gap: 30, flexWrap: "wrap" }}>
+              {STATS.map(([n, l]) => (
+                <div key={l}>
+                  <div style={heading({ fontSize: 22, fontWeight: 700, lineHeight: 1, letterSpacing: "-0.01em" })}>{n}</div>
+                  <div style={{ fontSize: 11, color: MUTED, marginTop: 4 }}>{l}</div>
+                </div>
+              ))}
+            </div>
+            <div style={{ fontSize: 11.5, color: MUTED, maxWidth: 300, textAlign: "right" }}>
+              Distilled from <a href="https://app.notion.com/p/This-is-Fronted-1cbe1940ba3881aba56cd1f62d44ddc6" target="_blank" rel="noreferrer" style={{ color: INK, fontWeight: 600 }}>“This is Fronted”</a> &amp; <a href="https://fronted.com" target="_blank" rel="noreferrer" style={{ color: INK, fontWeight: 600 }}>fronted.com</a>. Living source in Notion — keep in sync, don't fork.
+            </div>
           </div>
-        ))}
-      </div>
-
-      {rule()}
-
-      {/* Voice & tone */}
-      <h2 style={h2}>Voice &amp; tone — Nordic mindset, applied to every word</h2>
-      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))", gap: 16 }}>
-        <div style={card}>
-          <div style={{ ...eyebrow, color: "#16a34a" }}>Do</div>
-          <ul style={{ margin: "12px 0 0", paddingLeft: 18, fontSize: 14, lineHeight: 1.7 }}>{VOICE_DO.map((x) => <li key={x} style={muted}>{x}</li>)}</ul>
         </div>
-        <div style={card}>
-          <div style={{ ...eyebrow, color: "var(--ds-color-danger, #dc2626)" }}>Don't</div>
-          <ul style={{ margin: "12px 0 0", paddingLeft: 18, fontSize: 14, lineHeight: 1.7 }}>{VOICE_DONT.map((x) => <li key={x} style={muted}>{x}</li>)}</ul>
-        </div>
-      </div>
-      <p style={{ ...muted, fontSize: 13, margin: "14px 0 0" }}>This is the same voice the <b style={{ color: "var(--ds-color-text)" }}>UX-copy</b> and <b style={{ color: "var(--ds-color-text)" }}>design principles</b> apply inside the product — plain, warm, and honest.</p>
 
-      {rule()}
-
-      {/* Ambition metrics */}
-      <h2 style={h2}>The ambition, in numbers (2031)</h2>
-      <div style={{ display: "flex", gap: 40, flexWrap: "wrap" }}>
-        {STATS.map(([n, l]) => (
-          <div key={l}>
-            <div style={{ fontFamily: "var(--ds-font-heading)", fontSize: 34, fontWeight: 600, lineHeight: 1, color: "var(--ds-color-heading)", letterSpacing: "-0.02em" }}>{n}</div>
-            <div style={{ fontSize: 12.5, marginTop: 6, ...muted }}>{l}</div>
-          </div>
-        ))}
-      </div>
-
-      {rule()}
-
-      {/* Sources */}
-      <div style={{ ...card, background: "var(--ds-color-surface-sunken, var(--ds-color-surface))" }}>
-        <div style={eyebrow}>Sources · this page is a read-only mirror</div>
-        <p style={{ fontSize: 13.5, lineHeight: 1.6, margin: "10px 0 0", ...muted }}>
-          Distilled from <a href="https://app.notion.com/p/This-is-Fronted-1cbe1940ba3881aba56cd1f62d44ddc6" target="_blank" rel="noreferrer" style={{ color: "var(--ds-color-text)", fontWeight: 600 }}>“This is Fronted” (Notion · Company Overview)</a> and <a href="https://fronted.com" target="_blank" rel="noreferrer" style={{ color: "var(--ds-color-text)", fontWeight: 600 }}>fronted.com</a>. The living strategy lives in Notion — keep this page in sync with it, don't fork it here.
-        </p>
+        <p style={{ fontSize: 12, color: MUTED, textAlign: "center", margin: "18px 0 0" }}>Brand → Design Strategy → Foundations → Components → Patterns. This canvas is the top of the ladder the system builds on.</p>
       </div>
     </div>
   ),
