@@ -1,6 +1,5 @@
 import * as React from "react";
 import type { Meta, StoryObj } from "@storybook/react";
-import { Sheet, SheetTrigger, SheetContent, SheetHeader, SheetTitle, SheetDescription } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -8,7 +7,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Calendar } from "@/components/ui/calendar";
 import { cn } from "@/lib/utils";
-import { Clock, Plane, Receipt, CalendarOff, Gift, MoreHorizontal, ArrowLeft, Upload, Plus, type LucideIcon } from "lucide-react";
+import { Clock, Plane, Receipt, CalendarOff, Gift, MoreHorizontal, Upload, type LucideIcon } from "lucide-react";
 import { wrap, eyebrow, note, PageHeader } from "./_docTable";
 import "./tokens.css";
 import "./typography.css";
@@ -85,7 +84,6 @@ const CAL_CLASSNAMES = {
   day_hidden: "invisible",
 };
 
-const sheetCls = "[&>button.absolute]:top-[19px] [&>button.absolute]:right-5 w-full sm:w-full sm:max-w-md overflow-y-auto";
 
 /* ---- shared field atoms (real markup, verbatim classes) ------------------ */
 
@@ -452,54 +450,18 @@ function TypeForm({ id }: { id: string }) {
   }
 }
 
-/** Drawer body — picker step, then per-type form. Resets to the picker when the drawer closes. */
-function RequestBody({ resetKey }: { resetKey: number }) {
-  const [sel, setSel] = React.useState<AdjType | null>(null);
-  React.useEffect(() => { setSel(null); }, [resetKey]);
-  return (
-    <>
-      <SheetHeader className="pb-4 border-b border-border/40 text-left">
-        <div className="flex items-center gap-2">
-          {sel && (
-            <Button variant="ghost" size="icon" className="h-8 w-8 -ml-2" onClick={() => setSel(null)}>
-              <ArrowLeft className="h-4 w-4" />
-            </Button>
-          )}
-          <div>
-            <SheetTitle>{sel ? sel.formTitle : "Request adjustments"}</SheetTitle>
-            <SheetDescription className="text-xs mt-0.5">{sel ? sel.formDesc : "Submit an adjustment for the current pay cycle"}</SheetDescription>
-          </div>
-        </div>
-      </SheetHeader>
+/* ---- static panels (laid out inline, like Worker Drawer) ----------------- */
 
-      <div className="py-6 space-y-6">
-        {!sel ? (
-          <div className="grid grid-cols-1 gap-3">
-            {TYPES.map((t) => (
-              <button key={t.id} onClick={() => setSel(t)} className="flex items-center gap-4 p-4 rounded-xl border-2 transition-all text-left border-border/60 hover:border-primary/50 hover:bg-primary/[0.02]">
-                <div className="p-2.5 rounded-lg bg-muted/50"><t.icon className="h-5 w-5 text-muted-foreground" /></div>
-                <div className="flex-1"><p className="text-sm font-medium text-foreground">{t.label}</p><p className="text-xs text-muted-foreground">{t.description}</p></div>
-              </button>
-            ))}
-          </div>
-        ) : (
-          <TypeForm id={sel.id} />
-        )}
+/** The drawer chrome as a static panel: header (title + description) + body. */
+function Panel({ title, desc, children }: { title: string; desc: string; children: React.ReactNode }) {
+  return (
+    <div className="w-[440px] max-w-full rounded-lg border border-border bg-background shadow-overlay overflow-hidden">
+      <div className="px-6 pt-5 pb-4 border-b border-border/40">
+        <h2 className="text-lg font-semibold text-foreground">{title}</h2>
+        <p className="text-muted-foreground text-xs mt-0.5">{desc}</p>
       </div>
-    </>
-  );
-}
-
-function RequestDrawer() {
-  const [open, setOpen] = React.useState(false);
-  const [resetKey, setResetKey] = React.useState(0);
-  return (
-    <Sheet open={open} onOpenChange={(o) => { setOpen(o); if (!o) setResetKey((k) => k + 1); }}>
-      <SheetTrigger asChild>
-        <Button variant="outline" size="sm" className="h-9 text-xs gap-1.5"><Plus className="h-3.5 w-3.5" /> Request adjustment</Button>
-      </SheetTrigger>
-      <SheetContent side="right" className={sheetCls}><RequestBody resetKey={resetKey} /></SheetContent>
-    </Sheet>
+      <div className="px-6 py-6">{children}</div>
+    </div>
   );
 }
 
@@ -510,32 +472,36 @@ export const AdjustmentTypes: Story = {
       <PageHeader
         category="Pattern"
         title="Adjustment Request"
-        lead={<>
-        A right-side <b>drawer</b>: the worker opens it, picks one of <b>6 adjustment types</b>, and the drawer
-        swaps to that type's form (the back arrow returns to the picker). Verbatim from F41v81_AdjustmentModal
-        (employee) / F42v81_AdjustmentDrawer (contractor).
-        </>}
+        lead={<>The right-side drawer the worker opens to request an adjustment: a <b>type picker</b>, then one of <b>6 per-type forms</b>. Each panel is laid out below exactly as it appears in the drawer. Verbatim from F41v81_AdjustmentModal (employee) / F42v81_AdjustmentDrawer (contractor).</>}
       />
 
-      <h3 style={eyebrow}>Live drawer (open it)</h3>
-      <RequestDrawer />
-      <p style={{ ...note, marginTop: 10 }}>Each per-type form wraps its fields in a card (p-4 rounded-xl border border-border/60 bg-card/50 space-y-3) with real Label + helper-text + controls — Select, date-picker trigger, range calendar, time inputs, upload. Open the drawer and pick a type.</p>
-      <p style={{ ...note, marginTop: 10 }}>Description is single-line by intent — it does not accept line breaks. Enter is ignored and pasted newlines collapse to a space; capped at 100 characters with a live counter. Try it in the Bonus or Other form.</p>
-      <p style={{ ...note, marginTop: 10 }}>Sheet side=right sm:max-w-md overflow-y-auto · SheetHeader border-b · picker grid grid-cols-1 gap-3 · card p-4 rounded-xl border-2 border-border/60 hover:border-primary/50 · detail = back arrow + per-type title/description + card-wrapped fields + full-width Request adjustment</p>
-
-      <h3 style={eyebrow}>The 6 types &amp; the form each opens</h3>
-      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))", gap: 12 }}>
-        {TYPES.map((t) => (
-          <div key={t.id} className="rounded-xl border border-border/40 bg-card/20 p-4 flex items-start gap-3">
-            <div className="p-2.5 rounded-lg bg-muted/50 shrink-0"><t.icon className="h-5 w-5 text-muted-foreground" /></div>
-            <div className="min-w-0">
-              <p className="text-sm font-medium text-foreground">{t.label}</p>
-              <p className="text-xs text-muted-foreground mt-0.5">{t.description}</p>
-              <p style={{ ...note, marginTop: 6 }}>→ {t.opens}</p>
-            </div>
+      {/* Type picker */}
+      <h3 style={eyebrow}>Type picker</h3>
+      <div style={{ display: "flex", justifyContent: "center", padding: "8px 0" }}>
+        <Panel title="Request adjustments" desc="Submit an adjustment for the current pay cycle">
+          <div className="grid grid-cols-1 gap-3">
+            {TYPES.map((t) => (
+              <button key={t.id} className="flex items-center gap-4 p-4 rounded-xl border-2 transition-all text-left border-border/60 hover:border-primary/50 hover:bg-primary/[0.02]">
+                <div className="p-2.5 rounded-lg bg-muted/50"><t.icon className="h-5 w-5 text-muted-foreground" /></div>
+                <div className="flex-1"><p className="text-sm font-medium text-foreground">{t.label}</p><p className="text-xs text-muted-foreground">{t.description}</p></div>
+              </button>
+            ))}
           </div>
-        ))}
+        </Panel>
       </div>
+      <p style={{ ...note, marginTop: 4 }}>Picker cards p-4 rounded-xl border-2 border-border/60 hover:border-primary/50. Picking a type swaps the body to that type's form (below).</p>
+
+      {/* One panel per type — laid out, no click needed */}
+      {TYPES.map((t) => (
+        <React.Fragment key={t.id}>
+          <h3 style={eyebrow}>{t.label}</h3>
+          <div style={{ display: "flex", justifyContent: "center", padding: "8px 0" }}>
+            <Panel title={t.formTitle} desc={t.formDesc}><TypeForm id={t.id} /></Panel>
+          </div>
+        </React.Fragment>
+      ))}
+
+      <p style={{ ...note, marginTop: 14 }}>Each form wraps its fields in a card (p-4 rounded-xl border border-border/60 bg-card/50 space-y-3) with real Label + helper text + controls — Select, date-picker trigger, range calendar, time inputs, upload. Description (Bonus / Other) is single-line by intent: Enter is ignored, pasted newlines collapse to a space, capped at 100 characters with a live counter.</p>
     </div>
   ),
 };
