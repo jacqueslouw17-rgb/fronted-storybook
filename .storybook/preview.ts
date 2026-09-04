@@ -7,14 +7,14 @@ import "../src/typography.css";
 const preview: Preview = {
   globalTypes: {
     theme: {
-      description: "Brand theme — First Launch (launch look, default) vs Fronted Brand (real identity)",
-      defaultValue: "interim",
+      description: "Brand theme — Fronted Brand (real identity, default) vs First Launch (launch look)",
+      defaultValue: "fronted",
       toolbar: {
         title: "Theme",
         icon: "paintbrush",
         items: [
-          { value: "interim", title: "First Launch" },
           { value: "fronted", title: "Fronted Brand" },
+          { value: "interim", title: "First Launch" },
         ],
         dynamicTitle: true,
       },
@@ -22,7 +22,7 @@ const preview: Preview = {
   },
   decorators: [
     (Story, context) => {
-      const theme = (context.globals.theme as string) || "interim";
+      const theme = (context.globals.theme as string) || "fronted";
       // Set on <html> so it themes portalled content too (Radix Dialog/Drawer).
       if (typeof document !== "undefined") {
         document.documentElement.setAttribute("data-theme", theme);

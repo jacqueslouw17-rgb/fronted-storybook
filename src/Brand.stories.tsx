@@ -62,11 +62,10 @@ const VOICE_DO = ["Clear & direct — plain language, no jargon", "Warm & human 
 const VOICE_DONT = ["Corporate or legalistic wording", "Salesy superlatives & over-promising", "Cold, faceless “platform” tone", "Hiding cost, effort or caveats"];
 const STATS: [string, string][] = [["$100M", "ARR ambition (2031)"], ["5,000", "employees on EOR"], ["1,000+", "entity customers"], ["125%+", "net revenue retention"]];
 
+/* arrow badge sitting in the gap on the right edge of a ladder card */
 function Arrow() {
   return (
-    <div style={{ flex: "0 0 44px", display: "flex", alignItems: "center", justifyContent: "center" }}>
-      <div style={{ width: 34, height: 34, borderRadius: 999, background: YELLOW_TINT, border: `1px solid ${BORDER}`, display: "flex", alignItems: "center", justifyContent: "center", color: INK, fontSize: 17, fontWeight: 700, lineHeight: 1 }}>→</div>
-    </div>
+    <div style={{ position: "absolute", right: -26, top: "50%", transform: "translateY(-50%)", zIndex: 2, width: 32, height: 32, borderRadius: 999, background: SURFACE, border: `1px solid ${BORDER}`, display: "flex", alignItems: "center", justifyContent: "center", color: INK, fontSize: 15, fontWeight: 700, lineHeight: 1, boxShadow: "0 2px 6px -2px rgba(16,24,40,0.16)" }}>→</div>
   );
 }
 
@@ -74,7 +73,7 @@ export const BrandPage: Story = {
   name: "Brand",
   render: () => (
     <div data-theme="fronted" style={{ fontFamily: "var(--ds-font-body)", color: "var(--ds-color-text)", background: "var(--ds-color-surface-sunken, #fafafa)", minHeight: "100vh", padding: "48px 32px 80px" }}>
-      <div style={{ maxWidth: 1160, margin: "0 auto", border: `1px solid ${BORDER}`, borderRadius: 24, overflow: "hidden", background: SURFACE, boxShadow: "0 30px 70px -34px rgba(16,24,40,0.30)" }}>
+      <div style={{ maxWidth: 1160, margin: "0 auto", border: `1px solid ${BORDER}`, borderRadius: 24, overflow: "hidden", background: SURFACE, boxShadow: "0 10px 30px -22px rgba(16,24,40,0.18)" }}>
 
         {/* Header */}
         <Section tint={YELLOW_TINT}>
@@ -102,26 +101,22 @@ export const BrandPage: Story = {
         {/* Growth ladder — centrepiece */}
         <Section>
           {secLabel("The growth ladder", "One partner, from first hire to your own entity. Start where you are — no vendor switching as you grow.")}
-          <div style={{ display: "flex", alignItems: "stretch", gap: 0, minWidth: 0 }}>
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 20 }}>
             {MODULES.map((m, i) => (
-              <React.Fragment key={m.name}>
-                <div style={{ flex: "1 1 0", minWidth: 0 }}>
-                  <Box accent={m.tint}>
-                    <span style={{ display: "inline-block", ...label, color: m.tint, border: `1px solid ${m.tint}`, borderRadius: 999, padding: "3px 10px", marginBottom: 12 }}>{m.stage}</span>
-                    <div style={heading({ fontSize: 21, fontWeight: 600, margin: "0 0 2px" })}>{m.name}</div>
-                    <div style={{ fontSize: 13, fontWeight: 600, color: MUTED, marginBottom: 12 }}>{m.who}</div>
-                    <p style={{ fontSize: 13.5, lineHeight: 1.6, color: MUTED, margin: 0 }}>{m.body}</p>
-                  </Box>
-                </div>
+              <div key={m.name} style={{ position: "relative", border: `1px solid ${BORDER}`, borderRadius: 16, padding: "22px 24px", background: SURFACE, boxSizing: "border-box" }}>
+                <span style={{ display: "inline-block", ...label, color: m.tint, border: `1px solid ${m.tint}`, borderRadius: 999, padding: "3px 10px", marginBottom: 12 }}>{m.stage}</span>
+                <div style={heading({ fontSize: 21, fontWeight: 600, margin: "0 0 2px" })}>{m.name}</div>
+                <div style={{ fontSize: 13, fontWeight: 600, color: MUTED, marginBottom: 12 }}>{m.who}</div>
+                <p style={{ fontSize: 13.5, lineHeight: 1.6, color: MUTED, margin: 0 }}>{m.body}</p>
                 {i < MODULES.length - 1 && <Arrow />}
-              </React.Fragment>
+              </div>
             ))}
           </div>
         </Section>
 
         {/* Problem → Positioning → Audience */}
         <Section>
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(240px, 1fr))", gap: 20 }}>
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 20 }}>
             <Box>
               {boxLabel("The problem · why we exist")}
               <p style={{ fontSize: 13.5, lineHeight: 1.6, margin: 0, color: MUTED }}>Going global is slow and risky. Companies <b style={{ color: INK }}>stitch together a provider per country</b> — recruiters, lawyers, payroll, accountants, EOR — with no single system, and carry the compliance risk themselves.</p>
