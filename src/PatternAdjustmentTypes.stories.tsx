@@ -18,27 +18,49 @@ const meta: Meta = { title: "Patterns/Adjustment Request", parameters: { layout:
 export default meta;
 type Story = StoryObj;
 
-type Field = { label: string; kind: "text" | "amount" | "date" | "time" | "select" | "upload"; placeholder?: string; optional?: boolean };
+type Kind = "text" | "amount" | "date" | "daterange" | "time" | "select" | "upload" | "segmented" | "chips" | "tag" | "description";
+type Field = { label: string; kind: Kind; placeholder?: string; optional?: boolean; options?: string[]; addLabel?: string };
 type AdjType = { id: string; label: string; description: string; formTitle: string; formDesc: string; icon: LucideIcon; opens: string; fields: Field[] };
 
+// Verbatim from the live Request-adjustment drawer (demofronted.live · F4.1 employee).
 const TYPES: AdjType[] = [
-  { id: "overtime", label: "Overtime", description: "Log extra hours", formTitle: "Overtime request", formDesc: "Log your overtime hours", icon: Clock, opens: "date + start/end time → calculated hours", fields: [
-    { label: "Date", kind: "date" }, { label: "Start time", kind: "time", placeholder: "18:00" }, { label: "End time", kind: "time", placeholder: "21:00" }, { label: "Attachment", kind: "upload", optional: true },
+  { id: "overtime", label: "Overtime", description: "Log extra hours", formTitle: "Overtime request", formDesc: "Log your overtime hours", icon: Clock, opens: "date · shift type · trigger · start/end time · attachment", fields: [
+    { label: "Date", kind: "date" },
+    { label: "Shift type", kind: "segmented", optional: true, options: ["Morning", "Mixed", "Night"] },
+    { label: "Overtime trigger", kind: "select", placeholder: "Select trigger" },
+    { label: "Start time", kind: "time" }, { label: "End time", kind: "time" },
+    { label: "Attachment", kind: "upload", optional: true },
   ] },
-  { id: "per-diem", label: "Per diem", description: "Travel-day allowance — no receipt needed", formTitle: "Per diem request", formDesc: "Travel-day allowance — no receipt needed", icon: Plane, opens: "days + rate, no attachment", fields: [
-    { label: "Number of days", kind: "text", placeholder: "2" }, { label: "Daily rate", kind: "amount", placeholder: "PHP 1,500" },
+  { id: "per-diem", label: "Per diem", description: "Travel-day allowance — no receipt needed", formTitle: "Per diem request", formDesc: "Travel-day allowance — no receipt needed", icon: Plane, opens: "city · country · trip type · dates · provided · purpose", fields: [
+    { label: "City", kind: "text", placeholder: "e.g., Singapore" },
+    { label: "Country", kind: "select", placeholder: "Select country" },
+    { label: "Trip type", kind: "select", placeholder: "Select trip type" },
+    { label: "Dates", kind: "daterange" },
+    { label: "Provided during trip", kind: "chips", options: ["Breakfast", "Lunch", "Dinner", "Hotel"] },
+    { label: "Purpose", kind: "text", optional: true, placeholder: "e.g., Client workshop" },
   ] },
-  { id: "expense", label: "Expense Reimbursements", description: "Submit a reimbursement", formTitle: "Expense request", formDesc: "Submit expenses for reimbursement", icon: Receipt, opens: "category + amount + receipt upload", fields: [
-    { label: "Category", kind: "select", placeholder: "Meals" }, { label: "Amount", kind: "amount", placeholder: "PHP 6,350" }, { label: "Receipt", kind: "upload" },
+  { id: "expense", label: "Expense Reimbursements", description: "Submit a reimbursement", formTitle: "Expense request", formDesc: "Submit a reimbursement", icon: Receipt, opens: "category · amount · attachments · tag · +add another", fields: [
+    { label: "Category", kind: "select", placeholder: "Select" },
+    { label: "Amount (PHP)", kind: "amount", placeholder: "0.00" },
+    { label: "Attachments", kind: "upload" },
+    { label: "Tag", kind: "tag", optional: true, placeholder: "Type and press Enter" },
+    { label: "", kind: "text", addLabel: "Add another expense" },
   ] },
-  { id: "leave", label: "Leave", description: "Request paid, unpaid, or sick leave", formTitle: "Leave", formDesc: "Request time off for the current pay cycle", icon: CalendarOff, opens: "leave type + date range", fields: [
-    { label: "Leave type", kind: "select", placeholder: "Paid leave" }, { label: "From", kind: "date" }, { label: "To", kind: "date" },
+  { id: "leave", label: "Leave", description: "Request paid, unpaid, or sick leave", formTitle: "Leave", formDesc: "Request paid, unpaid, or sick leave", icon: CalendarOff, opens: "leave type · date range · upload docs", fields: [
+    { label: "Leave type", kind: "segmented", options: ["Paid leave", "Unpaid leave", "Sick leave", "Other"] },
+    { label: "Dates", kind: "daterange" },
+    { label: "Upload documents", kind: "upload", optional: true },
   ] },
-  { id: "bonus", label: "Bonus", description: "Request a bonus", formTitle: "Bonus request", formDesc: "Request a bonus payment", icon: Gift, opens: "description + amount", fields: [
-    { label: "Description", kind: "text", placeholder: "Q4 delivery bonus" }, { label: "Amount", kind: "amount", placeholder: "PHP 10,000" },
+  { id: "bonus", label: "Bonus", description: "Request a bonus", formTitle: "Bonus request", formDesc: "Request a bonus", icon: Gift, opens: "amount · description · attachment", fields: [
+    { label: "Amount (PHP)", kind: "amount", placeholder: "0.00" },
+    { label: "Description", kind: "description", placeholder: "What is this bonus for?" },
+    { label: "Attachment", kind: "upload", optional: true },
   ] },
-  { id: "other", label: "Other", description: "Any other addition or deduction", formTitle: "Other adjustment", formDesc: "Submit any other addition or deduction", icon: MoreHorizontal, opens: "free description + amount", fields: [
-    { label: "Description", kind: "text", placeholder: "Describe the adjustment" }, { label: "Amount", kind: "amount", placeholder: "PHP 0.00" },
+  { id: "other", label: "Other", description: "Any other addition or deduction", formTitle: "Other adjustment", formDesc: "Any other addition or deduction", icon: MoreHorizontal, opens: "addition/deduction · amount · description · attachment", fields: [
+    { label: "Type", kind: "segmented", options: ["Addition", "Deduction"] },
+    { label: "Amount (PHP)", kind: "amount", placeholder: "0.00" },
+    { label: "Description", kind: "description", placeholder: "e.g., Milestone bonus for Q4 delivery" },
+    { label: "Attachment", kind: "upload", optional: true },
   ] },
 ];
 
@@ -71,17 +93,35 @@ function DescriptionField({ placeholder }: { placeholder?: string }) {
 }
 
 function FieldRow({ f }: { f: Field }) {
+  // "+ Add another …" repeat control (no label)
+  if (f.addLabel) {
+    return <button className="flex w-full items-center justify-center gap-1.5 rounded-lg border border-dashed border-border/60 px-3 py-2.5 text-xs font-medium text-muted-foreground hover:border-primary/40 hover:bg-muted/30"><Plus className="h-3.5 w-3.5" />{f.addLabel}</button>;
+  }
   return (
     <div className="space-y-1.5">
       <div className="flex items-center gap-2"><span className="text-xs font-medium text-foreground/75">{f.label}</span>{f.optional && <span className="text-[10px] px-1.5 py-0 h-4 inline-flex items-center rounded-full bg-muted text-muted-foreground">Optional</span>}</div>
       {f.kind === "upload" ? (
-        <label className="flex w-full cursor-pointer items-center justify-center gap-1.5 rounded-lg border border-dashed border-border/60 px-3 py-2.5 text-xs font-medium text-muted-foreground hover:border-primary/40 hover:bg-muted/30"><Upload className="h-3.5 w-3.5" /> Upload receipt</label>
+        <label className="flex w-full cursor-pointer items-center justify-center gap-1.5 rounded-lg border border-dashed border-border/60 px-3 py-2.5 text-xs font-medium text-muted-foreground hover:border-primary/40 hover:bg-muted/30"><Upload className="h-3.5 w-3.5" /> Upload document</label>
+      ) : f.kind === "segmented" ? (
+        <div className="flex flex-wrap gap-2">{f.options?.map((o, i) => (
+          <span key={o} className={cn("inline-flex items-center h-9 px-3 rounded-md border text-sm cursor-pointer", i === 0 ? "border-primary bg-primary/[0.06] text-emphasis" : "border-input bg-background text-muted-foreground")}>{o}</span>
+        ))}</div>
+      ) : f.kind === "chips" ? (
+        <div className="flex flex-wrap gap-2">{f.options?.map((o) => (
+          <span key={o} className="inline-flex items-center h-8 px-3 rounded-full border border-input bg-background text-xs text-muted-foreground cursor-pointer">{o}</span>
+        ))}</div>
+      ) : f.kind === "daterange" ? (
+        <div className="rounded-md border border-input bg-background px-3 py-6 text-center text-xs text-muted-foreground">Date range calendar</div>
+      ) : f.kind === "tag" ? (
+        <div className="min-h-[36px] rounded-md border border-input bg-background px-2.5 py-1.5 flex items-center text-xs text-muted-foreground">{f.placeholder}</div>
       ) : f.kind === "select" ? (
         <div className="h-10 rounded-md border border-input bg-background px-3 flex items-center justify-between text-sm text-muted-foreground"><span>{f.placeholder}</span><ChevronDown className="h-3.5 w-3.5 opacity-50" /></div>
-      ) : f.label === "Description" ? (
+      ) : f.kind === "description" ? (
         <DescriptionField placeholder={f.placeholder} />
+      ) : f.kind === "time" ? (
+        <div className="h-10 w-full rounded-md border border-input bg-background px-3 flex items-center gap-1 text-sm text-muted-foreground tabular-nums"><span>00</span><span className="opacity-50">:</span><span>00</span></div>
       ) : (
-        <div className="h-10 rounded-md border border-input bg-background px-3 flex items-center text-sm text-muted-foreground">{f.placeholder ?? (f.kind === "date" ? "Select date" : f.kind === "time" ? "--:--" : "")}</div>
+        <div className="h-10 rounded-md border border-input bg-background px-3 flex items-center text-sm text-muted-foreground">{f.placeholder ?? (f.kind === "date" ? "Select date" : "")}</div>
       )}
     </div>
   );
