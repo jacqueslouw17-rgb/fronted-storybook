@@ -1,20 +1,27 @@
 import * as React from "react";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
+export type DashboardTab = "tracker" | "payroll" | "payments";
+
 /**
- * Dashboard Header — the F1 v6.1 welcome line and the Workers | Payroll switch.
+ * Dashboard Header — the F1 welcome line and the main tab switch.
  * Title verbatim from AgentHeader (showPulse=false, showInput=false,
  * titleClassName "text-xl sm:text-2xl md:text-3xl"); the switch verbatim from
- * F1v61_FrontedAdminDashboard ("Workers | Payroll Tab Toggle").
+ * F1v61_FrontedAdminDashboard ("Workers | Payroll Tab Toggle") or, with `payments`, from
+ * F1v63_FrontedAdminDashboard ("Workers | Payroll | Payments", contractors paid apart from
+ * employees).
  */
 export function DashboardHeader({
   title = "Welcome Joe, get to work at Acme Corp!",
   tab = "tracker",
   onTabChange,
+  payments = false,
 }: {
   title?: string;
-  tab?: "tracker" | "payroll";
-  onTabChange?: (tab: "tracker" | "payroll") => void;
+  tab?: DashboardTab;
+  onTabChange?: (tab: DashboardTab) => void;
+  /** Show the Payments tab (v6.3: contractor payments split from employee payroll). */
+  payments?: boolean;
 }) {
   return (
     <>
@@ -29,10 +36,11 @@ export function DashboardHeader({
       </div>
 
       <div className="flex items-center justify-center mt-1 pb-3">
-        <Tabs value={tab} onValueChange={(v) => onTabChange?.(v as "tracker" | "payroll")}>
-          <TabsList className="grid w-[280px] grid-cols-2">
+        <Tabs value={tab} onValueChange={(v) => onTabChange?.(v as DashboardTab)}>
+          <TabsList className={payments ? "grid w-[380px] grid-cols-3" : "grid w-[280px] grid-cols-2"}>
             <TabsTrigger value="tracker">Workers</TabsTrigger>
             <TabsTrigger value="payroll">Payroll</TabsTrigger>
+            {payments && <TabsTrigger value="payments">Payments</TabsTrigger>}
           </TabsList>
         </Tabs>
       </div>

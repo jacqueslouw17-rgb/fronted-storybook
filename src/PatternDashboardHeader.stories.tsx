@@ -1,21 +1,21 @@
 import * as React from "react";
 import type { Meta, StoryObj } from "@storybook/react";
-import { DashboardHeader as Header } from "@/components/flows/dashboard-header";
+import { DashboardHeader as Header, type DashboardTab } from "@/components/flows/dashboard-header";
 import { wrap, eyebrow, note, PageHeader } from "./_docTable";
 import "./tokens.css";
 import "./typography.css";
 
 /**
  * Patterns — Dashboard Header (verbatim from AgentHeader + the Workers | Payroll toggle in
- * F1v61_FrontedAdminDashboard).
+ * F1v61_FrontedAdminDashboard, or Workers | Payroll | Payments in F1v63).
  */
 const meta: Meta = { title: "Patterns/Dashboard Header", parameters: { layout: "padded" } };
 export default meta;
 type Story = StoryObj;
 
-function Live() {
-  const [tab, setTab] = React.useState<"tracker" | "payroll">("tracker");
-  return <Header tab={tab} onTabChange={setTab} />;
+function Live({ payments = false }: { payments?: boolean }) {
+  const [tab, setTab] = React.useState<DashboardTab>("tracker");
+  return <Header payments={payments} tab={tab} onTabChange={setTab} />;
 }
 
 export const DashboardHeader: Story = {
@@ -36,7 +36,10 @@ export const DashboardHeader: Story = {
       <h3 style={eyebrow}>Payroll selected</h3>
       <div className="py-6"><Header tab="payroll" /></div>
 
-      <p style={{ ...note, marginTop: 16 }}>h1 text-xl sm:text-2xl md:text-3xl font-bold, centred · empty subtitle row kept for spacing · TabsList grid w-[280px] grid-cols-2, mt-1 pb-3. The company name uses a non-breaking space ("Acme&nbsp;Corp").</p>
+      <h3 style={eyebrow}>With Payments (contractors paid apart from employees)</h3>
+      <div className="py-6"><Live payments /></div>
+
+      <p style={{ ...note, marginTop: 16 }}>h1 text-xl sm:text-2xl md:text-3xl font-bold, centred · empty subtitle row kept for spacing · TabsList grid w-[280px] grid-cols-2 (w-[380px] grid-cols-3 with Payments), mt-1 pb-3. The company name uses a non-breaking space ("Acme&nbsp;Corp").</p>
     </div>
   ),
 };
