@@ -1,0 +1,19 @@
+/* Responsive documentation: every story reads on a phone (390px) as well as on desktop.
+   Components and patterns carry their own breakpoints (verbatim from the app); this file
+   only reflows the documentation around them. */
+
+/* Doc tables stack on phones: one block per row, each cell labelled with its column
+   (data-th, set by the preview decorator from the table's header). */
+@media (max-width: 640px) {
+  .sb-docs table, .sb-docs tbody, .sb-docs tr, .sb-docs td { display: block; width: 100% !important; }
+  .sb-docs thead { display: none; }
+  .sb-docs tr { padding: 12px 16px; border-bottom: 1px solid var(--ds-color-border); }
+  .sb-docs tbody tr:last-child { border-bottom: 0; }
+  .sb-docs td { padding: 4px 0 !important; border: 0 !important; white-space: normal !important; min-width: 0; }
+  .sb-docs td[data-th]:not(:first-child)::before {
+    content: attr(data-th); display: block; margin: 6px 0 4px;
+    font: 700 10px/1.2 var(--ds-font-body); letter-spacing: .08em; text-transform: uppercase;
+    color: var(--ds-color-text-muted);
+  }
+  .sb-docs h1 { font-size: 32px !important; }
+}

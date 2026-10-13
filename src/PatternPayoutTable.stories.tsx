@@ -93,7 +93,7 @@ function PayoutTable() {
 /* ── Manual payout drawer — verbatim header + body from F1v6_ManualPayoutDrawer ── */
 function ManualPayoutDrawer() {
   return (
-    <div className="w-full sm:w-[440px] rounded-lg border border-border bg-background overflow-hidden shadow-overlay flex flex-col">
+    <div className="w-full sm:w-[440px] max-w-full rounded-lg border border-border bg-background overflow-hidden shadow-overlay flex flex-col">
       <div className="border-b border-border/50 px-5 py-4 text-left">
         <div className="flex items-center gap-3">
           <Avatar className="h-10 w-10">
@@ -169,10 +169,10 @@ export const PayoutTable_: Story = {
 
       <h3 style={eyebrow}>Row states</h3>
       <DocTable head={["State", "Example", "classes"]} w0={130} rows={[
-        ["Paid", <div className="w-[300px]"><PayoutRow r={{ name: "Wei Tan", country: "Singapore", flag: "🇸🇬", amount: "SGD 6,120", paid: true }} /></div>, "status pill text-accent-green-text bg-accent-green/10 + CheckCircle2"],
-        ["In progress", <div className="w-[300px]"><PayoutRow r={{ name: "Jonas Schmidt", country: "Germany", flag: "🇩🇪", amount: "EUR 4,350", paid: false }} /></div>, "status pill text-muted-foreground bg-muted/50 + Clock"],
-        ["With quantity", <div className="w-[300px]"><PayoutRow r={{ name: "Maria Santos", country: "Philippines", flag: "🇵🇭", amount: "PHP 238,000", qty: "12 h", paid: false }} /></div>, "amount + [11px] hours/days sub-line · tabular-nums"],
-        ["Manual", <div className="w-[300px]"><PayoutRow r={{ name: "Alex Hansen", country: "Norway · Manual", flag: "🇳🇴", amount: "—", paid: false, manual: true }} /></div>, "amount “—” muted · “· Manual” subtext · opens manual drawer"],
+        ["Paid", <div className="w-[300px] max-w-full"><PayoutRow r={{ name: "Wei Tan", country: "Singapore", flag: "🇸🇬", amount: "SGD 6,120", paid: true }} /></div>, "status pill text-accent-green-text bg-accent-green/10 + CheckCircle2"],
+        ["In progress", <div className="w-[300px] max-w-full"><PayoutRow r={{ name: "Jonas Schmidt", country: "Germany", flag: "🇩🇪", amount: "EUR 4,350", paid: false }} /></div>, "status pill text-muted-foreground bg-muted/50 + Clock"],
+        ["With quantity", <div className="w-[300px] max-w-full"><PayoutRow r={{ name: "Maria Santos", country: "Philippines", flag: "🇵🇭", amount: "PHP 238,000", qty: "12 h", paid: false }} /></div>, "amount + [11px] hours/days sub-line · tabular-nums"],
+        ["Manual", <div className="w-[300px] max-w-full"><PayoutRow r={{ name: "Alex Hansen", country: "Norway · Manual", flag: "🇳🇴", amount: "—", paid: false, manual: true }} /></div>, "amount “—” muted · “· Manual” subtext · opens manual drawer"],
       ]} />
 
       <h3 style={eyebrow}>Anatomy — manual drawer</h3>

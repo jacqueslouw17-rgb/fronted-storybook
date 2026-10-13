@@ -23,7 +23,7 @@ const note: React.CSSProperties = { fontFamily: "var(--ds-font-mono)", fontSize:
 
 function Bar({ value, complete }: { value: number; complete?: boolean }) {
   return (
-    <div className="h-1.5 bg-muted/40 rounded-full overflow-hidden w-[220px]">
+    <div className="h-1.5 bg-muted/40 rounded-full overflow-hidden w-[220px] max-w-full">
       <div className={cn("h-full rounded-full transition-all duration-500", complete ? "bg-accent-green-text" : "bg-primary")} style={{ width: `${value}%` }} />
     </div>
   );
@@ -69,7 +69,7 @@ export const ProgressStory: Story = {
       ]} />
 
       <h3 style={eyebrow}>With label (verification / onboarding)</h3>
-      <div className="w-[300px]">
+      <div className="w-[300px] max-w-full">
         <div className="flex items-center justify-between mb-1.5"><span className="text-xs text-muted-foreground">Verification progress</span><span className="text-xs font-medium text-foreground tabular-nums">7/12 verified</span></div>
         <Bar value={58} />
       </div>

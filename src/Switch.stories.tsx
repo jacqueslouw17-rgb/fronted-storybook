@@ -53,7 +53,7 @@ export const SwitchStory: Story = {
       </table>
 
       <h3 style={eyebrow}>In a settings row</h3>
-      <div className="flex items-center justify-between w-[360px] p-3 rounded-lg border border-border/40 bg-card">
+      <div className="flex items-center justify-between w-[360px] max-w-full p-3 rounded-lg border border-border/40 bg-card">
         <div className="flex flex-col">
           <Label htmlFor="sw" className="text-xs font-medium text-foreground/75">Enable overrides</Label>
           <span className="text-xs text-muted-foreground">Allow per-worker salary adjustments</span>

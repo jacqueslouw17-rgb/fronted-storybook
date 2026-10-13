@@ -44,7 +44,7 @@ const PAYROLL_WORKERS: Worker[] = [
 /* ── Single worker card — verbatim from F6v41_WorkersGrid ── */
 function WorkerCard({ contractor }: { contractor: Worker }) {
   return (
-    <Card className="w-[280px] border border-border/40 bg-card group hover:border-border transition-colors">
+    <Card className="w-[280px] max-w-full border border-border/40 bg-card group hover:border-border transition-colors">
       <CardContent className="p-2.5 space-y-0">
         <div className="flex items-center gap-2">
           <div className="flex-1 min-w-0">

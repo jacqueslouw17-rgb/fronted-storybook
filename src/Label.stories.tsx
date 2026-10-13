@@ -64,17 +64,17 @@ export const LabelStory: Story = {
       <Table rows={[
         {
           a: "Field label",
-          b: <div className="space-y-1.5"><Label htmlFor="l1" className="text-xs font-medium text-foreground/75">Job title</Label><Input id="l1" defaultValue="Frontend Engineer" className="w-[240px] h-10" /></div>,
+          b: <div className="space-y-1.5"><Label htmlFor="l1" className="text-xs font-medium text-foreground/75">Job title</Label><Input id="l1" defaultValue="Frontend Engineer" className="w-[240px] max-w-full h-10" /></div>,
           c: "text-xs font-medium text-foreground/75 (102× — the real field style)",
         },
         {
           a: "With icon",
-          b: <div className="space-y-1.5"><Label htmlFor="l2" className="text-xs font-medium text-foreground/75 flex items-center gap-1.5">Monthly salary <Info className="h-3 w-3 text-muted-foreground" /></Label><Input id="l2" defaultValue="NOK 65,000" className="w-[240px] h-10" /></div>,
+          b: <div className="space-y-1.5"><Label htmlFor="l2" className="text-xs font-medium text-foreground/75 flex items-center gap-1.5">Monthly salary <Info className="h-3 w-3 text-muted-foreground" /></Label><Input id="l2" defaultValue="NOK 65,000" className="w-[240px] max-w-full h-10" /></div>,
           c: "+ flex items-center gap-1.5 (info hint)",
         },
         {
           a: "Optional",
-          b: <div className="space-y-1.5"><Label htmlFor="l3" className="text-xs font-medium text-foreground/75">Additional notes <span className="text-muted-foreground font-normal">(optional)</span></Label><Input id="l3" placeholder="Add context…" className="w-[240px] h-10" /></div>,
+          b: <div className="space-y-1.5"><Label htmlFor="l3" className="text-xs font-medium text-foreground/75">Additional notes <span className="text-muted-foreground font-normal">(optional)</span></Label><Input id="l3" placeholder="Add context…" className="w-[240px] max-w-full h-10" /></div>,
           c: 'muted "(optional)" suffix · never a required *',
         },
         {
@@ -89,7 +89,7 @@ export const LabelStory: Story = {
         },
         {
           a: "Disabled (peer)",
-          b: <div className="space-y-1.5"><Label htmlFor="l5" className="text-xs font-medium text-foreground/75 peer-disabled:opacity-70">Country</Label><Input id="l5" disabled defaultValue="Norway" className="peer w-[240px] h-10" /></div>,
+          b: <div className="space-y-1.5"><Label htmlFor="l5" className="text-xs font-medium text-foreground/75 peer-disabled:opacity-70">Country</Label><Input id="l5" disabled defaultValue="Norway" className="peer w-[240px] max-w-full h-10" /></div>,
           c: "peer-disabled:opacity-70 (dims with its control)",
         },
       ]} />

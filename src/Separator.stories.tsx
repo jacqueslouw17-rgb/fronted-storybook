@@ -41,7 +41,7 @@ export const SeparatorStory: Story = {
           <tbody>
             <tr style={{ background: "var(--ds-color-surface)" }}>
               <td style={{ ...td, fontSize: 13, fontWeight: 600 }}>Horizontal</td>
-              <td style={td}><div className="w-[300px]"><div className="text-sm font-semibold">Payment details</div><Separator className="my-2" /><div className="text-xs text-muted-foreground">Bank transfer · monthly</div></div></td>
+              <td style={td}><div className="w-[300px] max-w-full"><div className="text-sm font-semibold">Payment details</div><Separator className="my-2" /><div className="text-xs text-muted-foreground">Bank transfer · monthly</div></div></td>
               <td style={{ ...td, ...note }}>h-[1px] w-full bg-border (default)</td>
             </tr>
             <tr style={{ background: "var(--ds-color-bg)" }}>

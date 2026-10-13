@@ -3,6 +3,23 @@ import React from "react";
 import "../src/tokens.css";
 import "../src/globals.css";
 import "../src/typography.css";
+import "../src/responsive.css";
+
+/** Label each doc-table cell with its column header, so a table stacked on a phone
+ *  (responsive.css) still says what each value is. Re-runs as the story changes. */
+function labelTableCells(root: HTMLDivElement | null) {
+  if (!root || (root as any).__labelled) return;
+  (root as any).__labelled = true;
+  const run = () => root.querySelectorAll("table").forEach((t) => {
+    const heads = Array.from(t.querySelectorAll("thead th")).map((th) => (th.textContent || "").trim());
+    if (!heads.length) return;
+    t.querySelectorAll("tbody tr").forEach((tr) => Array.from(tr.children).forEach((td, i) => {
+      if (heads[i] && td.getAttribute("data-th") !== heads[i]) td.setAttribute("data-th", heads[i]);
+    }));
+  });
+  run();
+  new MutationObserver(run).observe(root, { childList: true, subtree: true });
+}
 
 const preview: Preview = {
   globalTypes: {
@@ -20,6 +37,8 @@ const preview: Preview = {
       },
     },
   },
+  // Every story is checked at phone (390px) and desktop widths: see Viewport in the toolbar.
+  tags: ["responsive"],
   decorators: [
     (Story, context) => {
       const theme = (context.globals.theme as string) || "fronted";
@@ -30,6 +49,8 @@ const preview: Preview = {
       return React.createElement(
         "div",
         {
+          ref: labelTableCells,
+          className: "sb-docs",
           "data-theme": theme,
           style: {
             background: "var(--ds-color-bg)",

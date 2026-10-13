@@ -42,7 +42,7 @@ export const TagInput: Story = {
       />
 
       <h3 style={eyebrow}>With tags + counter</h3>
-      <div className="space-y-1.5 w-[380px]">
+      <div className="space-y-1.5 w-full max-w-[380px]">
         <Label className="text-xs">Tags</Label>
         <div className="flex flex-wrap items-center gap-1.5 min-h-[36px] px-2.5 py-1.5 rounded-md border bg-background transition-colors cursor-text border-input">
           <Chip label="NY trip" />
@@ -56,7 +56,7 @@ export const TagInput: Story = {
       </div>
 
       <h3 style={eyebrow}>Empty + suggestions open</h3>
-      <div className="space-y-1.5 w-[380px]">
+      <div className="space-y-1.5 w-full max-w-[380px]">
         <div className="flex flex-wrap items-center gap-1.5 min-h-[36px] px-2.5 py-1.5 rounded-md border bg-background transition-colors cursor-text border-input">
           <input className="flex-1 min-w-[80px] bg-transparent text-xs outline-none placeholder:text-muted-foreground" placeholder="Type and press Enter" />
         </div>

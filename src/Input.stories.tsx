@@ -32,7 +32,7 @@ const h10 = "h-10"; // drawer default in the flows
 /** Field wrapper as in the flows: label (+ Optional / *) · control · hint/error. */
 function Field({ label, optional, hint, error, children }: { label: string; optional?: boolean; hint?: string; error?: string; children: React.ReactNode }) {
   return (
-    <div className="space-y-1.5 w-[300px]">
+    <div className="space-y-1.5 w-[300px] max-w-full">
       <Label className={cn(labelCls, "flex items-center gap-1.5")}>
         {label}
         {optional ? <span className="text-[11px] font-normal text-muted-foreground">Optional</span> : null}
@@ -66,7 +66,7 @@ function Table({ head, rows }: { head: [string, string, string]; rows: Array<{ a
 function CountingTextarea({ max = 120 }: { max?: number }) {
   const [v, setV] = React.useState("");
   return (
-    <div className="w-[300px]">
+    <div className="w-[300px] max-w-full">
       <Textarea maxLength={max} value={v} onChange={(e) => setV(e.target.value)} placeholder="e.g., Milestone bonus for Q4 delivery" />
       <p className="mt-1 text-right text-[11px] text-muted-foreground">{max - v.length} characters left</p>
     </div>
@@ -125,7 +125,7 @@ export const InputStory: Story = {
         rows={[
           { a: "Currency prefix", b: (
             <Field label="Monthly salary">
-              <div className="relative w-[240px]">
+              <div className="relative w-[240px] max-w-full">
                 <span className="absolute left-3 top-1/2 -translate-y-1/2 text-sm text-muted-foreground pointer-events-none">NOK</span>
                 <Input className={cn(h10, "pl-12")} placeholder="5,000" />
               </div>
@@ -133,14 +133,14 @@ export const InputStory: Story = {
           ), c: "pl-12 · absolute prefix (currency)" },
           { a: "Rate + unit", b: (
             <Field label="Contractor rate">
-              <div className="relative w-[240px]">
+              <div className="relative w-[240px] max-w-full">
                 <span className="absolute left-3 top-1/2 -translate-y-1/2 text-sm text-muted-foreground pointer-events-none">NOK / hr</span>
                 <Input className={cn(h10, "pl-[96px]")} placeholder="850" />
               </div>
             </Field>
           ), c: "pl-[96px] · longer unit prefix" },
           { a: "Search", b: (
-            <div className="relative w-[240px]">
+            <div className="relative w-[240px] max-w-full">
               <svg className="absolute left-2.5 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-muted-foreground" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="11" cy="11" r="8" /><path d="m21 21-4.3-4.3" /></svg>
               <Input placeholder="Search..." className="pl-8 h-8 text-xs bg-background/50 border-border/30" />
             </div>

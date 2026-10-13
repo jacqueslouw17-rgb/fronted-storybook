@@ -16,6 +16,9 @@ const meta: Meta = { title: "Patterns/Payments Run", parameters: { layout: "padd
 export default meta;
 type Story = StoryObj;
 
+/** A panel column: side by side on desktop, full width on a phone. */
+const panelCol: React.CSSProperties = { flex: "1 1 360px", minWidth: 0, maxWidth: 440 };
+
 const emma = ACME_CONTRACTORS[0];
 const marcus = ACME_CONTRACTORS[2];
 const reviewOrder = ACME_CONTRACTORS;
@@ -61,8 +64,8 @@ export const InvoiceReview: Story = {
         lead={<>The side panel for one contractor while the run is in review: invoice total, the contract fee and each submitted adjustment, then the decision. Approving updates the total (with “was”) and marks the contractor Ready for payroll, with Undo.</>}
         meta="F1v6_SubmissionsView pay breakdown sheet · CollapsibleSection · AdjustmentRow · BreakdownRow" />
       <div style={{ display: "flex", gap: 32, flexWrap: "wrap", alignItems: "flex-start" }}>
-        <div><h3 style={eyebrow}>Pending</h3><ContractorReviewPanel inline contractor={emma} approved={false} /></div>
-        <div><h3 style={eyebrow}>Approved</h3><ContractorReviewPanel inline contractor={emma} approved /></div>
+        <div style={panelCol}><h3 style={eyebrow}>Pending</h3><ContractorReviewPanel inline contractor={emma} approved={false} /></div>
+        <div style={panelCol}><h3 style={eyebrow}>Approved</h3><ContractorReviewPanel inline contractor={emma} approved /></div>
       </div>
     </div>
   ),
@@ -107,8 +110,8 @@ export const InvoicePayout: Story = {
         lead={<>The side panel for one contractor in the locked run: what's due, the contractor's own invoice as a record, then Mark as paid. Once paid it shows the paid date and Download invoice.</>}
         meta="F1v6_WorkerDetailDrawer (track step, contractor)" />
       <div style={{ display: "flex", gap: 32, flexWrap: "wrap", alignItems: "flex-start" }}>
-        <div><h3 style={eyebrow}>To pay</h3><ContractorPayoutPanel inline contractor={marcus} approved paid={false} /></div>
-        <div><h3 style={eyebrow}>Paid</h3><ContractorPayoutPanel inline contractor={marcus} approved paid /></div>
+        <div style={panelCol}><h3 style={eyebrow}>To pay</h3><ContractorPayoutPanel inline contractor={marcus} approved paid={false} /></div>
+        <div style={panelCol}><h3 style={eyebrow}>Paid</h3><ContractorPayoutPanel inline contractor={marcus} approved paid /></div>
       </div>
     </div>
   ),

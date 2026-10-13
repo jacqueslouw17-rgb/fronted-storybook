@@ -120,7 +120,7 @@ function PeriodDropdown({ periods, selectedPeriodId, onPeriodChange, allowCustom
           <ChevronDown className={cn("h-3.5 w-3.5 text-muted-foreground transition-transform duration-200", isOpen && "rotate-180")} />
         </button>
       </PopoverTrigger>
-      <PopoverContent align="center" sideOffset={10} className="w-[360px] p-0 bg-popover/95 backdrop-blur-xl border border-border/60 rounded-xl shadow-2xl shadow-black/10 overflow-hidden max-h-[420px] overflow-y-auto overscroll-contain">
+      <PopoverContent align="center" sideOffset={10} className="w-[360px] max-w-full p-0 bg-popover/95 backdrop-blur-xl border border-border/60 rounded-xl shadow-2xl shadow-black/10 overflow-hidden max-h-[420px] overflow-y-auto overscroll-contain">
         {showCreateForm && allowCustomBatch ? (
           <div className="px-4 py-4 space-y-4">
             <div className="flex items-center justify-between">

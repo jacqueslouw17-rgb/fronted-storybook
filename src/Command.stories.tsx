@@ -28,7 +28,7 @@ function NationalityCombobox() {
   return (
     <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger asChild>
-        <Button variant="outline" role="combobox" className="group w-[280px] h-10 justify-between text-sm font-normal border-input hover:bg-background hover:text-foreground hover:shadow-none hover:translate-y-0">
+        <Button variant="outline" role="combobox" className="group w-[280px] max-w-full h-10 justify-between text-sm font-normal border-input hover:bg-background hover:text-foreground hover:shadow-none hover:translate-y-0">
           {value || <span className="text-muted-foreground group-hover:text-foreground transition-colors">Select nationality</span>}
           <ChevronDown className="ml-2 h-3.5 w-3.5 shrink-0 opacity-50" />
         </Button>
@@ -72,11 +72,11 @@ export const CommandStory: Story = {
 
       <h3 style={eyebrow}>Anatomy &amp; item states</h3>
       <DocTable head={["Part / state", "Example", "classes"]} w0={150} wLast={330} rows={[
-        ["Trigger", <Button variant="outline" role="combobox" className="group w-[220px] h-10 justify-between text-sm font-normal border-input"><span className="text-muted-foreground">Select nationality</span><ChevronDown className="ml-2 h-3.5 w-3.5 shrink-0 opacity-50" /></Button>, "outline h-10 justify-between · hover matches Select (placeholder muted→foreground, no fill)"],
-        ["Input", <div className="w-[240px] rounded-md border bg-popover"><div className="flex items-center border-b px-3"><Search className="mr-2 h-4 w-4 shrink-0 opacity-50" /><span className="h-10 flex items-center text-sm text-muted-foreground">Search…</span></div></div>, "CommandInput h-10 · flex items-center border-b px-3 · Search icon opacity-50"],
-        ["Item (default)", <div className="w-[240px] rounded-md border bg-popover p-1"><div className="flex items-center rounded-sm px-2 py-1.5 text-sm"><Check className="mr-2 h-3.5 w-3.5 opacity-0" />🇩🇪 German</div></div>, "px-2 py-1.5 text-sm · Check mr-2 h-3.5 opacity-0"],
-        ["Item (selected)", <div className="w-[240px] rounded-md border bg-popover p-1"><div className="flex items-center rounded-sm px-2 py-1.5 text-sm bg-primary/5 text-foreground"><Check className="mr-2 h-3.5 w-3.5 opacity-100" />🇳🇴 Norwegian</div></div>, "data-[selected=true]:bg-primary/5 text-foreground · Check opacity-100"],
-        ["Empty", <div className="w-[240px] rounded-md border bg-popover"><div className="py-6 text-center text-sm text-muted-foreground">No country found.</div></div>, "CommandEmpty py-6 text-center text-sm"],
+        ["Trigger", <Button variant="outline" role="combobox" className="group w-[220px] max-w-full h-10 justify-between text-sm font-normal border-input"><span className="text-muted-foreground">Select nationality</span><ChevronDown className="ml-2 h-3.5 w-3.5 shrink-0 opacity-50" /></Button>, "outline h-10 justify-between · hover matches Select (placeholder muted→foreground, no fill)"],
+        ["Input", <div className="w-[240px] max-w-full rounded-md border bg-popover"><div className="flex items-center border-b px-3"><Search className="mr-2 h-4 w-4 shrink-0 opacity-50" /><span className="h-10 flex items-center text-sm text-muted-foreground">Search…</span></div></div>, "CommandInput h-10 · flex items-center border-b px-3 · Search icon opacity-50"],
+        ["Item (default)", <div className="w-[240px] max-w-full rounded-md border bg-popover p-1"><div className="flex items-center rounded-sm px-2 py-1.5 text-sm"><Check className="mr-2 h-3.5 w-3.5 opacity-0" />🇩🇪 German</div></div>, "px-2 py-1.5 text-sm · Check mr-2 h-3.5 opacity-0"],
+        ["Item (selected)", <div className="w-[240px] max-w-full rounded-md border bg-popover p-1"><div className="flex items-center rounded-sm px-2 py-1.5 text-sm bg-primary/5 text-foreground"><Check className="mr-2 h-3.5 w-3.5 opacity-100" />🇳🇴 Norwegian</div></div>, "data-[selected=true]:bg-primary/5 text-foreground · Check opacity-100"],
+        ["Empty", <div className="w-[240px] max-w-full rounded-md border bg-popover"><div className="py-6 text-center text-sm text-muted-foreground">No country found.</div></div>, "CommandEmpty py-6 text-center text-sm"],
         ["List", <span style={note}>scroll region</span>, "max-h-[200px] overflow-y-auto"],
       ]} />
       <Guidance k="command" />

@@ -141,7 +141,7 @@ function ReviewView() {
         <div className="flex items-center gap-2">
           <div className="relative flex-1 sm:flex-none">
             <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-muted-foreground" />
-            <Input placeholder="Search..." className="h-9 pl-8 text-xs w-full sm:w-[200px]" />
+            <Input placeholder="Search..." className="h-9 pl-8 text-xs w-full sm:w-[200px] max-w-full" />
           </div>
           <Button size="sm" className="h-9 text-xs shrink-0">Continue to payout</Button>
         </div>

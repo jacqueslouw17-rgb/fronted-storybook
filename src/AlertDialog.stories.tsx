@@ -125,7 +125,7 @@ export const AlertDialogStory: Story = {
       <h3 style={eyebrow}>Parts (shared)</h3>
       <DocTable head={["Part", "Example", "classes"]} w0={150} wLast={340} rows={[
         ["Cancel", <button className="h-9 px-4 rounded-md border border-border bg-background text-sm font-medium hover:bg-foreground hover:text-background">Cancel</button>, "AlertDialogCancel = buttonVariants outline · border-border hover:bg-foreground hover:text-background"],
-        ["Reason textarea", <textarea readOnly placeholder="Enter a reason for the rejection..." className="w-[260px] min-h-[64px] resize-none rounded-md border border-input bg-background px-3 py-2 text-sm placeholder:text-muted-foreground" />, "w-full min-h-[80px] resize-none rounded-md border border-input · focus-visible:ring-2 ring-ring"],
+        ["Reason textarea", <textarea readOnly placeholder="Enter a reason for the rejection..." className="w-[260px] max-w-full min-h-[64px] resize-none rounded-md border border-input bg-background px-3 py-2 text-sm placeholder:text-muted-foreground" />, "w-full min-h-[80px] resize-none rounded-md border border-input · focus-visible:ring-2 ring-ring"],
         ["Close (✕)", <button className="text-muted-foreground opacity-70 hover:opacity-100"><X className="h-4 w-4" /></button>, "custom · absolute right-4 top-4 · onOverlayClick also closes"],
       ]} />
       <Guidance k="alertdialog" />

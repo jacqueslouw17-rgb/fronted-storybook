@@ -71,8 +71,8 @@ export const DialogStory: Story = {
       <DocTable head={["Part", "Example", "classes"]} w0={150} wLast={340} rows={[
         ["Full surface", <DialogPreview />, "content sm:max-w-sm p-5 sm:p-6 rounded-lg border bg-background shadow-lg · left-aligned"],
         ["Overlay", <span style={note}>dim scrim</span>, "fixed inset-0 z-50 bg-black/80 · fade in/out"],
-        ["Header + title", <div className="w-[300px] text-left"><div className="text-base sm:text-lg font-semibold">Ready to lock and pay out?</div></div>, "DialogHeader text-left pb-2 · title text-base sm:text-lg font-semibold"],
-        ["Description", <div className="w-[300px] text-left text-xs text-muted-foreground">Once locked, no further edits can be made.</div>, "text-xs sm:text-sm text-muted-foreground mt-1 · left-aligned"],
+        ["Header + title", <div className="w-[300px] max-w-full text-left"><div className="text-base sm:text-lg font-semibold">Ready to lock and pay out?</div></div>, "DialogHeader text-left pb-2 · title text-base sm:text-lg font-semibold"],
+        ["Description", <div className="w-[300px] max-w-full text-left text-xs text-muted-foreground">Once locked, no further edits can be made.</div>, "text-xs sm:text-sm text-muted-foreground mt-1 · left-aligned"],
         ["Footer", <div className="flex gap-2"><Button variant="outline" className="flex-1 sm:flex-initial">Go back</Button><Button className="flex-1 sm:flex-initial">Lock &amp; approve</Button></div>, "flex-row gap-2 pt-2 sm:justify-end · Go back = outline, Lock &amp; approve = default (gradient) · flex-1 sm:flex-initial"],
         ["Close (✕)", <button className="text-muted-foreground opacity-70 hover:opacity-100"><X className="h-4 w-4" /></button>, "absolute right-4 top-4 opacity-70 hover:opacity-100 (built-in)"],
       ]} />

@@ -56,7 +56,7 @@ export const SkeletonStory: Story = {
       </div>
 
       <h3 style={eyebrow}>Composition — worker row (loading)</h3>
-      <div className="flex items-center gap-3 w-[420px] rounded-lg border border-border/30 px-3 py-3">
+      <div className="flex items-center gap-3 w-full max-w-[420px] rounded-lg border border-border/30 px-3 py-3">
         <Skeleton className="h-8 w-8 rounded-full shrink-0" />
         <div className="flex-1 space-y-1.5"><Skeleton className="h-4 w-36" /><Skeleton className="h-3 w-24" /></div>
         <Skeleton className="h-4 w-20" />

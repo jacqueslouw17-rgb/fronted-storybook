@@ -118,7 +118,7 @@ function RunRow({ r }: { r: Run }) {
 function BatchSelectorPanel() {
   const label = "text-[10px] font-semibold text-muted-foreground/70 uppercase tracking-[0.08em]";
   return (
-    <div className="w-[360px] p-0 bg-popover/95 backdrop-blur-xl border border-border/60 rounded-xl shadow-2xl shadow-black/10 overflow-hidden max-h-[420px] overflow-y-auto overscroll-contain">
+    <div className="w-[360px] max-w-full p-0 bg-popover/95 backdrop-blur-xl border border-border/60 rounded-xl shadow-2xl shadow-black/10 overflow-hidden max-h-[420px] overflow-y-auto overscroll-contain">
       <div>
         <div className="px-4 pt-3 pb-1.5"><span className={label}>Active Runs</span></div>
         <div className="px-2 pb-2 space-y-0.5">
@@ -213,9 +213,9 @@ export const PayrollBatch: Story = {
 
       <h3 style={eyebrow}>Row variants (reused from Table &amp; List)</h3>
       <DocTable head={["Variant", "Example", "Notes"]} w0={130} rows={[
-        ["Ready", <div className="w-[280px]"><PayrollRow r={{ n: "Jonas Schmidt", c: "🇩🇪 Germany", a: "EUR 4,350", status: "ready" }} /></div>, "green ✓ · amount shown · included in payout"],
-        ["Pending + count", <div className="w-[280px]"><PayrollRow r={{ n: "Maria Santos", c: "🇵🇭 Philippines", a: "PHP 238,000", status: "pending", count: 8 }} /></div>, "amber pill + count badge = open adjustments to resolve"],
-        ["Manual", <div className="w-[280px]"><PayrollRow r={{ n: "Alex Hansen", c: "🇳🇴 Norway · Manual", a: "—", status: "pending", count: 4 }} /></div>, "amount “—” · “· Manual” in subtext · handled outside the auto-run"],
+        ["Ready", <div className="w-[280px] max-w-full"><PayrollRow r={{ n: "Jonas Schmidt", c: "🇩🇪 Germany", a: "EUR 4,350", status: "ready" }} /></div>, "green ✓ · amount shown · included in payout"],
+        ["Pending + count", <div className="w-[280px] max-w-full"><PayrollRow r={{ n: "Maria Santos", c: "🇵🇭 Philippines", a: "PHP 238,000", status: "pending", count: 8 }} /></div>, "amber pill + count badge = open adjustments to resolve"],
+        ["Manual", <div className="w-[280px] max-w-full"><PayrollRow r={{ n: "Alex Hansen", c: "🇳🇴 Norway · Manual", a: "—", status: "pending", count: 4 }} /></div>, "amount “—” · “· Manual” in subtext · handled outside the auto-run"],
       ]} />
 
       <h3 style={eyebrow}>Adjustments in payroll (admin review)</h3>

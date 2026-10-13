@@ -133,8 +133,8 @@ export const TableListStory: Story = {
 
       <h3 style={eyebrow}>Row &amp; cell states</h3>
       <DocTable head={["Element / state", "Example", "classes"]} w0={170} wLast={330} rows={[
-        ["Row (default)", <div className="w-[220px] flex items-center gap-3 px-4 py-3 rounded-md"><div className="h-8 w-8 rounded-full bg-muted flex items-center justify-center text-[11px] font-medium text-muted-foreground">MS</div><span className="text-sm font-medium">Maria Santos</span></div>, "flex items-center gap-3 px-4 sm:px-5 py-3 · divide-y divide-border/40"],
-        ["Row (hover)", <div className="w-[220px] flex items-center gap-3 px-4 py-3 rounded-md bg-muted/30"><div className="h-8 w-8 rounded-full bg-muted flex items-center justify-center text-[11px] font-medium text-muted-foreground">MS</div><span className="text-sm font-medium">Maria Santos</span></div>, "cursor-pointer hover:bg-muted/30 transition-colors"],
+        ["Row (default)", <div className="w-[220px] max-w-full flex items-center gap-3 px-4 py-3 rounded-md"><div className="h-8 w-8 rounded-full bg-muted flex items-center justify-center text-[11px] font-medium text-muted-foreground">MS</div><span className="text-sm font-medium">Maria Santos</span></div>, "flex items-center gap-3 px-4 sm:px-5 py-3 · divide-y divide-border/40"],
+        ["Row (hover)", <div className="w-[220px] max-w-full flex items-center gap-3 px-4 py-3 rounded-md bg-muted/30"><div className="h-8 w-8 rounded-full bg-muted flex items-center justify-center text-[11px] font-medium text-muted-foreground">MS</div><span className="text-sm font-medium">Maria Santos</span></div>, "cursor-pointer hover:bg-muted/30 transition-colors"],
         ["Status — Ready", <span className="flex items-center gap-1 text-accent-green-text"><CheckCircle2 className="h-3.5 w-3.5" /><span className="text-xs font-medium">Ready</span></span>, "text-accent-green-text · CheckCircle2 h-3.5"],
         ["Status — Pending", <span className="flex items-center gap-1.5"><span className="h-4 min-w-4 px-1 rounded-full bg-amber-500 text-white text-[10px] font-semibold flex items-center justify-center">5</span><span className="text-xs font-medium text-accent-amber-text">Pending</span></span>, "text-accent-amber-text + count badge bg-amber-500 text-white h-4 min-w-4 rounded-full"],
         ["Amount (empty)", <span className="text-sm tabular-nums text-muted-foreground">—</span>, "text-muted-foreground (else font-semibold text-foreground) · tabular-nums"],
@@ -147,7 +147,7 @@ export const TableListStory: Story = {
         <div className="px-4 sm:px-5 pt-4 pb-3 flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between sm:gap-3">
           <span className="text-xs font-medium text-muted-foreground">14 employees on payroll</span>
           <div className="flex items-center gap-2">
-            <div className="relative"><Search className="absolute left-2.5 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-muted-foreground" /><Input placeholder="Search..." className="pl-8 h-8 text-xs bg-background/50 border-border/30 w-[150px]" /></div>
+            <div className="relative"><Search className="absolute left-2.5 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-muted-foreground" /><Input placeholder="Search..." className="pl-8 h-8 text-xs bg-background/50 border-border/30 w-[150px] max-w-full" /></div>
             <Button size="sm" className="h-8 text-xs bg-gradient-primary">Continue to payout</Button>
           </div>
         </div>
@@ -226,7 +226,7 @@ export const TableListStory: Story = {
               <button className="px-3 py-1 rounded-full text-xs font-medium bg-primary/10 text-emphasis">All 14</button>
               <button className="px-3 py-1 rounded-full text-xs text-muted-foreground hover:text-foreground transition-colors">Managers 0</button>
             </div>
-            <div className="relative"><Search className="absolute left-2.5 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-muted-foreground" /><Input placeholder="Search" className="pl-8 h-8 text-xs bg-background/50 border-border/30 w-[130px]" /></div>
+            <div className="relative"><Search className="absolute left-2.5 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-muted-foreground" /><Input placeholder="Search" className="pl-8 h-8 text-xs bg-background/50 border-border/30 w-[130px] max-w-full" /></div>
           </div>
         </div>
         <div className="divide-y divide-border/40 border-t border-border/40">
@@ -287,7 +287,7 @@ export const TableListStory: Story = {
       <p style={note}>row group rounded-lg border-border/30 bg-card px-4 py-3 hover:bg-muted/30 · icon tile w-8 h-8 rounded-md bg-primary/[0.06] border-primary/20 + FileText text-primary/70 · amount tabular-nums · Paid pill bg-emerald-50 text-emerald-700 border-emerald-200 · Download p-1.5 hover:bg-muted/50 · contractor = invoices</p>
 
       <h3 style={eyebrow}>Empty state (pipeline column)</h3>
-      <div className="w-[240px] rounded-xl border border-border/40 bg-muted/10">
+      <div className="w-[240px] max-w-full rounded-xl border border-border/40 bg-muted/10">
         <div className="min-h-[240px] flex flex-col items-center justify-center px-4 text-center">
           <h3 className="text-sm font-medium text-foreground mb-1">No workers yet</h3>
           <p className="text-xs text-muted-foreground mb-4 max-w-[200px]">Add your first worker to start the contracting process</p>

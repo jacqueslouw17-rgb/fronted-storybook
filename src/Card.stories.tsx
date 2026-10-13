@@ -26,7 +26,7 @@ type Story = StoryObj;
 /** V2 — Worker pipeline card (verbatim base className from F1v6_PipelineView, flat). */
 function WorkerCard() {
   return (
-    <Card className="w-[280px] border border-border/40 bg-card relative group/wcard transition-colors duration-150">
+    <Card className="w-[280px] max-w-full border border-border/40 bg-card relative group/wcard transition-colors duration-150">
       <CardContent className="p-2.5 space-y-0">
         <div className="flex items-center gap-2">
           <Checkbox className="h-4 w-4" />
@@ -84,7 +84,7 @@ const statusCls = (label: string) => WORKER_STATUS.find(([l]) => l === label)?.[
 /** V3 — F6 client / roster card (read-only): status Badge + a single View button. */
 function WorkerCardClient({ status = "Active" }: { status?: string }) {
   return (
-    <Card className="w-[280px] border border-border/40 bg-card group hover:border-border transition-colors">
+    <Card className="w-[280px] max-w-full border border-border/40 bg-card group hover:border-border transition-colors">
       <CardContent className="p-2.5 space-y-0">
         <div className="flex items-center gap-2">
           <div className="flex-1 min-w-0">
@@ -162,10 +162,10 @@ export const CardStory: Story = {
 
       <h3 style={eyebrow}>Worker card — actions per pipeline column (live F1)</h3>
       <DocTable head={["Pipeline column", "Actions", "classes"]} w0={200} wLast={280} rows={[
-        ["Offer Accepted", <div className="flex gap-2 w-[260px]"><Button variant="outline" size="sm" className="flex-1 text-xs h-7 gap-1"><Settings className="h-3 w-3" /> Configure</Button><Button size="sm" className="flex-1 text-xs h-7 gap-1 bg-gradient-primary hover:opacity-90"><Send className="h-3 w-3" /> Send Form</Button></div>, "outline Configure + gradient Send Form"],
-        ["Awaiting worker details", <div className="flex gap-2 w-[260px]"><Button variant="outline" size="sm" className="flex-1 text-xs h-7 gap-1"><Eye className="h-3 w-3" /> View</Button><Button size="sm" className="flex-1 text-xs h-7 gap-1 bg-gradient-primary hover:opacity-90"><RefreshCw className="h-3 w-3" /> Resend</Button></div>, "outline View + gradient Resend"],
-        ["Prepare Contract", <div className="flex gap-2 w-[260px]"><Button variant="outline" size="sm" className="flex-1 text-xs h-7 gap-1"><Eye className="h-3 w-3" /> View</Button><Button size="sm" className="flex-1 text-xs h-7 gap-1 bg-gradient-primary hover:opacity-90"><FileText className="h-3 w-3" /> Draft Contract</Button></div>, "outline View + gradient Draft Contract"],
-        ["Waiting for Signature", <div className="flex gap-2 w-[260px]"><Button variant="outline" size="sm" className="flex-1 text-xs h-7 gap-1"><Eye className="h-3 w-3" /> View</Button><Button size="sm" className="flex-1 text-xs h-7 gap-1 bg-gradient-primary hover:opacity-90"><Activity className="h-3 w-3" /> Track Progress</Button></div>, "outline View + gradient Track Progress"],
+        ["Offer Accepted", <div className="flex gap-2 w-[260px] max-w-full"><Button variant="outline" size="sm" className="flex-1 text-xs h-7 gap-1"><Settings className="h-3 w-3" /> Configure</Button><Button size="sm" className="flex-1 text-xs h-7 gap-1 bg-gradient-primary hover:opacity-90"><Send className="h-3 w-3" /> Send Form</Button></div>, "outline Configure + gradient Send Form"],
+        ["Awaiting worker details", <div className="flex gap-2 w-[260px] max-w-full"><Button variant="outline" size="sm" className="flex-1 text-xs h-7 gap-1"><Eye className="h-3 w-3" /> View</Button><Button size="sm" className="flex-1 text-xs h-7 gap-1 bg-gradient-primary hover:opacity-90"><RefreshCw className="h-3 w-3" /> Resend</Button></div>, "outline View + gradient Resend"],
+        ["Prepare Contract", <div className="flex gap-2 w-[260px] max-w-full"><Button variant="outline" size="sm" className="flex-1 text-xs h-7 gap-1"><Eye className="h-3 w-3" /> View</Button><Button size="sm" className="flex-1 text-xs h-7 gap-1 bg-gradient-primary hover:opacity-90"><FileText className="h-3 w-3" /> Draft Contract</Button></div>, "outline View + gradient Draft Contract"],
+        ["Waiting for Signature", <div className="flex gap-2 w-[260px] max-w-full"><Button variant="outline" size="sm" className="flex-1 text-xs h-7 gap-1"><Eye className="h-3 w-3" /> View</Button><Button size="sm" className="flex-1 text-xs h-7 gap-1 bg-gradient-primary hover:opacity-90"><Activity className="h-3 w-3" /> Track Progress</Button></div>, "outline View + gradient Track Progress"],
       ]} />
       <p style={{ ...note, marginTop: 10 }}>1st = outline (Configure/View) · 2nd = gradient primary, label changes per column</p>
 

@@ -90,7 +90,7 @@ export const CheckboxStory: Story = {
             </tr>
             <tr style={{ background: "var(--ds-color-surface)" }}>
               <td style={{ ...td, fontSize: 13, fontWeight: 600 }}>Top-aligned</td>
-              <td style={td}><div className="flex gap-2"><Checkbox defaultChecked className="mt-0.5 h-4 w-4" /><span className="text-sm text-foreground leading-snug w-[180px]">A longer label that wraps onto a second line</span></div></td>
+              <td style={td}><div className="flex gap-2"><Checkbox defaultChecked className="mt-0.5 h-4 w-4" /><span className="text-sm text-foreground leading-snug w-[180px] max-w-full">A longer label that wraps onto a second line</span></div></td>
               <td style={{ ...td, ...note }}>mt-0.5 · aligns box to the first line</td>
             </tr>
           </tbody>

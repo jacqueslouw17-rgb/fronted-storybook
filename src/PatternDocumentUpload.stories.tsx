@@ -52,14 +52,14 @@ export const DocumentUpload: Story = {
       />
 
       <h3 style={eyebrow}>Add dropzone</h3>
-      <div className="w-[420px]"><label className={addDocClass}><span>Upload document</span></label></div>
+      <div className="w-full max-w-[420px]"><label className={addDocClass}><span>Upload document</span></label></div>
       <p style={note}>border border-dashed border-border/60 px-3 py-2.5 text-xs · hover:border-primary/40 hover:bg-muted/30 · focus ring</p>
 
       <h3 style={eyebrow}>Uploaded row states</h3>
       <DocTable head={["State", "Example", "classes"]} w0={130} wLast={300} rows={[
-        ["Done", <div className="w-[360px]"><DocRow name="passport.pdf" meta="PDF · 1.2 MB" status="done" /></div>, "border-border/60 bg-muted/20 · actions View · Replace · Remove"],
-        ["Uploading", <div className="w-[360px]"><DocRow name="proof-of-address.png" status="uploading" /></div>, "opacity-80 · text-foreground/70 · 'Uploading…' · no actions"],
-        ["Error", <div className="w-[360px]"><DocRow name="contract-scan.pdf" status="error" error="File is larger than 10 MB." /></div>, "border-destructive/50 bg-destructive/5 · text-destructive · Retry · Remove"],
+        ["Done", <div className="w-[360px] max-w-full"><DocRow name="passport.pdf" meta="PDF · 1.2 MB" status="done" /></div>, "border-border/60 bg-muted/20 · actions View · Replace · Remove"],
+        ["Uploading", <div className="w-[360px] max-w-full"><DocRow name="proof-of-address.png" status="uploading" /></div>, "opacity-80 · text-foreground/70 · 'Uploading…' · no actions"],
+        ["Error", <div className="w-[360px] max-w-full"><DocRow name="contract-scan.pdf" status="error" error="File is larger than 10 MB." /></div>, "border-destructive/50 bg-destructive/5 · text-destructive · Retry · Remove"],
       ]} />
       <p style={note}>row rounded-lg border px-3 py-2.5 · actions text-[11px] font-medium hover:underline</p>
     </div>

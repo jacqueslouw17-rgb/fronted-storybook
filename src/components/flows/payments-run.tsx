@@ -411,7 +411,7 @@ export function ContractorReviewPanel({
 function InlineSheet({ width, children }: { width: number; children: React.ReactNode }) {
   return (
     <Sheet open modal={false}>
-      <div data-ds="sheet" className="relative bg-background border rounded-lg shadow-lg overflow-hidden" style={{ width }}>{children}</div>
+      <div data-ds="sheet" className="relative bg-background border rounded-lg shadow-lg overflow-hidden" style={{ width, maxWidth: "100%" }}>{children}</div>
     </Sheet>
   );
 }

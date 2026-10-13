@@ -37,14 +37,26 @@ export function StatusChip({ status }: { status: Status }) {
   );
 }
 
+/** Responsive pill — the page and what it documents work on phones (390px) and desktop. */
+export function ResponsiveChip() {
+  return (
+    <span title="Checked on mobile (390px) and desktop. Switch with Viewport in the toolbar."
+      style={{ display: "inline-flex", alignItems: "center", gap: 5, fontSize: 10.5, fontWeight: 700, letterSpacing: ".04em", textTransform: "uppercase", color: "var(--ds-color-text-muted)", background: "var(--ds-color-surface-sunken)", border: "1px solid var(--ds-color-border)", borderRadius: 999, padding: "2px 9px" }}>
+      <svg width="12" height="10" viewBox="0 0 12 10" aria-hidden="true" fill="none" stroke="currentColor" strokeWidth="1.2"><rect x="0.6" y="0.6" width="7.5" height="6" rx="1" /><path d="M2.5 9h4" /><rect x="8.8" y="2.6" width="2.6" height="6.8" rx=".7" /></svg>
+      Responsive
+    </span>
+  );
+}
+
 /** Page header — the consistent top-of-page chrome for every story. */
 export function PageHeader({ category, title, lead, meta, status }: { category: string; title: React.ReactNode; lead?: React.ReactNode; meta?: React.ReactNode; status?: Status }) {
   return (
     <header style={{ marginBottom: 8 }}>
-      <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 14 }}>
+      <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 14, flexWrap: "wrap" }}>
         <span style={{ width: 6, height: 6, borderRadius: 999, background: "var(--ds-color-focus-ring)" }} />
         <span style={{ fontSize: 11, fontWeight: 700, textTransform: "uppercase", letterSpacing: ".12em", color: "var(--ds-color-text-muted)" }}>{category}</span>
         {status && <StatusChip status={status} />}
+        <ResponsiveChip />
       </div>
       <h1 style={{ fontFamily: "var(--ds-font-heading, var(--ds-font-body))", fontSize: 40, lineHeight: 1.05, letterSpacing: "-0.025em", fontWeight: 600, color: "var(--ds-color-heading)", margin: 0 }}>{title}</h1>
       {lead && <p style={{ fontSize: 16, lineHeight: 1.65, color: "var(--ds-color-text)", opacity: 0.82, maxWidth: 680, margin: "16px 0 0" }}>{lead}</p>}

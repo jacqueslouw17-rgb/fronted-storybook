@@ -178,7 +178,7 @@ function ProvidedDuringTrip() {
         {PROVIDED_ROWS.map((row) => (
           <div key={row.key} className="flex items-center justify-between gap-3 h-11 px-3">
             <span className="text-sm text-foreground truncate">{row.label}</span>
-            <div className="grid grid-cols-2 gap-1 shrink-0 w-[104px]">
+            <div className="grid grid-cols-2 gap-1 shrink-0 w-[104px] max-w-full">
               {[false, true].map((opt) => (
                 <button
                   key={String(opt)}

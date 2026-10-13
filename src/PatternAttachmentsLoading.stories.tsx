@@ -46,7 +46,7 @@ export const AttachmentsLoading: Story = {
       />
 
       <h3 style={eyebrow}>Attachments list</h3>
-      <div className="space-y-1.5 w-[360px]">
+      <div className="space-y-1.5 w-[360px] max-w-full">
         <AttRow name="receipt-jan.pdf" meta="PDF · 240 KB" icon={FileText} />
         <AttRow name="hotel-invoice.png" meta="PNG · 1.1 MB" icon={ImageIcon} />
       </div>
@@ -60,7 +60,7 @@ export const AttachmentsLoading: Story = {
       <p style={note}>empty text-xs text-muted-foreground/60 · chip Paperclip h-2.5 + count text-[10px]</p>
 
       <h3 style={eyebrow}>Payroll loading (skeleton table)</h3>
-      <div className="min-h-[300px] overflow-hidden rounded-lg border border-border/40 bg-card/50 shadow-sm w-[520px]">
+      <div className="min-h-[300px] overflow-hidden rounded-lg border border-border/40 bg-card/50 shadow-sm w-full max-w-[520px]">
         <div className="flex flex-col gap-2 border-b border-border/40 px-4 py-4 sm:flex-row sm:items-center sm:justify-between sm:px-5">
           <Skeleton className="h-4 w-24" />
           <div className="flex items-center gap-2"><Skeleton className="h-8 flex-1 sm:w-44 sm:flex-none" /><Skeleton className="h-8 w-28" /></div>

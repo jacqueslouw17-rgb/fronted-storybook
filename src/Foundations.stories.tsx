@@ -35,7 +35,7 @@ function Ramp({ name, family, stops }: { name: string; family: string; stops: St
         <strong style={{ fontSize: 13 }}>{name}</strong>
         <span style={mono}>--p-{family}-*</span>
       </div>
-      <div style={{ display: "grid", gridTemplateColumns: `repeat(${stops.length}, 1fr)`, gap: 4 }}>
+      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(64px, 1fr))", gap: 4 }}>
         {stops.map((s) => (
           <div key={s.step} title={`--p-${family}-${s.step} · ${s.hex}`}
                style={{ height: 56, borderRadius: 6, background: s.hex, border: "1px solid rgba(0,0,0,.06)",
@@ -237,7 +237,7 @@ export const Typography: Story = {
       <p style={{ ...mono, marginBottom: 18 }}>Every line-height is a multiple of 4px → text sits on the same baseline grid as spacing.</p>
 
       {/* header */}
-      <div style={{ display: "grid", gridTemplateColumns: "1fr 80px 90px 60px 56px", gap: 14, alignItems: "end", padding: "0 0 6px", borderBottom: "1px solid var(--ds-color-border)" }}>
+      <div style={{ display: "grid", gridTemplateColumns: "minmax(0, 1fr) 64px 72px 44px 44px", gap: 10, alignItems: "end", padding: "0 0 6px", borderBottom: "1px solid var(--ds-color-border)" }}>
         <div style={mono}>sample</div>
         <div style={mono}>font</div>
         <div style={mono}>size / lh</div>
@@ -245,7 +245,7 @@ export const Typography: Story = {
         <div style={mono}>track</div>
       </div>
       {TYPE.map((t) => (
-        <div key={t.cls} style={{ display: "grid", gridTemplateColumns: "1fr 80px 90px 60px 56px", gap: 14, alignItems: "center", padding: "14px 0", borderBottom: "1px solid var(--ds-color-border)" }}>
+        <div key={t.cls} style={{ display: "grid", gridTemplateColumns: "minmax(0, 1fr) 64px 72px 44px 44px", gap: 10, alignItems: "center", padding: "14px 0", borderBottom: "1px solid var(--ds-color-border)" }}>
           <div style={{ minWidth: 0 }}>
             <div className={t.cls} style={{ whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>
               {t.role === "Overline" ? "Section overline" : "Scale your company globally"}
@@ -300,7 +300,7 @@ const RADII: RadiusRow[] = [
 export const SpacingAndRadii: Story = {
   name: "Spacing & Radii",
   render: () => {
-    const srow: React.CSSProperties = { display: "grid", gridTemplateColumns: "84px 44px 1fr", gap: 14, alignItems: "center", padding: "5px 0" };
+    const srow: React.CSSProperties = { display: "grid", gridTemplateColumns: "84px 44px minmax(0, 1fr)", gap: 14, alignItems: "center", padding: "5px 0" };
     return (
       <div style={wrap}>
         <PageHeader
@@ -311,7 +311,7 @@ export const SpacingAndRadii: Story = {
         />
 
         <h3 style={{ ...eyebrow, marginTop: 4 }}>Spacing scale</h3>
-        <div style={{ display: "grid", gridTemplateColumns: "84px 44px 1fr", gap: 14, paddingBottom: 6, borderBottom: "1px solid var(--ds-color-border)" }}>
+        <div style={{ display: "grid", gridTemplateColumns: "84px 44px minmax(0, 1fr)", gap: 14, paddingBottom: 6, borderBottom: "1px solid var(--ds-color-border)" }}>
           <div style={mono}>token</div><div style={mono}>px</div><div style={mono}>bar · usage</div>
         </div>
         <div style={{ display: "flex", flexDirection: "column" }}>
@@ -321,7 +321,7 @@ export const SpacingAndRadii: Story = {
               <span style={{ ...mono, color: "var(--ds-color-text)" }}>{s.px}</span>
               <div style={{ display: "flex", alignItems: "center", gap: 12, minWidth: 0 }}>
                 <div style={{ width: `var(--p-space-${s.t})`, height: 14, background: "var(--p-yellow-400)", borderRadius: 2, flex: "none", outline: s.px === 0 ? "1px dashed var(--ds-color-border-strong)" : "none" }} />
-                {s.use && <span style={{ ...mono, whiteSpace: "nowrap" }}>{s.use}</span>}
+                {s.use && <span style={{ ...mono, minWidth: 0 }}>{s.use}</span>}
               </div>
             </div>
           ))}
@@ -493,7 +493,7 @@ export const Themes: Story = {
         meta={`Toolbar → Theme · or scope any subtree with data-theme="interim" / "fronted"`}
       />
 
-      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(340px, 1fr))", gap: 20 }}>
+      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(min(340px, 100%), 1fr))", gap: 20 }}>
         {([["interim", "First Launch"], ["fronted", "Fronted Brand"]] as const).map(([t, label]) => (
           <div key={t} data-theme={t} className="rounded-2xl border border-border overflow-hidden bg-background">
             <div className="px-5 py-3 border-b border-border flex items-center justify-between bg-muted/40">

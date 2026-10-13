@@ -88,7 +88,7 @@ export const SelectStory: Story = {
 
       <h3 style={eyebrow}>Open menu</h3>
       <div style={{ display: "flex", gap: 24, alignItems: "flex-start" }}>
-        <div className="w-[240px] rounded-md border bg-card text-foreground shadow-md p-1">
+        <div className="w-[240px] max-w-full rounded-md border bg-card text-foreground shadow-md p-1">
           <div className={menuItem}>🇵🇭 Philippines</div>
           <div className={cn(menuItem, "bg-primary/5")}>🇬🇧 United Kingdom<span className="ml-auto text-[10px] text-muted-foreground">hover</span></div>
           <div className={cn(menuItem, "bg-primary/10")}>
@@ -101,9 +101,9 @@ export const SelectStory: Story = {
 
       <h3 style={eyebrow}>Sizes</h3>
       <Table head={["Size", "Example", "Notes"]} rows={[
-        { a: "Drawer (h-10)", b: <CountrySelect value="NO" className="h-10 w-[220px]" />, c: "drawer default (28× in flows)" },
-        { a: "Base (h-9)", b: <CountrySelect value="NO" className="h-9 w-[220px]" />, c: "component default" },
-        { a: "Compact (h-8)", b: <CountrySelect value="NO" className="h-8 text-xs w-[220px]" />, c: "dense rows / toolbars" },
+        { a: "Drawer (h-10)", b: <CountrySelect value="NO" className="h-10 w-[220px] max-w-full" />, c: "drawer default (28× in flows)" },
+        { a: "Base (h-9)", b: <CountrySelect value="NO" className="h-9 w-[220px] max-w-full" />, c: "component default" },
+        { a: "Compact (h-8)", b: <CountrySelect value="NO" className="h-8 text-xs w-[220px] max-w-full" />, c: "dense rows / toolbars" },
       ]} />
       <Guidance k="select" />
     </div>
