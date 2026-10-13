@@ -112,13 +112,26 @@ function FlowPage({ children }: { children: React.ReactNode }) {
     };
     const timers = [50, 400, 1200].map((ms) => window.setTimeout(post, ms));
     document.fonts?.ready.then(post);
+    // The canvas lets you use a focused page: re-measure after scrolling or any change.
+    let pending = 0;
+    const soon = () => { window.clearTimeout(pending); pending = window.setTimeout(post, 120); };
+    const observer = new MutationObserver(soon);
+    if (ref.current) observer.observe(ref.current, { subtree: true, childList: true, attributes: true });
     const onMessage = (e: MessageEvent) => { if (e.data?.type === "flow-page-parts?") post(); };
+    // Esc inside the page closes the step on the canvas.
+    const onKey = (e: KeyboardEvent) => { if (e.key === "Escape") window.parent.postMessage({ type: "flow-page-escape" }, "*"); };
     window.addEventListener("message", onMessage);
     window.addEventListener("resize", post);
+    window.addEventListener("scroll", soon, true);
+    window.addEventListener("keydown", onKey);
     return () => {
       timers.forEach(window.clearTimeout);
+      window.clearTimeout(pending);
+      observer.disconnect();
       window.removeEventListener("message", onMessage);
       window.removeEventListener("resize", post);
+      window.removeEventListener("scroll", soon, true);
+      window.removeEventListener("keydown", onKey);
     };
   }, []);
   // A full screen takes the app's heading hierarchy via data-app-base (globals.css).
@@ -136,13 +149,19 @@ function SignInScreen(props: React.ComponentProps<typeof SignInCard>) {
   );
 }
 
+/** The header with a working Workers | Payroll switch (the body stays on Workers). */
+function LiveHeader() {
+  const [tab, setTab] = React.useState<"tracker" | "payroll">("tracker");
+  return <DashboardHeader tab={tab} onTabChange={setTab} />;
+}
+
 function DashboardScreen({ children, body }: { children: React.ReactNode; body: PartInfo }) {
   return (
     <FlowPage>
       <Part of={P.shell}>
         <AdminDashboardShell
           topbar={<Part of={P.topbar}><AdminTopbar fixed /></Part>}
-          header={<Part of={P.header}><DashboardHeader /></Part>}
+          header={<Part of={P.header}><LiveHeader /></Part>}
         >
           <Part of={body}>{children}</Part>
         </AdminDashboardShell>
