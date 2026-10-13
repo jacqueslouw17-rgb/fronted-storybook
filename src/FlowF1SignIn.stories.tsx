@@ -101,11 +101,48 @@ function measureParts(root: HTMLElement) {
   return [...patterns, ...components];
 }
 
-/** A full screen of the flow. Reports its parts to an embedding window. */
-function FlowPage({ children }: { children: React.ReactNode }) {
+/** Whether something under `el` can still scroll in the wheel's direction. */
+function canScroll(el: Element | null, dx: number, dy: number) {
+  for (let a = el; a && a !== document.documentElement; a = a.parentElement) {
+    const cs = getComputedStyle(a);
+    if (dy && /(auto|scroll)/.test(cs.overflowY) && a.scrollHeight > a.clientHeight + 1 &&
+        (dy < 0 ? a.scrollTop > 0 : a.scrollTop + a.clientHeight < a.scrollHeight - 1)) return true;
+    if (dx && /(auto|scroll)/.test(cs.overflowX) && a.scrollWidth > a.clientWidth + 1 &&
+        (dx < 0 ? a.scrollLeft > 0 : a.scrollLeft + a.clientWidth < a.scrollWidth - 1)) return true;
+  }
+  return false;
+}
+
+type Advance = "input" | "submit";
+
+/** A full screen of the flow. Reports its parts to an embedding window, tells it when the
+ *  screen's action happens (`advanceOn`: typing, submitting) so the flow can move on, and
+ *  hands back wheel gestures it has no use for so the canvas keeps panning and zooming. */
+function FlowPage({ children, advanceOn = [] }: { children: React.ReactNode; advanceOn?: Advance[] }) {
   const ref = React.useRef<HTMLDivElement>(null);
+  const advance = React.useRef(advanceOn);
+  advance.current = advanceOn;
   React.useEffect(() => {
     if (window.parent === window) return;
+    const root = ref.current;
+    let advanced = false;
+    const onAction = (kind: Advance) => (e: Event) => {
+      if (!advance.current.includes(kind) || advanced) return;
+      if (kind === "submit") e.preventDefault();
+      advanced = true;
+      window.parent.postMessage({ type: "flow-page-advance", via: kind }, "*");
+    };
+    const onInput = onAction("input"), onSubmit = onAction("submit");
+    root?.addEventListener("input", onInput, true);
+    root?.addEventListener("submit", onSubmit, true);
+    const onWheel = (e: WheelEvent) => {
+      const zoom = e.ctrlKey || e.metaKey;
+      if (!zoom && canScroll(e.target as Element, e.deltaX, e.deltaY)) return;
+      e.preventDefault();
+      window.parent.postMessage({ type: "flow-page-wheel", dx: e.deltaX, dy: e.deltaY, mode: e.deltaMode,
+        zoom, shift: e.shiftKey, x: e.clientX, y: e.clientY }, "*");
+    };
+    window.addEventListener("wheel", onWheel, { passive: false });
     const post = () => {
       if (!ref.current) return;
       window.parent.postMessage({ type: "flow-page-parts", parts: measureParts(ref.current) }, "*");
@@ -132,6 +169,9 @@ function FlowPage({ children }: { children: React.ReactNode }) {
       window.removeEventListener("resize", post);
       window.removeEventListener("scroll", soon, true);
       window.removeEventListener("keydown", onKey);
+      window.removeEventListener("wheel", onWheel);
+      root?.removeEventListener("input", onInput, true);
+      root?.removeEventListener("submit", onSubmit, true);
     };
   }, []);
   // A full screen takes the app's heading hierarchy via data-app-base (globals.css).
@@ -140,9 +180,9 @@ function FlowPage({ children }: { children: React.ReactNode }) {
 
 const credentials = { email: "joe@example.com", password: "example-password" };
 
-function SignInScreen(props: React.ComponentProps<typeof SignInCard>) {
+function SignInScreen({ advanceOn, ...props }: React.ComponentProps<typeof SignInCard> & { advanceOn?: Advance[] }) {
   return (
-    <FlowPage>
+    <FlowPage advanceOn={advanceOn}>
       <Part of={P.login}><AuthShell fullPage><SignInCard {...props} /></AuthShell></Part>
       <Part of={P.bubble}><FeedbackBubble /></Part>
     </FlowPage>
@@ -172,12 +212,13 @@ function DashboardScreen({ children, body }: { children: React.ReactNode; body: 
 
 export const SignIn: Story = {
   name: "1 · Sign in",
-  render: () => <SignInScreen />,
+  // Typing (or trying Sign In) moves on to the filled form.
+  render: () => <SignInScreen advanceOn={["input", "submit"]} />,
 };
 
 export const CredentialsEntered: Story = {
   name: "2 · Credentials entered",
-  render: () => <SignInScreen {...credentials} />,
+  render: () => <SignInScreen {...credentials} advanceOn={["submit"]} />,
 };
 
 export const SigningIn: Story = {
