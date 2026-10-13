@@ -27,8 +27,9 @@ const PANEL = {
  *   LockPayoutDialog       F1v6_ApproveConfirmationModal
  *   ContractorPayoutTable  F1v6_PayoutTable (contractor scope)
  *   ContractorPayoutPanel  F1v6_WorkerDetailDrawer (track step, contractor)
- * Two deliberate differences from v6.3, both shown as findings on the flow canvas: a row's
- * total follows its approved adjustments, and "Approve all" counts only the lines shown.
+ * As v6.3 has it, known issues included (listed on the flow canvas): a row's amount stays at
+ * the contract fee after adjustments are approved, and "Approve all" also counts items the
+ * panel doesn't show (a contractor's timesheet).
  */
 
 export type PayLine = { label: string; amount: number; attachments?: number };
@@ -41,6 +42,8 @@ export type Contractor = {
   base: PayLine;
   /** Adjustments the contractor submitted for this run, waiting for review. */
   pending: PayLine[];
+  /** Submitted items the panel doesn't list but the counts include (a timesheet). */
+  unlisted?: number;
   /** The contractor's own invoice: a record only, it does not change the amount due. */
   invoice?: { fileName: string; uploadedAt: string };
 };
@@ -49,7 +52,7 @@ export type Contractor = {
 export const ACME_CONTRACTORS: Contractor[] = [
   { id: "emma", name: "Emma Wilson", country: "Norway", flag: "🇳🇴",
     base: { label: "Base Contract Fee", amount: 6266.67 },
-    pending: [{ label: "Equipment purchase", amount: 243.7, attachments: 1 }] },
+    pending: [{ label: "Equipment purchase", amount: 243.7, attachments: 1 }], unlisted: 1 },
   { id: "aditi", name: "Aditi Sharma", country: "India", flag: "🇮🇳",
     base: { label: "Base Fee", amount: 3555.56 },
     pending: [
@@ -75,6 +78,8 @@ const initials = (name: string) => name.split(" ").map((p) => p[0]).join("").sli
 /** What a contractor is owed: the fee plus the adjustments approved so far. */
 export const amountDue = (c: Contractor, approved: boolean) =>
   c.base.amount + (approved ? c.pending.reduce((s, l) => s + l.amount, 0) : 0);
+/** Items waiting for a decision, as the counts show them (listed or not). */
+export const pendingCount = (c: Contractor) => c.pending.length + (c.unlisted || 0);
 
 /* ---------------------------------------------------------------- loading */
 
@@ -215,7 +220,8 @@ export function ContractorReviewTable({
                     <PersonCell c={c} />
                     <div className="flex items-center gap-3 flex-shrink-0">
                       <div className="text-right">
-                        <p className="text-sm font-semibold text-foreground tabular-nums leading-tight">{formatCurrency(amountDue(c, approved.includes(c.id)))}</p>
+                        {/* v6.3: the row keeps the fee alone, even once adjustments are approved. */}
+                        <p className="text-sm font-semibold text-foreground tabular-nums leading-tight">{formatCurrency(c.base.amount)}</p>
                       </div>
                       {isReady ? (
                         <div className="flex items-center gap-1.5 text-xs text-accent-green-text">
@@ -224,7 +230,7 @@ export function ContractorReviewTable({
                         </div>
                       ) : (
                         <div className="flex items-center gap-1.5 text-xs text-orange-600">
-                          <span className="flex items-center justify-center h-4 w-4 rounded-full bg-orange-500/15 text-orange-600 text-[10px] font-semibold">{c.pending.length}</span>
+                          <span className="flex items-center justify-center h-4 w-4 rounded-full bg-orange-500/15 text-orange-600 text-[10px] font-semibold">{pendingCount(c)}</span>
                           <span className="hidden sm:inline">Pending</span>
                         </div>
                       )}
@@ -321,7 +327,7 @@ export function ContractorReviewPanel({
   /** Render in place (pattern docs) instead of as a sheet over the page. */
   inline?: boolean;
 }) {
-  const pending = approved ? 0 : c.pending.length;
+  const pending = approved ? 0 : pendingCount(c);
   const [sectionOpen, setSectionOpen] = React.useState(pending > 0);
   React.useEffect(() => { if (pending > 0) setSectionOpen(true); }, [pending]);
   const total = amountDue(c, approved);
@@ -356,7 +362,7 @@ export function ContractorReviewPanel({
 
       <div className="px-5 py-4 space-y-0.5">
         <section>
-          <SectionHeader title="Amount due" open={sectionOpen} pending={pending} total={1 + (approved ? c.pending.length : 0)} onToggle={() => setSectionOpen(!sectionOpen)} />
+          <SectionHeader title="Amount due" open={sectionOpen} pending={approved ? 0 : c.pending.length} total={1 + (approved ? c.pending.length : 0)} onToggle={() => setSectionOpen(!sectionOpen)} />
           {sectionOpen && (
             <div className="overflow-y-hidden overflow-x-visible">
               <div className="pl-4 pr-3 pb-2">
@@ -486,7 +492,7 @@ export function ContractorPayoutTable({
                         </span>
                       )}
                       <div className="text-right hidden sm:block">
-                        <p className="text-sm tabular-nums font-semibold text-foreground">{formatCurrency(amountDue(c, approved.includes(c.id)))}</p>
+                        <p className="text-sm tabular-nums font-semibold text-foreground">{formatCurrency(c.base.amount)}</p>
                       </div>
                       <div className={cn("flex items-center gap-1.5 text-xs px-2 py-0.5 rounded-full",
                         isPaid ? "text-accent-green-text bg-accent-green/10" : "text-muted-foreground bg-muted/50")}>

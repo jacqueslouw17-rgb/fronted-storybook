@@ -38,7 +38,7 @@ export const ReviewTable: Story = {
   render: () => (
     <div style={{ ...wrap, maxWidth: 1240 }}>
       <PageHeader category="Pattern" status="Beta" title="Contractor run — review"
-        lead={<>The run in review. Each contractor shows what they're owed and either the number of adjustments waiting for a decision (Pending) or Ready. <b>Continue to payout</b> unlocks once every row is Ready. A row's amount follows its approved adjustments.</>}
+        lead={<>The run in review. Each contractor shows what they're owed and either the number of adjustments waiting for a decision (Pending) or Ready. <b>Continue to payout</b> unlocks once every row is Ready. As in v6.3, a row keeps the fee alone after approval (known issue).</>}
         meta="F1v6_SubmissionsView (hideTypeFilters) · F1v6_PeriodDropdown trigger" />
       <h3 style={eyebrow}>Two contractors pending</h3>
       <PaymentsRunFrame period={<PeriodSelector status="in-review" />}>

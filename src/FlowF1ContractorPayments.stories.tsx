@@ -14,7 +14,8 @@ import "./typography.css";
  * Payments tab (reached from the Workers pipeline, Flows/F1 Sign in · 5) through review,
  * approval, lock and payout to paid. Each story is one full screen, composed only from the
  * patterns in this Storybook; the run works, so each screen can be used, and on the flow
- * canvas the step's action moves the journey on.
+ * canvas the step's action moves the journey on. This is Scoping (Flow 1 v6.3) only: the demo
+ * (v6.1) has no Payments tab. Copied as v6.3 has it, feedback bubble included.
  */
 const meta: Meta = {
   title: "Flows/F1 Contractor payments",

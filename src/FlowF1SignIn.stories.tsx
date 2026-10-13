@@ -7,7 +7,7 @@ import { AdminTopbar } from "@/components/flows/admin-topbar";
 import { DashboardHeader, type DashboardTab } from "@/components/flows/dashboard-header";
 import { TrackerLoading as TrackerLoadingGrid } from "@/components/flows/tracker-loading";
 import { WorkerPipeline } from "@/components/flows/worker-pipeline";
-import { FlowPage, Part, useFlowAdvance, type Advance, type PartInfo } from "@/components/flows/flow-page";
+import { FlowPage, Part, type Advance, type PartInfo } from "@/components/flows/flow-page";
 import "./tokens.css";
 import "./typography.css";
 
@@ -47,13 +47,11 @@ function SignInScreen({ advanceOn, ...props }: React.ComponentProps<typeof SignI
   );
 }
 
-/** The header with a working Workers | Payroll | Payments switch. The body stays on Workers;
- *  choosing Payments is where the contractor payments flow branches off (on the canvas it
- *  moves on to Flows/F1 Contractor payments). */
+/** The header with a working Workers | Payroll switch (the body stays on Workers). The demo
+ *  (v6.1) has no Payments tab; that split is Scoping only (Flows/F1 Contractor payments). */
 function LiveHeader() {
   const [tab, setTab] = React.useState<DashboardTab>("tracker");
-  const advance = useFlowAdvance();
-  return <DashboardHeader payments tab={tab} onTabChange={(t) => { setTab(t); if (t === "payments") advance("payments"); }} />;
+  return <DashboardHeader tab={tab} onTabChange={setTab} />;
 }
 
 function DashboardScreen({ children, body }: { children: React.ReactNode; body: PartInfo }) {
