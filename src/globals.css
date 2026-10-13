@@ -9,6 +9,22 @@
 .shadow-card { box-shadow: var(--shadow-card); }
 .shadow-elevated { box-shadow: var(--shadow-elevated); }
 .shadow-overlay { box-shadow: var(--shadow-overlay); }
+
+/* Skeleton shimmer — verbatim from the app's index.css. ui/skeleton renders
+   `skeleton-shimmer`, which reads these two tokens (same in both themes). */
+:root {
+  --skeleton: 0 0% 92%;
+  --skeleton-shimmer: 0 0% 95%;
+}
+@keyframes skeleton-shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+.skeleton-shimmer {
+  background: linear-gradient(90deg, hsl(var(--skeleton)) 0%, hsl(var(--skeleton-shimmer)) 50%, hsl(var(--skeleton)) 100%);
+  background-size: 200% 100%;
+  animation: skeleton-shimmer 1.5s ease-in-out infinite;
+}
 /* rebuild trigger: badge input textarea card checkbox workercard preflight select label tooltip avatar switch separator progress tabs collapsible skeleton radio emphasis alert popover dropdown dialog alertdialog sheet command calendar */
 
 @layer base {
@@ -109,6 +125,18 @@
   blockquote, dl, dd, h1, h2, h3, h4, h5, h6, hr, figure, p, pre {
     margin: 0;
   }
+
+  /* App base — heading hierarchy, verbatim from the app's index.css, scoped to
+     [data-app-base] (full flow screens) so the docs pages keep their own rhythm.
+     :where() keeps element specificity, so utilities (text-[15px], font-bold …)
+     still override; line-height and tracking carry through as in the flows. */
+  :where([data-app-base]) h1 { font-size: 36px; line-height: 1.25; letter-spacing: -0.02em; font-weight: 600; }
+  :where([data-app-base]) h2 { font-size: 30px; line-height: 1.25; letter-spacing: -0.02em; font-weight: 600; }
+  :where([data-app-base]) h3 { font-size: 24px; line-height: 1.375; letter-spacing: -0.02em; font-weight: 600; }
+  :where([data-app-base]) h4 { font-size: 20px; line-height: 1.375; font-weight: 600; }
+  :where([data-app-base]) h5 { font-size: 17px; line-height: 1.375; font-weight: 500; }
+  :where([data-app-base]) h6 { font-size: 15px; line-height: 1.375; font-weight: 500; }
+  :where([data-app-base]) small { font-size: 13px; line-height: 1.5; }
 
   /* App base — body font-size 15px (--text-base) + smoothing, matching the
      flows, so inherited text sizes and line-height multipliers line up. */
