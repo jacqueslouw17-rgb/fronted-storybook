@@ -33,7 +33,7 @@ export function AdminTopbar({
         <Button variant="ghost" size="icon" className="hover:bg-transparent flex-shrink-0 h-8 w-8 sm:h-10 sm:w-10">
           <ArrowLeft className="h-4 w-4 sm:h-5 sm:w-5" />
         </Button>
-        <img src={frontedLogo} alt="Fronted" className="h-5 sm:h-6 w-auto cursor-pointer hover:opacity-80 transition-opacity flex-shrink-0" />
+        <img data-ds="wordmark" src={frontedLogo} alt="Fronted" className="h-5 sm:h-6 w-auto cursor-pointer hover:opacity-80 transition-opacity flex-shrink-0" />
         <Button variant="outline" role="combobox" aria-expanded={false} className="w-[140px] sm:w-[280px] h-8 sm:h-9 text-xs sm:text-sm bg-background justify-between">
           <span className="truncate">{company}</span>
           <ChevronDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />

@@ -237,14 +237,14 @@
    re-skins the whole system with no component changes.
    :root (above) = "fronted" (real brand identity).
    [data-theme="interim"] = the interim launch look (blue→purple
-   gradient, 8px controls, system font for components) captured from
-   the flows. Interim is the DEFAULT we launch with; headings stay on
-   the Fronted display font so we align typography as we go.
+   gradient, 8px controls, Inter for components) captured from the
+   flows. Interim is the DEFAULT we launch with; headings stay on the
+   Fronted display font so we align typography as we go.
    ============================================================ */
 [data-theme="interim"] {
-  /* typography — system font for components; content headings keep Fronted's Clash Display */
-  --ds-font-body: var(--p-font-system);
-  --ds-font-ui:   var(--p-font-system);
+  /* typography — Inter for components, as live; content headings keep Fronted's Clash Display */
+  --ds-font-body: var(--p-font-sans);
+  --ds-font-ui:   var(--p-font-sans);
 
   /* neutrals */
   --ds-color-text:           #171717;

@@ -10,6 +10,7 @@ const Card = React.forwardRef<
   }
 >(({ className, hover = false, variant = "default", ...props }, ref) => (
   <div
+    data-ds="card"
     ref={ref}
     className={cn(
       "rounded-2xl border bg-card text-card-foreground shadow-card",

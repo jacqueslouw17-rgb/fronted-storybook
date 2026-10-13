@@ -11,7 +11,7 @@ import frontedLogo from "../../fronted-logo.png";
  * Sign In). Shared by Patterns/Login and the flow pages.
  */
 
-export const Wordmark = () => <img src={frontedLogo} alt="Fronted" className="h-10 object-contain" />;
+export const Wordmark = () => <img data-ds="wordmark" src={frontedLogo} alt="Fronted" className="h-10 object-contain" />;
 
 /** Shared auth chrome — gradient backdrop, soft blobs, centred logo + glass card.
  *  `fullPage` fills the viewport the way /auth does in the app. */

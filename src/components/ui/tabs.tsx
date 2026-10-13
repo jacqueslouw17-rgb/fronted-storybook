@@ -10,6 +10,7 @@ const TabsList = React.forwardRef<
   React.ComponentPropsWithoutRef<typeof TabsPrimitive.List>
 >(({ className, ...props }, ref) => (
   <TabsPrimitive.List
+    data-ds="tabs"
     ref={ref}
     className={cn(
       "inline-flex items-center justify-center rounded-full bg-muted/50 p-1 text-muted-foreground",
