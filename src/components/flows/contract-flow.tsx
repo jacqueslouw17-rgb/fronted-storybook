@@ -1,5 +1,14 @@
 import * as React from "react";
-import { Calendar, ChevronDown, Clock, Info, Pencil, RotateCcw, Upload, User, X } from "lucide-react";
+import { AlertCircle, Calendar, ChevronDown, Clock, FileText, Info, Loader2, Pencil, RotateCcw, Upload, User, X } from "lucide-react";
+import {
+  AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter,
+  AlertDialogHeader, AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { Skeleton } from "@/components/ui/skeleton";
+import { toast } from "@/components/ui/sonner";
+import { ContractRichTextEditor } from "@/components/flows/contract-editor";
+import { Part } from "@/components/flows/flow-page";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
@@ -12,6 +21,13 @@ import { Background } from "@/components/flows/admin-dashboard-shell";
 import { cn } from "@/lib/utils";
 import frontedLogo from "../../fronted-logo.png";
 
+/** Layers that portal out of the page mark the pattern they belong to themselves. */
+const PANEL_PARTS = {
+  reset:  { id: "patterns-contract-actions--reset-dialog", label: "Patterns/Contract Actions · Reset dialog" },
+  upload: { id: "patterns-contract-actions--upload-dialog", label: "Patterns/Contract Actions · Upload dialog" },
+  editor: { id: "patterns-contract-actions--contract-editor", label: "Patterns/Contract Actions · Contract editor" },
+};
+
 /**
  * Contract Flow — the F1 v6.1 "Draft Contract" journey for one candidate, from the pipeline's
  * Prepare Contract card to Waiting for Signature. Verbatim markup (as rendered) from:
@@ -22,7 +38,10 @@ import frontedLogo from "../../fronted-logo.png";
  *   ReviewDetailsForm            F1v6_ContractCreationScreen (v6.1) — Personal Information +
  *                                Working Engagement sections, Review Agreement
  *   ContractDraftWorkspace       F1v6_ContractDraftWorkspace (v6.1) — candidate card, Edit
- *                                history, the contract preview gated on scroll-to-end
+ *                                history, the contract preview gated on scroll-to-end, and its
+ *                                branches: edit (ContractRichTextEditor), reset (regenerate),
+ *                                upload (ContractUploadDialog), no documents
+ *   ResetContractDialog / UploadContractDialog / EditHistory (ContractAuditLog)
  *   ContractReviewBoard          contract-flow/ContractReviewBoard — Send for Signature
  *   SentToast                    the "Contracts sent for signature" toast
  * Copied as the demo has it, including a known issue: the payment clause reads
@@ -288,11 +307,16 @@ export function contractClauses(c: Candidate): Clause[] {
   ];
 }
 
-const EDITS = [
-  { who: "Sarah Johnson", doc: "Agreement", what: "Updated compensation clause", when: "1h ago", latest: true },
+/** One entry in a contract's edit history. */
+export type EditEvent = { who: string; doc?: string; what?: string; when: string; kind?: "edit" | "reset" | "upload" };
+
+/** The candidate's history before this session: 10 edits, the latest three shown. */
+export const BASE_EDITS: EditEvent[] = [
+  { who: "Sarah Johnson", doc: "Agreement", what: "Updated compensation clause", when: "1h ago" },
   { who: "David Park", doc: "NDA", what: "Revised confidentiality scope", when: "4h ago" },
   { who: "Emily Rodriguez", doc: "IP Addendum", what: "Added IP carve-out for side project", when: "1d ago" },
 ];
+const BASE_EDIT_COUNT = 10;
 
 function DetailRows({ rows, last }: { rows: [string, string][]; last?: boolean }) {
   return (
@@ -319,8 +343,10 @@ function SideSection({ title, rows, last }: { title: string; rows: [string, stri
   );
 }
 
-function EditHistory() {
+/** Edit history (ContractAuditLog): newest first; resets and uploads carry a badge. */
+export function EditHistory({ events = BASE_EDITS, count = BASE_EDIT_COUNT }: { events?: EditEvent[]; count?: number }) {
   const [open, setOpen] = React.useState(false);
+  const latest = events[0];
   return (
     <div className="mt-3">
       <Collapsible open={open} onOpenChange={setOpen}>
@@ -328,14 +354,14 @@ function EditHistory() {
           <div className="w-full flex items-center justify-between gap-2">
             <div className="flex items-center gap-2 min-w-0">
               <span className="text-xs font-medium text-foreground">Edit history</span>
-              <Badge variant="secondary" className="h-4 px-1.5 text-[10px] font-medium bg-muted/60">10</Badge>
+              <Badge variant="secondary" className="h-4 px-1.5 text-[10px] font-medium bg-muted/60">{count}</Badge>
             </div>
             <ChevronDown className={cn("h-3.5 w-3.5 text-muted-foreground flex-shrink-0 transition-transform duration-200", open && "rotate-180")} />
           </div>
-          {!open && (
+          {!open && latest && (
             <div className="flex items-center gap-1.5 text-[11px] text-muted-foreground">
               <Clock className="h-3 w-3 flex-shrink-0" />
-              <span className="truncate">Sarah Johnson · Agreement · 1h ago</span>
+              <span className="truncate">{latest.who}{latest.doc ? ` · ${latest.doc}` : ""} · {latest.when}</span>
             </div>
           )}
         </CollapsibleTrigger>
@@ -343,27 +369,45 @@ function EditHistory() {
           <div className="mt-2 rounded-lg border border-border/30 bg-card/30 overflow-hidden">
             <div className="overflow-y-auto">
               <div className="divide-y divide-border/20">
-                {EDITS.map((e) => (
-                  <div key={e.who} className="px-3 py-2 flex items-start gap-2 hover:bg-muted/10 transition-colors">
-                    <div className="flex-shrink-0 mt-0.5">
-                      <div className="h-5 w-5 rounded-full flex items-center justify-center bg-muted/50"><User className="h-3 w-3 text-muted-foreground" /></div>
-                    </div>
-                    <div className="flex-1 min-w-0">
-                      <div className="flex items-center gap-1.5"><p className="text-xs text-foreground font-medium truncate">{e.who}</p></div>
-                      <p className="text-[10px] text-muted-foreground mt-0.5 truncate"><span className="font-medium text-foreground/70">{e.doc}</span><span> · </span>{e.what}</p>
-                      <div className="flex items-center gap-1.5 mt-0.5">
-                        <Clock className="h-3 w-3 text-muted-foreground" />
-                        <span className="text-[10px] text-muted-foreground">{e.when}</span>
+                {events.slice(0, 3).map((e, i) => {
+                  const marked = e.kind === "reset" || e.kind === "upload";
+                  return (
+                    <div key={i} className="px-3 py-2 flex items-start gap-2 hover:bg-muted/10 transition-colors">
+                      <div className="flex-shrink-0 mt-0.5">
+                        <div className={cn("h-5 w-5 rounded-full flex items-center justify-center", marked ? "bg-primary/10" : "bg-muted/50")}>
+                          {e.kind === "reset" ? <RotateCcw className="h-3 w-3 text-primary" />
+                            : e.kind === "upload" ? <Upload className="h-3 w-3 text-primary" />
+                            : <User className="h-3 w-3 text-muted-foreground" />}
+                        </div>
                       </div>
+                      <div className="flex-1 min-w-0">
+                        <div className="flex items-center gap-1.5">
+                          <p className="text-xs text-foreground font-medium truncate">{e.who}</p>
+                          {marked && <Badge variant="secondary" className="h-4 px-1.5 text-[9px] bg-primary/10 text-primary border-0">{e.kind === "reset" ? "Reset to original" : "Uploaded contract"}</Badge>}
+                        </div>
+                        {(e.doc || e.what) && (
+                          <p className="text-[10px] text-muted-foreground mt-0.5 truncate">
+                            {e.doc && <span className="font-medium text-foreground/70">{e.doc}</span>}
+                            {e.doc && e.what && <span> · </span>}
+                            {e.what}
+                          </p>
+                        )}
+                        <div className="flex items-center gap-1.5 mt-0.5">
+                          <Clock className="h-3 w-3 text-muted-foreground" />
+                          <span className="text-[10px] text-muted-foreground">{e.when}</span>
+                        </div>
+                      </div>
+                      {i === 0 && <Badge variant="outline" className="h-4 px-1.5 text-[9px] flex-shrink-0 font-normal">Latest</Badge>}
                     </div>
-                    {e.latest && <Badge variant="outline" className="h-4 px-1.5 text-[9px] flex-shrink-0 font-normal">Latest</Badge>}
-                  </div>
-                ))}
+                  );
+                })}
               </div>
             </div>
-            <button className="w-full px-3 py-2 border-t border-border/20 bg-muted/10 hover:bg-muted/20 transition-colors text-center">
-              <span className="text-[11px] text-primary font-medium">Show all 10 edits</span>
-            </button>
+            {count > 3 && (
+              <button className="w-full px-3 py-2 border-t border-border/20 bg-muted/10 hover:bg-muted/20 transition-colors text-center">
+                <span className="text-[11px] text-primary font-medium">Show all {count} edits</span>
+              </button>
+            )}
           </div>
         </CollapsibleContent>
       </Collapsible>
@@ -371,21 +415,249 @@ function EditHistory() {
   );
 }
 
-/** "Reviewing [name]'s Contract": the candidate and their details beside the contract preview.
- *  Confirm & Continue unlocks once the contract has been scrolled to the end (`readToEnd`
- *  starts there). */
+/* ---------------------------------------------------------------- dialogs */
+
+/** "Reset contract to original?" — regenerate from the template, discarding manual edits. */
+export function ResetContractDialog({ open, onOpenChange, onReset }: { open: boolean; onOpenChange: (o: boolean) => void; onReset: () => void }) {
+  return (
+    <AlertDialog open={open} onOpenChange={onOpenChange}>
+      <AlertDialogContent>
+        <Part of={PANEL_PARTS.reset}>
+          <button onClick={() => onOpenChange(false)} aria-label="Close"
+            className="absolute right-4 top-4 rounded-sm opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2">
+            <X className="h-4 w-4" />
+          </button>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Reset contract to original?</AlertDialogTitle>
+            <AlertDialogDescription>This will regenerate the contract using the current worker data and discard all manual edits. This action cannot be undone.</AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogAction onClick={onReset}>Reset Contract</AlertDialogAction>
+          </AlertDialogFooter>
+        </Part>
+      </AlertDialogContent>
+    </AlertDialog>
+  );
+}
+
+/** Why an upload was refused (contract-flow/ContractUploadDialog IMPORT_MESSAGES). */
+export const IMPORT_MESSAGES = {
+  format: "Upload a PDF, DOC or DOCX file.",
+  size: "File must be 10 MB or smaller.",
+  server: "Something went wrong while importing the contract. Try again.",
+  other: "We couldn't import this contract. Check that the file isn't corrupted, password-protected, or image-only, then try again.",
+} as const;
+export type ImportProblem = keyof typeof IMPORT_MESSAGES;
+export type PickedFile = { name: string; size: number };
+
+const prettySize = (bytes: number) => {
+  const mb = bytes / (1024 * 1024);
+  return mb >= 1 ? `${mb.toFixed(1)} MB` : `${Math.max(1, Math.round(bytes / 1024))} KB`;
+};
+/** The file checks the dialog runs before importing (contractImport.validateContractFile). */
+export function checkFile(f: PickedFile): ImportProblem | null {
+  if (!/\.(pdf|docx?)$/i.test(f.name)) return "format";
+  if (f.size > 10 * 1024 * 1024) return "size";
+  return null;
+}
+
+export type UploadState = { file?: PickedFile | null; error?: ImportProblem | null; importing?: boolean };
+
+/** "Upload the finalised agreement": drop or browse a PDF / DOC / DOCX (10 MB), then Upload
+ *  contract. Refused files and failed imports show inline, with Try again. `fail` makes the
+ *  next import fail with that reason (for the error branch). */
+export function UploadContractDialog({
+  open, onOpenChange, workerName, countryLabel, documentLabel = "agreement", initial = {}, fail, onImported, onEvent, hold,
+}: {
+  open: boolean; onOpenChange: (o: boolean) => void; workerName: string; countryLabel?: string; documentLabel?: string; hold?: boolean;
+  initial?: UploadState; fail?: ImportProblem; onImported?: (f: PickedFile) => void; onEvent?: (e: "pick" | "refused" | "import" | "failed") => void;
+}) {
+  const [file, setFile] = React.useState<PickedFile | null>(initial.file ?? null);
+  const [error, setError] = React.useState<ImportProblem | null>(initial.error ?? null);
+  const [importing, setImporting] = React.useState(!!initial.importing);
+  const input = React.useRef<HTMLInputElement>(null);
+  const first = React.useRef(true);
+  // Closing clears the dialog (as the app does); the first open keeps any starting state.
+  React.useEffect(() => {
+    if (first.current) { first.current = false; return; }
+    if (!open) { setFile(null); setError(null); setImporting(false); }
+  }, [open]);
+  // A dialog that starts mid-upload finishes it.
+  React.useEffect(() => { if (initial.importing && initial.file && !hold) finish(initial.file); }, []);
+  const finish = (f: PickedFile) => window.setTimeout(() => {
+    setImporting(false);
+    if (fail) { setError(fail); onEvent?.("failed"); return; }
+    onImported?.(f); onOpenChange(false);
+  }, 1200);
+  const pick = (f: PickedFile | null) => {
+    if (!f) return;
+    const bad = checkFile(f);
+    if (bad) { setFile(null); setError(bad); onEvent?.("refused"); return; }
+    setError(null); setFile(f); onEvent?.("pick");
+  };
+  const upload = () => {
+    if (!file) return;
+    setImporting(true); setError(null); onEvent?.("import");
+    finish(file);
+  };
+  return (
+    <Dialog open={open} onOpenChange={(next) => (importing ? null : onOpenChange(next))}>
+      <DialogContent className="sm:max-w-[460px]">
+        <Part of={PANEL_PARTS.upload}>
+          <DialogHeader>
+            <DialogTitle>Upload the finalised {documentLabel}</DialogTitle>
+            <DialogDescription>
+              Becomes {workerName}'s current version and is saved to history. It applies to this worker only. The{countryLabel ? ` ${countryLabel}` : ""} template stays unchanged.
+            </DialogDescription>
+          </DialogHeader>
+          {importing ? (
+            <div className="flex flex-col items-center justify-center gap-3 py-10">
+              <Loader2 className="h-5 w-5 animate-spin text-muted-foreground" />
+              <p className="text-xs text-muted-foreground">Uploading…</p>
+            </div>
+          ) : (
+            <div className="space-y-3">
+              <div role="button" tabIndex={0} onClick={() => input.current?.click()}
+                onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") input.current?.click(); }}
+                onDragOver={(e) => e.preventDefault()}
+                onDrop={(e) => { e.preventDefault(); const f = e.dataTransfer.files?.[0]; if (f) pick({ name: f.name, size: f.size }); }}
+                className={cn("flex cursor-pointer flex-col items-center justify-center gap-2 rounded-lg border border-dashed px-4 py-8 text-center transition-colors",
+                  "border-border/70 hover:bg-muted/30", error && !file && "border-destructive/60")}>
+                {file ? (
+                  <>
+                    <FileText className="h-5 w-5 text-muted-foreground" />
+                    <p className="text-sm font-medium text-foreground">{file.name}</p>
+                    <p className="text-[11px] text-muted-foreground">{prettySize(file.size)} · Choose a different file</p>
+                  </>
+                ) : (
+                  <>
+                    <Upload className="h-5 w-5 text-muted-foreground" />
+                    <p className="text-sm font-medium text-foreground">Drop your file here or browse</p>
+                    <p className="text-[11px] text-muted-foreground">PDF, DOC or DOCX up to 10 MB</p>
+                  </>
+                )}
+                <input ref={input} type="file" accept=".pdf,.doc,.docx" className="hidden"
+                  onChange={(e) => { const f = e.target.files?.[0]; if (f) pick({ name: f.name, size: f.size }); e.target.value = ""; }} />
+              </div>
+              {error && (
+                <div className="flex items-start gap-2 rounded-lg border border-destructive/40 bg-destructive/5 px-3 py-2">
+                  <AlertCircle className="mt-0.5 h-3.5 w-3.5 flex-shrink-0 text-destructive" />
+                  <p className="text-[11px] leading-relaxed text-destructive">{IMPORT_MESSAGES[error]}</p>
+                </div>
+              )}
+              <div className="flex items-center justify-end gap-2 pt-1">
+                <Button variant="outline" size="sm" onClick={() => onOpenChange(false)}>Cancel</Button>
+                <Button size="sm" disabled={!file} onClick={upload}>{error && file ? "Try again" : "Upload contract"}</Button>
+              </div>
+            </div>
+          )}
+        </Part>
+      </DialogContent>
+    </Dialog>
+  );
+}
+
+/* ---------------------------------------------------------------- the workspace */
+
+/** What the workspace shows: the contract, the editor, a skeleton while a reset or upload is
+ *  applied, or nothing to show when no document was generated. */
+export type WorkspaceMode = "view" | "editing" | "resetting" | "applying" | "no-documents";
+
+export type WorkspaceState = {
+  mode?: WorkspaceMode;
+  readToEnd?: boolean;
+  /** Editor content emptied (Save Changes disabled, "cannot be empty"). */
+  emptyEditor?: boolean;
+  dialog?: "reset" | "upload" | null;
+  upload?: UploadState;
+  /** Edits made in this session, newest first (on top of BASE_EDITS). */
+  edits?: EditEvent[];
+  /** Reset stays disabled until something changes after a reset. */
+  changedSinceReset?: boolean;
+  /** Toast to show on arrival (the screen right after an action). */
+  toast?: { title: string; description?: string };
+  /** Keep an in-between state (regenerating, applying, uploading) instead of letting it settle. */
+  hold?: boolean;
+};
+
+export type WorkspaceEvent =
+  | "read" | "confirm" | "back" | "edit" | "cancel-edit" | "save" | "empty"
+  | "reset-open" | "reset" | "reset-done" | "upload-open" | "upload-pick" | "upload-refused"
+  | "upload-import" | "upload-failed" | "upload-done";
+
+/** The editor's starting HTML: the contract with values marked {{hl}} (as the demo has it). */
+function contractHtml(c: Candidate) {
+  const text = (n: React.ReactNode): string =>
+    typeof n === "string" ? n : Array.isArray(n) ? n.map(text).join("")
+      : React.isValidElement(n) ? ((n.type === V ? `{{hl}}${text((n.props as { children: React.ReactNode }).children)}{{/hl}}` : text((n.props as { children: React.ReactNode }).children))) : n == null ? "" : String(n);
+  return contractClauses(c).map((k) => `${k.h ? `<h2>${k.h}</h2>` : ""}${k.body ? `<p>${text(k.body)}</p>` : ""}`).join("");
+}
+
+/** "Reviewing [name]'s Contract": the candidate and their details beside the contract preview,
+ *  with Reset, Edit and Upload. Confirm & Continue unlocks once the contract has been scrolled
+ *  to the end. `initial` sets up any state of the journey (editing, a dialog, a skeleton…);
+ *  `onEvent` reports each step the admin takes. */
 export function ContractDraftWorkspace({
-  candidate: c = MARCUS, readToEnd = false, onConfirm, onBack, onRead,
-}: { candidate?: Candidate; readToEnd?: boolean; onConfirm?: () => void; onBack?: () => void; onRead?: () => void }) {
+  candidate: c = MARCUS, readToEnd = false, initial = {}, onConfirm, onBack, onRead, onEvent, uploadFails,
+}: {
+  candidate?: Candidate; readToEnd?: boolean; initial?: WorkspaceState;
+  onConfirm?: () => void; onBack?: () => void; onRead?: () => void; onEvent?: (e: WorkspaceEvent) => void;
+  /** Make uploads fail with this reason (the import error branch). */
+  uploadFails?: ImportProblem;
+}) {
   const doc = React.useRef<HTMLDivElement>(null);
-  const [read, setRead] = React.useState(readToEnd);
-  React.useLayoutEffect(() => { if (readToEnd && doc.current) doc.current.scrollTop = doc.current.scrollHeight; }, [readToEnd]);
+  const [mode, setMode] = React.useState<WorkspaceMode>(initial.mode ?? "view");
+  const [read, setRead] = React.useState(readToEnd || !!initial.readToEnd);
+  const [dialog, setDialog] = React.useState(initial.dialog ?? null);
+  const [edits, setEdits] = React.useState<EditEvent[]>(initial.edits ?? []);
+  const [changed, setChanged] = React.useState(initial.changedSinceReset ?? true);
+  const [html, setHtml] = React.useState(() => (initial.emptyEditor ? "" : contractHtml(c)));
+  const emit = (e: WorkspaceEvent) => onEvent?.(e);
+  const empty = html.replace(/<[^>]*>/g, "").trim().length === 0;
+  const loading = mode === "resetting" || mode === "applying";
+
+  React.useLayoutEffect(() => { if ((readToEnd || initial.readToEnd) && doc.current) doc.current.scrollTop = doc.current.scrollHeight; }, [readToEnd, initial.readToEnd, mode]);
+  React.useEffect(() => { if (initial.toast) toast.success(initial.toast.title, initial.toast.description ? { description: initial.toast.description } : undefined); }, []);
+  // A reset or an upload settles by itself, as in the app (4s to regenerate, 1.6s to apply).
+  React.useEffect(() => {
+    if (initial.hold && mode === initial.mode) return;
+    if (mode === "resetting") {
+      const t = window.setTimeout(() => {
+        setMode("view"); setChanged(false); setHtml(contractHtml(c));
+        setEdits((e) => [{ who: "You", when: "Just now", kind: "reset" }, ...e]);
+        toast.success("Contract reset to original", { description: "The contract has been regenerated using the current worker data." });
+        emit("reset-done");
+      }, 4000);
+      return () => window.clearTimeout(t);
+    }
+    if (mode === "applying") {
+      const t = window.setTimeout(() => {
+        setMode("view");
+        toast.success("Contract replaced with your uploaded version", { description: "Saved as the current version in edit history." });
+        emit("upload-done");
+      }, 1600);
+      return () => window.clearTimeout(t);
+    }
+  }, [mode]);
+
   const onScroll = () => {
     const d = doc.current;
-    if (d && !read && d.scrollTop + d.clientHeight >= d.scrollHeight - 8) { setRead(true); onRead?.(); }
+    if (d && !read && d.scrollTop + d.clientHeight >= d.scrollHeight - 8) { setRead(true); onRead?.(); emit("read"); }
   };
+  const save = () => {
+    if (empty) { toast.error("Contract cannot be empty", { description: "Please add content before saving." }); return; }
+    setMode("view"); setChanged(true);
+    setEdits((e) => [{ who: "You", doc: "Agreement", when: "Just now" }, ...e]);
+    toast.success("Contract changes saved");
+    emit("save");
+  };
+
   const personal: [string, string][] = [["Name", c.name], ["Country", `${c.flag} ${c.country}`], ["Email", c.email], ["Nationality", c.nationality], ["City", c.city], ["Address", c.address], ["ID", c.idNumber]];
   const contract: [string, string][] = [["Type", c.type], ["Role", c.role], ["Monthly fee", c.salary], ["Start Date", c.startDate]];
+  const allEdits = [...edits, ...BASE_EDITS];
+  const history = <EditHistory events={allEdits} count={BASE_EDIT_COUNT + edits.length} />;
+
   return (
     <div className="flex-1 flex flex-col items-center px-2 sm:px-4 md:px-8 py-10 sm:py-16">
       <div className="w-full max-w-7xl space-y-3 sm:space-y-8">
@@ -428,50 +700,113 @@ export function ContractDraftWorkspace({
                   <SideSection title="Contract Details" rows={contract} last />
                 </div>
               </Card>
-              <div className="flex-1 min-h-0 overflow-hidden"><EditHistory /></div>
+              <div className="flex-1 min-h-0 overflow-hidden">{history}</div>
             </div>
             <div className="flex-1 flex flex-col h-[calc(100vh-200px)] sm:h-[calc(100vh-180px)] lg:h-[700px] min-h-[500px] w-full rounded-lg border border-border overflow-hidden">
               <div className="bg-muted/80 border-b border-border/50 p-2 flex-shrink-0 flex items-center justify-between gap-2">
-                <p className="text-xs sm:text-sm text-foreground pl-1">Review the contract details carefully before proceeding.</p>
-                <div className="flex items-center gap-1 flex-shrink-0">
-                  <Button variant="ghost" size="sm" className="flex items-center gap-1.5 h-7 text-xs text-muted-foreground hover:text-foreground disabled:opacity-50 px-1.5 sm:px-3">
-                    <RotateCcw className="h-3.5 w-3.5" /><span className="hidden sm:inline">Reset</span>
-                  </Button>
-                  <Button variant="outline" size="sm" className="flex items-center gap-1.5 h-7 text-xs px-1.5 sm:px-3">
-                    <Pencil className="h-3.5 w-3.5" /><span className="hidden sm:inline">Edit</span>
-                  </Button>
-                  <Button variant="outline" size="sm" className="flex items-center gap-1.5 h-7 text-xs px-1.5 sm:px-3">
-                    <Upload className="h-3.5 w-3.5" /><span className="hidden sm:inline">Upload</span>
-                  </Button>
-                </div>
+                {mode === "editing" ? (
+                  <div className="flex items-center gap-2 min-w-0">
+                    <span className={`w-2 h-2 rounded-full flex-shrink-0 ${empty ? "bg-destructive" : "bg-warning animate-pulse"}`} />
+                    <p className="text-xs sm:text-sm text-muted-foreground truncate">
+                      {empty
+                        ? <>Editing <span className="font-medium text-foreground">Agreement</span><span className="text-destructive ml-1">- cannot be empty</span></>
+                        : <>Edits to <span className="font-medium text-foreground">Agreement</span> apply only to {c.name}</>}
+                    </p>
+                  </div>
+                ) : (
+                  <p className="text-xs sm:text-sm text-foreground pl-1">
+                    {mode === "resetting" ? "Regenerating contract from template..." : mode === "applying" ? "Loading your uploaded contract..." : "Review the contract details carefully before proceeding."}
+                  </p>
+                )}
+                {mode === "editing" ? (
+                  <div className="flex items-center gap-2 flex-shrink-0">
+                    <Button variant="outline" size="sm" className="h-7 text-xs" onClick={() => { setMode("view"); setHtml(contractHtml(c)); emit("cancel-edit"); }}>Cancel</Button>
+                    <Button size="sm" className="h-7 text-xs" onClick={save} disabled={empty}>Save Changes</Button>
+                  </div>
+                ) : (
+                  <div className="flex items-center gap-1 flex-shrink-0">
+                    <Button variant="ghost" size="sm" onClick={() => { setDialog("reset"); emit("reset-open"); }} disabled={loading || mode === "no-documents" || !changed}
+                      className="flex items-center gap-1.5 h-7 text-xs text-muted-foreground hover:text-foreground disabled:opacity-50 px-1.5 sm:px-3">
+                      <RotateCcw className={`h-3.5 w-3.5 ${mode === "resetting" ? "animate-spin" : ""}`} /><span className="hidden sm:inline">Reset</span>
+                    </Button>
+                    <Button variant="outline" size="sm" onClick={() => { setMode("editing"); emit("edit"); }} disabled={loading || mode === "no-documents"}
+                      className="flex items-center gap-1.5 h-7 text-xs px-1.5 sm:px-3">
+                      <Pencil className="h-3.5 w-3.5" /><span className="hidden sm:inline">Edit</span>
+                    </Button>
+                    <Button variant="outline" size="sm" onClick={() => { setDialog("upload"); emit("upload-open"); }} disabled={loading}
+                      className="flex items-center gap-1.5 h-7 text-xs px-1.5 sm:px-3">
+                      <Upload className="h-3.5 w-3.5" /><span className="hidden sm:inline">Upload</span>
+                    </Button>
+                  </div>
+                )}
               </div>
-              <div ref={doc} onScroll={onScroll} className="flex-1 min-h-0 overflow-y-auto bg-background">
-                <div className="p-4 sm:p-6">
-                  <div className="space-y-4 select-none">
-                    {contractClauses(c).map((k, i) => (
-                      <div key={i}>
-                        {k.level === "title" ? <h3 className="text-base sm:text-lg font-medium mb-4 text-foreground">{k.h}</h3>
-                          : k.h && <h3 className="text-sm font-medium mb-2 text-foreground">{k.h}</h3>}
-                        {k.body && <p className="text-xs sm:text-sm text-foreground/80 leading-relaxed whitespace-pre-wrap">{k.body}</p>}
-                      </div>
-                    ))}
+              {mode === "editing" ? (
+                <div className="flex-1 min-h-0 bg-background flex flex-col overflow-hidden">
+                  <div className="h-full flex flex-col">
+                    <Part of={PANEL_PARTS.editor}>
+                      <ContractRichTextEditor content={html} onChange={(h) => { setHtml(h); if (!h.replace(/<[^>]*>/g, "").trim()) emit("empty"); }} className="border-0 rounded-none flex-1 min-h-0" />
+                    </Part>
                   </div>
                 </div>
-              </div>
-              <div className="flex-shrink-0 p-3 sm:p-4 flex items-center justify-between bg-background border-t border-border/50">
-                <div className="flex items-center gap-2">
-                  <Button variant="outline" size="sm" onClick={onBack} className="sm:h-10">Back</Button>
+              ) : (
+                <div ref={doc} onScroll={onScroll} className="flex-1 min-h-0 overflow-y-auto bg-background">
+                  {loading ? (
+                    <div className="p-4 sm:p-6">
+                      <div className="space-y-4">
+                        <div className="flex justify-center"><Skeleton className="h-6 w-48" /></div>
+                        <div className="space-y-2"><Skeleton className="h-4 w-full" /><Skeleton className="h-4 w-11/12" /><Skeleton className="h-4 w-10/12" /></div>
+                        <Skeleton className="h-5 w-40 mt-6" />
+                        <div className="space-y-2"><Skeleton className="h-4 w-full" /><Skeleton className="h-4 w-full" /><Skeleton className="h-4 w-9/12" /></div>
+                      </div>
+                    </div>
+                  ) : mode === "no-documents" ? (
+                    <div className="flex items-center justify-center h-full p-6">
+                      <div className="text-center text-muted-foreground">
+                        <FileText className="h-12 w-12 mx-auto mb-3 opacity-40" />
+                        <p className="text-sm font-medium">No documents available</p>
+                        <p className="text-xs mt-1">No documents have been generated for this worker yet.</p>
+                      </div>
+                    </div>
+                  ) : (
+                    <div className="p-4 sm:p-6">
+                      <div className="space-y-4 select-none">
+                        {contractClauses(c).map((k, i) => (
+                          <div key={i}>
+                            {k.level === "title" ? <h3 className="text-base sm:text-lg font-medium mb-4 text-foreground">{k.h}</h3>
+                              : k.h && <h3 className="text-sm font-medium mb-2 text-foreground">{k.h}</h3>}
+                            {k.body && <p className="text-xs sm:text-sm text-foreground/80 leading-relaxed whitespace-pre-wrap">{k.body}</p>}
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  )}
                 </div>
-                <div className="flex items-center gap-2">
-                  {!read && <span className="text-xs text-muted-foreground text-right hidden sm:inline">Scroll to end to confirm</span>}
-                  <Button size="sm" disabled={!read} onClick={onConfirm} className="sm:h-10 whitespace-nowrap">Confirm &amp; Continue</Button>
+              )}
+              {mode !== "editing" && !loading && (
+                <div className="flex-shrink-0 p-3 sm:p-4 flex items-center justify-between bg-background border-t border-border/50">
+                  <div className="flex items-center gap-2">
+                    <Button variant="outline" size="sm" onClick={() => { onBack?.(); emit("back"); }} className="sm:h-10">Back</Button>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    {!read && <span className="text-xs text-muted-foreground text-right hidden sm:inline">Scroll to end to confirm</span>}
+                    <Button size="sm" disabled={!read || mode === "no-documents"} onClick={() => { onConfirm?.(); emit("confirm"); }} className="sm:h-10 whitespace-nowrap">Confirm &amp; Continue</Button>
+                  </div>
                 </div>
-              </div>
+              )}
             </div>
           </div>
-          <div className="lg:hidden"><EditHistory /></div>
+          <div className="lg:hidden">{history}</div>
         </div>
       </div>
+      <ResetContractDialog open={dialog === "reset"} onOpenChange={(o) => setDialog(o ? "reset" : null)}
+        onReset={() => { setDialog(null); setMode("resetting"); emit("reset"); }} />
+      <UploadContractDialog open={dialog === "upload"} onOpenChange={(o) => setDialog(o ? "upload" : null)}
+        workerName={c.name} countryLabel={c.country} initial={initial.upload} fail={uploadFails} hold={initial.hold}
+        onEvent={(e) => emit(e === "pick" ? "upload-pick" : e === "refused" ? "upload-refused" : e === "import" ? "upload-import" : "upload-failed")}
+        onImported={(f) => {
+          setEdits((e) => [{ who: "You", doc: "Agreement", what: `Uploaded ${f.name}`, when: "Just now", kind: "upload" }, ...e]);
+          setChanged(true); setMode("applying");
+        }} />
     </div>
   );
 }
