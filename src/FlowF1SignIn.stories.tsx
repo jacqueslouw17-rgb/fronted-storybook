@@ -7,7 +7,7 @@ import { AdminTopbar } from "@/components/flows/admin-topbar";
 import { DashboardHeader, type DashboardTab } from "@/components/flows/dashboard-header";
 import { TrackerLoading as TrackerLoadingGrid } from "@/components/flows/tracker-loading";
 import { WorkerPipeline } from "@/components/flows/worker-pipeline";
-import { FlowPage, Part, type Advance, type PartInfo } from "@/components/flows/flow-page";
+import { FlowPage, Part, useFlowAdvance, type Advance, type PartInfo } from "@/components/flows/flow-page";
 import "./tokens.css";
 import "./typography.css";
 
@@ -90,7 +90,14 @@ export const TrackerLoading: Story = {
   render: () => <DashboardScreen body={P.loading}><TrackerLoadingGrid /></DashboardScreen>,
 };
 
+/** The pipeline; Draft Contract on Marcus Chen's card is where the draft contract flow
+ *  branches off (on the canvas it moves on to Flows/F1 Draft contract). */
+function LivePipeline() {
+  const advance = useFlowAdvance();
+  return <WorkerPipeline onAction={(w, action) => { if (action === "Draft Contract" && w.id === "default-1") advance("draft-contract"); }} />;
+}
+
 export const Pipeline: Story = {
   name: "5 · Pipeline",
-  render: () => <DashboardScreen body={P.pipeline}><WorkerPipeline /></DashboardScreen>,
+  render: () => <DashboardScreen body={P.pipeline}><LivePipeline /></DashboardScreen>,
 };

@@ -35,6 +35,9 @@ export const COMPONENTS: Record<string, PartInfo> = {
   skeleton: { id: "components-skeleton--skeleton-story", label: "Components/Skeleton" },
   sheet:    { id: "components-sheet--sheet-story", label: "Components/Sheet" },
   dialog:   { id: "components-dialog--dialog-story", label: "Components/Dialog" },
+  checkbox: { id: "components-checkbox--checkbox-story", label: "Components/Checkbox" },
+  select:   { id: "components-select--select-story", label: "Components/Select" },
+  collapsible: { id: "components-collapsible--collapsible-story", label: "Components/Collapsible" },
 };
 
 type Box = { l: number; t: number; r: number; b: number };

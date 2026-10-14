@@ -77,11 +77,11 @@ export function AdminDashboardShell({
   );
 }
 
-/** Static background of the dashboard. */
-function Background() {
+/** Static background of the dashboard (`absolute` where the page scrolls inside its own box). */
+export function Background({ absolute = false }: { absolute?: boolean }) {
   return (
     <>
-      <div className="fixed inset-0 pointer-events-none overflow-hidden">
+      <div className={absolute ? "absolute inset-0 pointer-events-none overflow-hidden" : "fixed inset-0 pointer-events-none overflow-hidden"}>
         <div className="absolute inset-0 bg-gradient-to-br from-primary/[0.03] via-secondary/[0.02] to-accent/[0.03]" />
         <div className="absolute -top-20 -left-24 w-[36rem] h-[36rem] rounded-full blur-3xl opacity-10"
              style={{ background: "linear-gradient(135deg, hsl(var(--primary) / 0.08), hsl(var(--secondary) / 0.05))" }} />

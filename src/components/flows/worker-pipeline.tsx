@@ -70,9 +70,14 @@ export const STAGE_ACTIONS: Record<PipelineStatus, [Action, Action]> = {
   "CERTIFIED": [{ label: "View", icon: Eye, outline: true }, { label: "Edit", icon: Pencil, outline: true }],
 };
 
-function ActionButton({ a }: { a: Action }) {
+/** Reports a card action (worker, button label) to whoever renders the pipeline. */
+const ActionContext = React.createContext<((worker: Worker, action: string) => void) | undefined>(undefined);
+
+function ActionButton({ a, worker }: { a: Action; worker?: Worker }) {
+  const onAction = React.useContext(ActionContext);
   return (
     <Button
+      onClick={worker && onAction ? () => onAction(worker, a.label) : undefined}
       variant={a.outline ? "outline" : "default"}
       size="sm"
       className={cn("flex-1 text-[13px] h-8", a.gap || "gap-1", !a.outline && "bg-gradient-primary hover:opacity-90")}
@@ -84,12 +89,12 @@ function ActionButton({ a }: { a: Action }) {
 }
 
 /** A stage's footer action pair. Some stages wrap the pair in a stacked group. */
-export function StageActions({ status }: { status: PipelineStatus }) {
+export function StageActions({ status, worker }: { status: PipelineStatus; worker?: Worker }) {
   const [left, right] = STAGE_ACTIONS[status];
   const wrapped = status === "offer-accepted" || status === "data-pending" || status === "trigger-onboarding" || status === "onboarding-pending";
   return wrapped
-    ? <div className="w-full space-y-2"><div className="flex gap-2"><ActionButton a={left} /><ActionButton a={right} /></div></div>
-    : <div className="w-full flex gap-2"><ActionButton a={left} /><ActionButton a={right} /></div>;
+    ? <div className="w-full space-y-2"><div className="flex gap-2"><ActionButton a={left} worker={worker} /><ActionButton a={right} worker={worker} /></div></div>
+    : <div className="w-full flex gap-2"><ActionButton a={left} worker={worker} /><ActionButton a={right} worker={worker} /></div>;
 }
 
 export function WorkerCard({ worker, status = worker.status }: { worker: Worker; status?: PipelineStatus }) {
@@ -132,7 +137,7 @@ export function WorkerCard({ worker, status = worker.status }: { worker: Worker;
         </div>
 
         <div className="mt-auto flex gap-2 pt-3">
-          <StageActions status={status} />
+          <StageActions status={status} worker={worker} />
         </div>
       </CardContent>
     </Card>
@@ -178,14 +183,17 @@ export function PipelineColumn({ status, workers }: { status: PipelineStatus; wo
 }
 
 /** The full pipeline: every column, horizontally scrollable. */
-export function WorkerPipeline({ workers = ACME_WORKERS, columns = PIPELINE_COLUMNS, className }: { workers?: Worker[]; columns?: ReadonlyArray<PipelineStatus>; className?: string }) {
+/** `onAction(worker, label)` is called when a card's action is pressed (e.g. Draft Contract). */
+export function WorkerPipeline({ workers = ACME_WORKERS, columns = PIPELINE_COLUMNS, className, onAction }: { workers?: Worker[]; columns?: ReadonlyArray<PipelineStatus>; className?: string; onAction?: (worker: Worker, action: string) => void }) {
   return (
-    <div className={cn("pb-4 overflow-x-auto lg:h-[min(496px,calc(100vh-320px))] lg:min-h-0 lg:overflow-y-hidden lg:overflow-x-auto lg:overscroll-y-none", className)}>
-      <div className="flex gap-4 min-w-max lg:h-full lg:min-h-0">
-        {columns.map((status) => (
-          <PipelineColumn key={status} status={status} workers={workers.filter((w) => w.status === status)} />
-        ))}
+    <ActionContext.Provider value={onAction}>
+      <div className={cn("pb-4 overflow-x-auto lg:h-[min(496px,calc(100vh-320px))] lg:min-h-0 lg:overflow-y-hidden lg:overflow-x-auto lg:overscroll-y-none", className)}>
+        <div className="flex gap-4 min-w-max lg:h-full lg:min-h-0">
+          {columns.map((status) => (
+            <PipelineColumn key={status} status={status} workers={workers.filter((w) => w.status === status)} />
+          ))}
+        </div>
       </div>
-    </div>
+    </ActionContext.Provider>
   );
 }
