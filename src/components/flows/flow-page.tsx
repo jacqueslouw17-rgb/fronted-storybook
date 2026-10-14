@@ -13,11 +13,13 @@ import * as React from "react";
  * submitting (`advanceOn`), or any control that calls `useFlowAdvance()`. Wheel gestures the
  * page has no use for are handed back so the canvas keeps panning and zooming.
  */
-export type PartInfo = { id: string; label: string };
+export type PartInfo = { id: string; label: string; family?: string };
 
-/** Marks a composed piece. `display: contents` keeps it out of layout. */
+/** Marks a composed piece. `display: contents` keeps it out of layout. A `family` names the
+ *  job a pattern does (e.g. "sign-in"), so the canvas can compare different patterns that do
+ *  the same job - an admin sign-in against an employee sign-in. */
 export function Part({ of, children }: { of: PartInfo; children: React.ReactNode }) {
-  return <div data-part={of.id} data-label={of.label} style={{ display: "contents" }}>{children}</div>;
+  return <div data-part={of.id} data-label={of.label} data-family={of.family} style={{ display: "contents" }}>{children}</div>;
 }
 
 /** The components a page is built from, keyed by the data-ds mark each one renders. */
@@ -59,14 +61,28 @@ const norm = (x: Box) => {
   return [n(x.l / vw), n(x.t / vh), n((x.r - x.l) / vw), n((x.b - x.t) / vh)];
 };
 
-/** Patterns (one union rect each, from <Part>) and components (one rect per visible instance,
- *  from data-ds), as fractions of the viewport. */
+/** What a pattern is made of on this screen: each visible component it renders itself (not
+ *  inside a nested pattern), with its width in px - "tabs@280". Two screens rendering the same
+ *  pattern with different signatures are an inconsistency the canvas can point at. */
+function signature(part: HTMLElement) {
+  const sig = new Set<string>();
+  part.querySelectorAll<HTMLElement>("[data-ds]").forEach((el) => {
+    if (el.closest("[data-part]") !== part || !COMPONENTS[el.dataset.ds!]) return;
+    const box = visibleBox(el);
+    if (box) sig.add(`${el.dataset.ds}@${Math.round((box.r - box.l) / 4) * 4}`);
+  });
+  return Array.from(sig).sort();
+}
+
+/** Patterns (one union rect each, from <Part>, with their signature and family) and components
+ *  (one rect per visible instance, from data-ds), as fractions of the viewport. */
 function measureParts(root: HTMLElement) {
   const patterns = Array.from(root.querySelectorAll<HTMLElement>("[data-part]")).map((el) => {
     const boxes = Array.from(el.children).map(visibleBox).filter(Boolean) as Box[];
     if (!boxes.length) return null;
     const u = { l: Math.min(...boxes.map((x) => x.l)), t: Math.min(...boxes.map((x) => x.t)), r: Math.max(...boxes.map((x) => x.r)), b: Math.max(...boxes.map((x) => x.b)) };
-    return { kind: "pattern", id: el.dataset.part, label: el.dataset.label, rects: [norm(u)] };
+    return { kind: "pattern", id: el.dataset.part, label: el.dataset.label, family: el.dataset.family || undefined,
+             rects: [norm(u)], sig: signature(el) };
   }).filter(Boolean);
   const byName = new Map<string, number[][]>();
   root.querySelectorAll<HTMLElement>("[data-ds]").forEach((el) => {

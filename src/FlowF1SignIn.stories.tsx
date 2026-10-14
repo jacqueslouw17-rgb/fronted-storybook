@@ -27,7 +27,7 @@ export default meta;
 type Story = StoryObj;
 
 const P = {
-  login:    { id: "patterns-login--login", label: "Patterns/Login" },
+  login:    { id: "patterns-login--login", label: "Patterns/Login", family: "sign-in" },
   bubble:   { id: "patterns-feedback-bubble--feedback-bubble", label: "Patterns/Feedback Bubble" },
   shell:    { id: "patterns-admin-dashboard-shell--admin-dashboard-shell", label: "Patterns/Admin Dashboard Shell" },
   topbar:   { id: "patterns-admin-topbar--admin-topbar", label: "Patterns/Admin Topbar" },
