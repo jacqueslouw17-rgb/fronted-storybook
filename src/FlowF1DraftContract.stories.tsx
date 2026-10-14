@@ -21,7 +21,7 @@ import "./typography.css";
  * the candidate in Waiting for Signature. Demo (Flow 1 v6.1). Each story is one full screen,
  * composed only from this Storybook's patterns; the screen's action moves the canvas on.
  *
- * Besides the happy path (1-5), the branches the contract can take:
+ * Besides the happy path (1-6), the branches the contract can take:
  *   Edit       edit the contract in the editor and save (an empty contract can't be saved)
  *   Reset      regenerate the contract from the template, discarding manual edits
  *   Upload     replace it with an uploaded file (refused files and failed imports too)
@@ -79,11 +79,13 @@ function DraftScreen({ readToEnd, initial, on = ["read", "confirm", "edit", "res
   );
 }
 
-function ReviewScreen() {
+/** Review Contracts. Pressing Send for Signature moves the canvas on at once (to Preparing
+ *  signatures); `sending` is that screen, held while it prepares. */
+function ReviewScreen({ sending }: { sending?: boolean }) {
   const advance = useFlowAdvance();
   return (
     <ContractFlowShell header={header}>
-      <Part of={P.board}><ContractReviewBoard onSend={() => advance("send")} /></Part>
+      <Part of={P.board}><ContractReviewBoard sending={sending} hold={sending} onSending={() => advance("send")} /></Part>
     </ContractFlowShell>
   );
 }
@@ -152,8 +154,14 @@ export const ReviewContracts: Story = {
   render: () => <FlowPage><ReviewScreen /></FlowPage>,
 };
 
+export const PreparingSignatures: Story = {
+  name: "5 · Preparing signatures",
+  // The moment after Send for Signature: spinner on the button, a sweep across each card.
+  render: () => <FlowPage><ReviewScreen sending /></FlowPage>,
+};
+
 export const SentForSignature: Story = {
-  name: "5 · Sent for signature",
+  name: "6 · Sent for signature",
   // Track Progress on Marcus Chen's card branches into signing.
   render: () => <FlowPage><SentScreen on={["track"]} /></FlowPage>,
 };

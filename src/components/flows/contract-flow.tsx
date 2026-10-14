@@ -815,16 +815,36 @@ export function ContractDraftWorkspace({
 
 /* ---------------------------------------------------------------- 3 · review and send */
 
-/** "Review Contracts": every drafted contract, ready to send for e-signature. */
-export function ContractReviewBoard({ candidates = [MARCUS], onSend, onPrevious }: { candidates?: Candidate[]; onSend?: () => void; onPrevious?: () => void }) {
+/** "Review Contracts": every drafted contract, ready to send for e-signature. Send for
+ *  Signature shows "Preparing signatures…" while a highlight sweeps across each card (staggered
+ *  400ms), then hands over (`onSend`) - as contract-flow/ContractReviewBoard. `sending` starts in
+ *  that state; `hold` keeps it there. */
+export function ContractReviewBoard({
+  candidates = [MARCUS], onSend, onSending, onPrevious, sending: startSending = false, hold = false,
+}: {
+  candidates?: Candidate[]; onSend?: () => void; onSending?: () => void; onPrevious?: () => void; sending?: boolean; hold?: boolean;
+}) {
+  const [sending, setSending] = React.useState(startSending);
+  const [swept, setSwept] = React.useState<number>(startSending ? candidates.length : 0);
+  const send = () => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+    setSending(true); onSending?.();
+    candidates.forEach((_, i) => window.setTimeout(() => setSwept((n) => Math.max(n, i + 1)), i * 400));
+    if (!hold) window.setTimeout(() => onSend?.(), candidates.length * 400 + 1200);
+  };
+  React.useEffect(() => { if (startSending && !hold) { const t = window.setTimeout(() => onSend?.(), 1200); return () => window.clearTimeout(t); } }, []);
   return (
     <div className="flex-1 px-4 py-6 sm:p-8">
-      <div className="space-y-6">
+      <div className="space-y-6" data-pattern-state={sending ? "sending" : "ready"}>
         <PageHeading title="Review Contracts" subtitle="Ready to send contract bundles to your candidates for electronic signature." />
         <div className="grid gap-3 grid-cols-1 max-w-lg mx-auto">
-          {candidates.map((c) => (
+          {candidates.map((c, i) => (
             <div key={c.name}>
               <Card className="p-4 relative overflow-hidden border border-border/40 bg-card">
+                {i < swept && (
+                  <div className="absolute inset-0 bg-gradient-to-r from-primary/15 via-primary/25 to-primary/15 pointer-events-none z-10 animate-[sweep_1.2s_ease-in-out_forwards]"
+                    style={hold ? { transform: "translateX(0)" } : undefined} />
+                )}
                 <div className="relative">
                   <div className="flex items-start justify-between gap-4">
                     <div className="min-w-0">
@@ -843,9 +863,17 @@ export function ContractReviewBoard({ candidates = [MARCUS], onSend, onPrevious 
         </div>
         <div className="flex justify-center gap-3">
           <Button variant="outline" size="lg" onClick={onPrevious}>Previous</Button>
-          <Button size="lg" onClick={onSend} className="bg-gradient-to-r from-primary to-secondary shadow-lg hover:shadow-[0_0_20px_rgba(139,92,246,0.3)] transition-shadow">Send for Signature</Button>
+          <Button size="lg" onClick={send} disabled={sending} className="bg-gradient-to-r from-primary to-secondary shadow-lg hover:shadow-[0_0_20px_rgba(139,92,246,0.3)] transition-shadow">
+            {sending ? (
+              <>
+                <div className="h-4 w-4 border-2 border-white/30 border-t-white rounded-full animate-spin mr-2" />
+                Preparing signatures...
+              </>
+            ) : "Send for Signature"}
+          </Button>
         </div>
       </div>
+      <style>{"@keyframes sweep{from{transform:translateX(-100%)}to{transform:translateX(100%)}}"}</style>
     </div>
   );
 }
