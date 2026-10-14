@@ -505,6 +505,7 @@ export function UploadContractDialog({
     <Dialog open={open} onOpenChange={(next) => (importing ? null : onOpenChange(next))}>
       <DialogContent className="sm:max-w-[460px]">
         <Part of={PANEL_PARTS.upload}>
+          <span hidden data-pattern-state={importing ? "uploading" : error ? (file ? "failed" : "refused") : file ? "chosen" : "empty"} />
           <DialogHeader>
             <DialogTitle>Upload the finalised {documentLabel}</DialogTitle>
             <DialogDescription>
@@ -659,7 +660,7 @@ export function ContractDraftWorkspace({
   const history = <EditHistory events={allEdits} count={BASE_EDIT_COUNT + edits.length} />;
 
   return (
-    <div className="flex-1 flex flex-col items-center px-2 sm:px-4 md:px-8 py-10 sm:py-16">
+    <div className="flex-1 flex flex-col items-center px-2 sm:px-4 md:px-8 py-10 sm:py-16" data-pattern-state={mode === "editing" && empty ? "editing-empty" : mode}>
       <div className="w-full max-w-7xl space-y-3 sm:space-y-8">
         <div className="space-y-2">
           <PageHeading title={`Reviewing ${c.firstName}'s Contract`} subtitle="Preview how this contract will appear to the worker before sending for signature." />
@@ -744,6 +745,7 @@ export function ContractDraftWorkspace({
                 <div className="flex-1 min-h-0 bg-background flex flex-col overflow-hidden">
                   <div className="h-full flex flex-col">
                     <Part of={PANEL_PARTS.editor}>
+                      <span hidden data-pattern-state={empty ? "empty" : "editing"} />
                       <ContractRichTextEditor content={html} onChange={(h) => { setHtml(h); if (!h.replace(/<[^>]*>/g, "").trim()) emit("empty"); }} className="border-0 rounded-none flex-1 min-h-0" />
                     </Part>
                   </div>

@@ -66,7 +66,8 @@ const norm = (x: Box) => {
 
 /** What a pattern is made of on this screen: each visible component it renders itself (not
  *  inside a nested pattern), with its width in px - "tabs@280". Two screens rendering the same
- *  pattern with different signatures are an inconsistency the canvas can point at. */
+ *  pattern, in the same state, with different signatures are an inconsistency the canvas can
+ *  point at. A component names its state with data-pattern-state (e.g. "editing"). */
 function signature(part: HTMLElement) {
   const sig = new Set<string>();
   part.querySelectorAll<HTMLElement>("[data-ds]").forEach((el) => {
@@ -84,8 +85,9 @@ function measureParts(root: HTMLElement) {
     const boxes = Array.from(el.children).map(visibleBox).filter(Boolean) as Box[];
     if (!boxes.length) return null;
     const u = { l: Math.min(...boxes.map((x) => x.l)), t: Math.min(...boxes.map((x) => x.t)), r: Math.max(...boxes.map((x) => x.r)), b: Math.max(...boxes.map((x) => x.b)) };
+    const stateEl = Array.from(el.querySelectorAll<HTMLElement>("[data-pattern-state]")).find((s) => s.closest("[data-part]") === el);
     return { kind: "pattern", id: el.dataset.part, label: el.dataset.label, family: el.dataset.family || undefined,
-             rects: [norm(u)], sig: signature(el) };
+             rects: [norm(u)], sig: signature(el), state: stateEl?.dataset.patternState };
   }).filter(Boolean);
   const byName = new Map<string, number[][]>();
   root.querySelectorAll<HTMLElement>("[data-ds]").forEach((el) => {

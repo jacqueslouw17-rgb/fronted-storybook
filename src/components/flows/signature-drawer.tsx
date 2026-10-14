@@ -75,6 +75,7 @@ export function SignatureDrawer({
     <Sheet open={open} onOpenChange={(o) => { onOpenChange?.(o); if (!o) onEvent?.("close"); }}>
       <SheetContent side="right" className="[&>button.absolute]:top-[19px] [&>button.absolute]:right-5 w-full sm:w-full sm:max-w-xl p-0 flex flex-col overflow-hidden">
         <Part of={{ id: "patterns-signature-workflow--signature-workflow", label: "Patterns/Signature Workflow" }}>
+          <span hidden data-pattern-state={status} />
           <SheetHeader className="px-5 pt-4 pb-3 border-b border-border/30 shrink-0">
             <div className="min-w-0">
               <div className="flex items-center gap-2">
