@@ -48,7 +48,10 @@ export const SentToastStory: Story = {
         lead={<>The toast after Send for Signature: bottom-right on desktop, top on a phone.</>}
         meta="Toast · title text-sm font-semibold · description text-sm opacity-90" />
       <h3 style={eyebrow}>Toast</h3>
-      <SentToast />
+      {/* The toast is fixed to the viewport; a transformed frame keeps it in place here. */}
+      <div style={{ position: "relative", height: 150, transform: "translateZ(0)", overflow: "hidden", border: "1px solid var(--ds-color-border)", borderRadius: 12 }}>
+        <SentToast />
+      </div>
     </div>
   ),
 };
