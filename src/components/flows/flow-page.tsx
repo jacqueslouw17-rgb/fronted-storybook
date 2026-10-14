@@ -7,7 +7,8 @@ import * as React from "react";
  * component marks itself with data-ds. When a page is embedded (the flow canvas), it posts the
  * patterns and each visible component instance, measured, to the parent window so the canvas
  * can spotlight them — regions come from the live layout, never from a screenshot. Portalled
- * layers (sheets, dialogs) are measured too.
+ * layers (sheets, dialogs) are measured too. The page's visible words go with them, so the
+ * canvas can check its wording against the requirements' language rules.
  *
  * A page also tells the canvas when its action happens, so the flow moves on: typing or
  * submitting (`advanceOn`), or any control that calls `useFlowAdvance()`. Wheel gestures the
@@ -151,7 +152,8 @@ export function FlowPage({ children, advanceOn = [] }: { children: React.ReactNo
     };
     window.addEventListener("wheel", onWheel, { passive: false });
     // Measure the whole document: sheets and dialogs render in portals outside the page root.
-    const measure = () => window.parent.postMessage({ type: "flow-page-parts", parts: measureParts(document.body) }, "*");
+    const measure = () => window.parent.postMessage({ type: "flow-page-parts", parts: measureParts(document.body),
+      text: (document.body.innerText || "").slice(0, 20000) }, "*");
     const timers = [50, 400, 1200].map((ms) => window.setTimeout(measure, ms));
     document.fonts?.ready.then(measure);
     // The canvas lets you use a focused page: re-measure after scrolling or any change.
