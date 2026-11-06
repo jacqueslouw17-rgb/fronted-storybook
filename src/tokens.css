@@ -199,13 +199,20 @@
   --ds-accent-green:  var(--p-green-400);
   --ds-accent-rose:   var(--p-rose-200);
 
-  /* radius roles — one radius per component category */
+  /* radius roles — one radius per component category. Fronted, "soft ledger" (6 Nov): one step softer than
+     the interim look so corners follow the pill buttons; inner corners stay smaller than their outer ones. */
   --ds-radius-button: var(--p-radius-pill);   /* buttons / CTAs — brand pill */
   --ds-radius-chip:   var(--p-radius-pill);   /* chips / tags / badges */
-  --ds-radius-input:  var(--p-radius-md);     /* inputs / selects / menus */
-  --ds-radius-card:   var(--p-radius-lg);     /* cards / popovers */
-  --ds-radius-sheet:  var(--p-radius-xl);     /* modals / dialogs */
-  --ds-radius-control: var(--p-radius-md);    /* alias = input */
+  --ds-radius-input:  10px;                   /* inputs / selects / menus / small boxes */
+  --ds-radius-card:   14px;                   /* cards / popovers / list rows */
+  --ds-radius-sheet:  20px;                   /* panels / sheets / modals */
+  --ds-radius-control: var(--ds-radius-input); /* alias = input */
+
+  /* spacing roles — an 8-point rhythm for lists and cards */
+  --ds-row-gap:   8px;    /* between list rows */
+  --ds-row-pad-y: 12px;   /* a list row's vertical padding */
+  --ds-row-pad-x: 14px;
+  --ds-card-pad:  24px;   /* a card's inner padding (20px below 640px) */
 
   /* controls / motion / elevation */
   --ds-input-h: 40px; --ds-button-h: 40px;
@@ -224,8 +231,8 @@
   --ds-page: var(--p-neutral-50);
   --ds-backdrop: var(--ds-color-backdrop);
   --ds-accent-pink: var(--p-rose-200);
-  --ds-radius: var(--p-radius-md);
-  --ds-radius-sm: var(--p-radius-sm);
+  --ds-radius: 10px;
+  --ds-radius-sm: 6px;
   --ds-radius-pill: var(--p-radius-pill);
   --ds-sheet-w: 576px;
   --ds-font-sans: var(--p-font-sans);
@@ -279,6 +286,17 @@
   --ds-action-primary-radius:    8px;
   --ds-radius-button: 8px;
   --ds-radius-chip:   9999px;   /* demo badges are full pills, not 8px */
+  /* the interim look keeps its own shape and rhythm (Fronted's softened on 6 Nov) */
+  --ds-radius-input:  8px;
+  --ds-radius-card:   12px;
+  --ds-radius-sheet:  16px;
+  --ds-radius-control: 8px;
+  --ds-radius:        8px;
+  --ds-radius-sm:     4px;
+  --ds-row-gap:   6px;
+  --ds-row-pad-y: 10px;
+  --ds-row-pad-x: 12px;
+  --ds-card-pad:  20px;
 
   /* feedback */
   --ds-feedback-success-solid: #008566; --ds-feedback-success-bg: #D7F9E9; --ds-feedback-success-fg: #00654E; --ds-feedback-success-border: #A7E8D0;
