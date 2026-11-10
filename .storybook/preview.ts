@@ -40,6 +40,12 @@ function labelTableCells(root: HTMLDivElement | null) {
 
 const preview: Preview = {
   globalTypes: {
+    /* The component ID tag top right of a story; off for clean screenshots (the flow canvas's snapshots pass ids:hide) */
+    ids: {
+      description: "Show each story's component ID",
+      defaultValue: "show",
+      toolbar: { title: "IDs", icon: "tag", items: [{ value: "show", title: "Show IDs" }, { value: "hide", title: "Hide IDs" }], dynamicTitle: true },
+    },
     theme: {
       description: "Brand theme — Fronted Brand (real identity, default) vs First Launch (launch look)",
       defaultValue: "fronted",
@@ -79,7 +85,7 @@ const preview: Preview = {
             minHeight: "100vh",
           },
         },
-        componentId ? idTag(componentId) : null,
+        componentId && context.globals.ids !== "hide" ? idTag(componentId) : null,
         React.createElement(Story)
       );
     },

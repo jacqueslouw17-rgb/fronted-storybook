@@ -25,9 +25,9 @@ A component that belongs to the system is built and storied in **fronted-storybo
 
 ## Component IDs
 
-Every story under `Components/` and `Patterns/` in fronted-storybook has an ID: `<component>-<variant>-<4 digits>`, e.g. `accordion-expand-4821`, `payments-run-lock-dialog-5390`. A story whose name is the component's own gets `default`.
+Every story under `Components/`, `Patterns/` and `Flows/` in fronted-storybook has an ID: `<component>-<variant>-<4 digits>`, e.g. `accordion-expand-4821`, `payments-run-lock-dialog-5390`; a flow screen is `<flow>-<screen>-<4 digits>`, e.g. `f1-draft-contract-reset-confirm-…`. A story whose name is the component's own gets `default`. Only documentation and token pages have none.
 
 - Kept in `fronted-storybook/src/component-ids.json` (story id to component ID). An ID never changes once given, so tickets, the canvas and conversations can point at it.
-- Shown top right of the story (click to copy) and set on its wrapper as `data-component-id`.
+- Shown top right of the story (click to copy) and set on its wrapper as `data-component-id`. The toolbar's **IDs** switch hides the tag for clean screenshots; the flow canvas's snapshots pass `globals=ids:hide`.
 - After adding stories, with Storybook running: `node scripts/component-ids.mjs`. It gives new stories an ID and leaves the rest alone. Commit the JSON with the story.
 - Refer to a component by its ID when asking for a change ("make `badge-default-5827` support a warning tone").

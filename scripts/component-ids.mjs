@@ -1,4 +1,4 @@
-/* Component IDs: every story under Components/ and Patterns/ gets one, as <component>-<variant>-<4 digits>
+/* Component IDs: every story under Components/, Patterns/ and Flows/ gets one (a flow screen: <flow>-<screen>-<4 digits>), as <component>-<variant>-<4 digits>
    (e.g. accordion-expand-4821), kept in src/component-ids.json. An ID never changes once given; new stories get
    one the next time this runs. Run with Storybook up: node scripts/component-ids.mjs [http://localhost:6009] */
 import fs from "node:fs";
@@ -10,11 +10,12 @@ const ids = fs.existsSync(FILE) ? JSON.parse(fs.readFileSync(FILE, "utf8")) : {}
 const taken = new Set(Object.values(ids).map((x) => x.split("-").pop()));
 const num = () => { let n; do n = String(1000 + Math.floor(Math.random() * 9000)); while (taken.has(n)); taken.add(n); return n; };
 let added = 0;
-const stories = Object.values(index.entries).filter((e) => e.type === "story" && /^(Components|Patterns)\//.test(e.title));
+const stories = Object.values(index.entries).filter((e) => e.type === "story" && /^(Components|Patterns|Flows)\//.test(e.title));
 for (const e of stories) {
   if (ids[e.id]) continue;
   const component = kebab(e.title.split("/").pop());
-  let variant = kebab(e.name);
+  /* a flow screen is named by its story id (no step numbers): f1-draft-contract-reset-confirm */
+  let variant = e.title.startsWith("Flows/") ? e.id.split("--")[1] : kebab(e.name);
   if (!variant || variant === component) variant = "default";
   else if (variant.startsWith(component + "-")) variant = variant.slice(component.length + 1);
   ids[e.id] = `${component}-${variant}-${num()}`;
