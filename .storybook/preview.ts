@@ -93,7 +93,7 @@ const preview: Preview = {
   parameters: {
     layout: "fullscreen",
     options: {
-      storySort: { order: ["Introduction", "Brand", "Product Flows", "Flows", "Design Strategy", ["Overview", "Principles"], "Foundations", "Inventory", "Components", "Patterns", "Governance"] },
+      storySort: { order: ["Introduction", "Brand", "Product Flows", "Design Strategy", ["Overview", "Principles"], "Foundations", "Inventory", "Components", "Patterns", "Governance"] },
     },
     controls: { matchers: { color: /(background|color)$/i, date: /Date$/i } },
     viewport: {

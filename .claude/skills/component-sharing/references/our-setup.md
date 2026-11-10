@@ -15,7 +15,7 @@ A component that belongs to the system is built and storied in **fronted-storybo
 | Primitives `src/components/ui/<name>/` · `Primitives/<Name>` | `fronted-storybook/src/components/ui/<name>.tsx` (shadcn-based) · story `src/<Name>.stories.tsx` titled `Components/<Name>` |
 | Patterns `src/components/patterns/` · `Patterns/<Name>` | fronted-storybook story `src/Pattern<Name>.stories.tsx` titled `Patterns/<Name>`; shared flow pieces in `src/components/flows/` |
 | Composites `src/components/shared/` · `Composites/<Name>` | Prototype: `src/components/flows/shared/` (e.g. `F63_InvoiceApprovals`); register in `src/data/componentsRegistry.ts` |
-| Flows / pages | Prototype: `src/pages/flows/`, `src/components/flows/<flow>/`. Storybook: `Flows/<Name>` |
+| Flows / pages | Prototype: `src/pages/flows/`, `src/components/flows/<flow>/`; laid out on the flow canvas. Not in Storybook |
 | `Typography` and `Icon` atoms | fronted-storybook: `src/components/ui/typography/` (`Components/Typography`) and `src/components/ui/icon/` (`Components/Icon`, with the set of Lucide icons the prototype and canvas use). Not yet in the prototype: there, keep to its existing text styles and `lucide-react` |
 | `DESIGN_PRINCIPLES.md`, `COMPONENT_STANDARDS.md` | At the root of this repo |
 | `STORYBOOK_GUIDELINES.md` | Not present. Use fronted-storybook's `Governance`, `Introduction` and `Inventory` stories and its README |
@@ -25,9 +25,13 @@ A component that belongs to the system is built and storied in **fronted-storybo
 
 ## Component IDs
 
-Every story under `Components/`, `Patterns/` and `Flows/` in fronted-storybook has an ID: `<component>-<variant>-<4 digits>`, e.g. `accordion-expand-4821`, `payments-run-lock-dialog-5390`; a flow screen is `<flow>-<screen>-<4 digits>`, e.g. `f1-draft-contract-reset-confirm-…`. A story whose name is the component's own gets `default`. Only documentation and token pages have none.
+Every story under `Components/` and `Patterns/` in fronted-storybook has an ID: `<component>-<variant>-<4 digits>`, e.g. `accordion-expand-4821`, `payments-run-lock-dialog-5390`. A story whose name is the component's own gets `default`. Storybook has no flow screens: those live on the flow canvas.
 
 - Kept in `fronted-storybook/src/component-ids.json` (story id to component ID). An ID never changes once given, so tickets, the canvas and conversations can point at it.
 - Shown top right of the story (click to copy) and set on its wrapper as `data-component-id`. The toolbar's **IDs** switch hides the tag for clean screenshots; the flow canvas's snapshots pass `globals=ids:hide`.
 - After adding stories, with Storybook running: `node scripts/component-ids.mjs`. It gives new stories an ID and leaves the rest alone. Commit the JSON with the story.
 - Refer to a component by its ID when asking for a change ("make `badge-default-5827` support a warning tone").
+
+## Where components are used (the canvas)
+
+Prototype primitives and the Ready screens' patterns carry `data-ds="<storybook story id>"` (invisible). Capturing Sprints 18-20 in the Fronted brand records their boxes to `flow-canvas/ds-parts/`; `node flow-canvas/tools/ds-json.mjs` (Storybook up) builds `flow-canvas/ds.json`. On the canvas, **On canvas → Storybook components / patterns** lists each with its uses; picking one lights up every use on the Ready screens in pink with its ID. A new shared component gets a `data-ds` on its root in the prototype.
