@@ -4,6 +4,23 @@ import "../src/tokens.css";
 import "../src/globals.css";
 import "../src/typography.css";
 import "../src/responsive.css";
+import COMPONENT_IDS from "../src/component-ids.json";
+
+/** A story's component ID (scripts/component-ids.mjs): on its wrapper as data-component-id, and as a small tag
+ *  top right that copies it on click. Docs-only pages and flows have none. */
+function idTag(id: string) {
+  return React.createElement("button", {
+    type: "button",
+    title: "Component ID: click to copy",
+    onClick: () => { try { navigator.clipboard.writeText(id); } catch (e) { /* no clipboard in this frame */ } },
+    style: {
+      position: "absolute", top: 8, right: 8, zIndex: 50, cursor: "copy",
+      font: "500 11px/16px var(--ds-font-mono)", letterSpacing: ".02em",
+      padding: "2px 8px", borderRadius: 999, border: "1px solid var(--ds-color-border)",
+      background: "var(--ds-color-surface)", color: "var(--ds-color-text-muted)",
+    },
+  }, id);
+}
 
 /** Label each doc-table cell with its column header, so a table stacked on a phone
  *  (responsive.css) still says what each value is. Re-runs as the story changes. */
@@ -46,19 +63,23 @@ const preview: Preview = {
       if (typeof document !== "undefined") {
         document.documentElement.setAttribute("data-theme", theme);
       }
+      const componentId = (COMPONENT_IDS as Record<string, string>)[context.id];
       return React.createElement(
         "div",
         {
           ref: labelTableCells,
           className: "sb-docs",
           "data-theme": theme,
+          "data-component-id": componentId,
           style: {
+            position: "relative",
             background: "var(--ds-color-bg)",
             color: "var(--ds-color-text)",
             fontFamily: "var(--ds-font-body)",
             minHeight: "100vh",
           },
         },
+        componentId ? idTag(componentId) : null,
         React.createElement(Story)
       );
     },

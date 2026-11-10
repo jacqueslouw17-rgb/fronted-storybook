@@ -21,12 +21,14 @@ Each entry lists: where it lives, the **tags** on its Storybook story (match the
 - **Path:** `src/components/ui/typography/` · **Storybook:** `Primitives/Typography` · **Tags:** `text`, `heading`, `body`, `label`, `caption`
 - **Purpose:** every piece of text in new UI goes through this — never hand-roll `text-sm font-medium`. Roles from Fronted Foundation (Inter headings, Inter body).
 - **Props:** `variant: "display"|"h1"|"h2"|"h3"|"h4"|"h5"|"h6"|"body"|"body-lg"|"body-sm"|"label"|"caption"|"caption-strong"|"caption-meta"|"overline"|"metric"|"metric-lg"`, `color?: "default"|"muted"|"heading"|"primary"|"secondary"|"accent"|"destructive"|"success"|"warning"|"info"|"inherit"`, `as?: ElementType`.
+- **In fronted-storybook:** `src/components/ui/typography/typography.tsx` · `Components/Typography` (IDs `typography-roles-1018`, `typography-playground-1445`, `typography-colours-5211`, `typography-tabular-figures-2676`). Clash Display headings, Inter body, from `typography.css`. Props: `variant?: "display"|"h1"…"h6"|"body-lg"|"body"|"body-sm"|"label"|"caption"|"overline"`, `color?: "default"|"heading"|"strong"|"muted"|"disabled"|"danger"|"success"|"warning"|"inherit"`, `as?`, `tabular?`.
 
 ### Icon
 
 - **Path:** `src/components/ui/icon/` · **Storybook:** `Primitives/Icon` · **Tags:** `icon`, `lucide`, `atom`
 - **Purpose:** the only way to render a glyph in new UI. Lucide, 2px stroke, sizes on the 4px grid. Check here before dropping raw `lucide-react` icons with ad-hoc `h-4 w-4`.
 - **Props:** `icon: LucideIcon`, `size?: "xs"|"sm"|"md"|"lg"|"xl"` (12/14/16/20/24), `tone?: "muted"|"strong"|"brand"|"danger"|"disabled"|"inherit"`, `label?: string` (required when not decorative), `decorative?: boolean`.
+- **In fronted-storybook:** `src/components/ui/icon/icon.tsx` · `Components/Icon` (IDs `icon-playground-8176`, `icon-sizes-8853`, `icon-tones-2492`, `icon-with-text-6237`, `icon-without-text-7892`, `icon-in-use-9504`). 2px stroke at every size; decorative unless `label` is set. Props: `icon`, `size?` as above, `tone?: "inherit"|"muted"|"strong"|"brand"|"success"|"warning"|"danger"|"disabled"` (brand = teal ink), `label?`. Exports `ICON_SIZE`, `HIT_TARGET_MIN` (24). "In use" lists the Lucide icons the prototype and canvas already use.
 
 ### Country
 

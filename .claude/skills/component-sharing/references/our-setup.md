@@ -16,9 +16,18 @@ A component that belongs to the system is built and storied in **fronted-storybo
 | Patterns `src/components/patterns/` · `Patterns/<Name>` | fronted-storybook story `src/Pattern<Name>.stories.tsx` titled `Patterns/<Name>`; shared flow pieces in `src/components/flows/` |
 | Composites `src/components/shared/` · `Composites/<Name>` | Prototype: `src/components/flows/shared/` (e.g. `F63_InvoiceApprovals`); register in `src/data/componentsRegistry.ts` |
 | Flows / pages | Prototype: `src/pages/flows/`, `src/components/flows/<flow>/`. Storybook: `Flows/<Name>` |
-| `Typography` and `Icon` atoms | Not built yet in either repo. Until they exist: text via the `.ds-*` classes (Storybook) or the existing text styles (prototype); icons via `lucide-react`, 2px stroke, sizes on the 4px grid |
+| `Typography` and `Icon` atoms | fronted-storybook: `src/components/ui/typography/` (`Components/Typography`) and `src/components/ui/icon/` (`Components/Icon`, with the set of Lucide icons the prototype and canvas use). Not yet in the prototype: there, keep to its existing text styles and `lucide-react` |
 | `DESIGN_PRINCIPLES.md`, `COMPONENT_STANDARDS.md` | At the root of this repo |
 | `STORYBOOK_GUIDELINES.md` | Not present. Use fronted-storybook's `Governance`, `Introduction` and `Inventory` stories and its README |
 | Locked flows (`src/config/flowRegistry.ts`) | Same file in this repo |
 | `references/component-catalog.md` | Describes ecor-fe's components. Also match against fronted-storybook's `Inventory` story and its `Components/*` and `Patterns/*` lists, and add an entry here for anything we build |
 | Flow canvas | After a component change that shows on a captured screen, recapture the affected canvas screens (`flow-canvas/tools/capture-demo.mjs`) and republish |
+
+## Component IDs
+
+Every story under `Components/` and `Patterns/` in fronted-storybook has an ID: `<component>-<variant>-<4 digits>`, e.g. `accordion-expand-4821`, `payments-run-lock-dialog-5390`. A story whose name is the component's own gets `default`.
+
+- Kept in `fronted-storybook/src/component-ids.json` (story id to component ID). An ID never changes once given, so tickets, the canvas and conversations can point at it.
+- Shown top right of the story (click to copy) and set on its wrapper as `data-component-id`.
+- After adding stories, with Storybook running: `node scripts/component-ids.mjs`. It gives new stories an ID and leaves the rest alone. Commit the JSON with the story.
+- Refer to a component by its ID when asking for a change ("make `badge-default-5827` support a warning tone").
