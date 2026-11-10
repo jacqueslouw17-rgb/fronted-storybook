@@ -124,6 +124,12 @@ Each entry lists: where it lives, the **tags** on its Storybook story (match the
 - **Props:** `open`, `onOpenChange`, `title`, `description?`, `children?` (slot for extra content, e.g. a reason textarea), `confirmLabel?`, `cancelLabel?`, `onConfirm`, `onCancel?`, `variant?: "default"|"destructive"`, `loading?`, `disabled?`, `icon?: LucideIcon`, `className?`.
 - **Existing story variants:** `Default`, `Destructive`, `ApproveRequest`, `ApproveAllRequests`, `RejectWithReason` (dialog + `Textarea` in `children`, confirm disabled until non-empty), `ApproveLoading`. A new "confirm with X" need is almost always a new story here, not a new component.
 
+### Control Room (fronted-storybook)
+
+- **Path:** `fronted-storybook/src/components/flows/control-room.tsx` · **Storybook:** `Patterns/Control Room` (IDs `control-room-default-7630`, `control-room-kpi-tiles-1902`, `control-room-pipeline-cards-4613`, `control-room-to-do-8044`) · **Tags:** `dashboard`, `pipeline`, `kpi`, `filter`, `list`
+- **Purpose:** Fronted ops' worker pipeline across clients (Control Center experiment, `/flows/control-center` in the prototype). KPI tiles that filter the pipeline, one or several at once; the pipeline's own stages; calm cards with one tag only for ops' step; To do beside it. Built from Typography and Icon.
+- **Exports:** `KpiTile` (`label`, `value`, `sub`, `icon`, `tone?: "default"|"warning"|"success"`, `selected?`, `onToggle?`), `PipelineCard` (`worker`, `onOpen?`), `StageColumn` (`stage`, `workers`, `width?`), `TodoList` (`groups: {title, items: {name, detail, days?}[]}[]`), plus `STAGES`, `WORKERS`, `overdue`, `needsOps`.
+
 ---
 
 ## Composites / Shared (`src/components/shared/<ComponentName>/`)

@@ -1,7 +1,7 @@
 import * as React from "react";
 import type { LucideIcon } from "lucide-react";
 
-/** The only way to draw a glyph in new UI: Lucide, 2px stroke, sizes on the 4px grid,
+/** The only way to draw a glyph in new UI: Lucide at its standard 2px stroke, sizes on the 4px grid,
  *  coloured by semantic tokens. Decorative unless it has a label. */
 export type IconSize = "xs" | "sm" | "md" | "lg" | "xl";
 export type IconTone = "inherit" | "muted" | "strong" | "brand" | "danger" | "success" | "warning" | "disabled";
@@ -36,7 +36,6 @@ export function Icon({ icon: Glyph, size = "md", tone = "inherit", label, style,
       width={px}
       height={px}
       strokeWidth={2}
-      absoluteStrokeWidth
       color={TONE[tone]}
       style={{ flexShrink: 0, ...style }}
       {...(label ? { role: "img", "aria-label": label } : { "aria-hidden": true })}
